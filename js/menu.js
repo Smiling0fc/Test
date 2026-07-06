@@ -1,44 +1,53 @@
-{
-    "menu": [
+async function buildMenu(){
 
-        {
-            "title": "Коллекции",
+    const response = await fetch("config/menu.json");
 
-            "children": [
+    const data = await response.json();
 
-                {
-                    "title": "Мероприятия",
-                    "link": "#"
-                },
+    const nav = document.querySelector("nav ul");
 
-                {
-                    "title": "Свадьбы",
-                    "link": "#"
-                },
+    nav.innerHTML = "";
 
-                {
-                    "title": "Сессии",
-                    "link": "#"
-                }
+    data.menu.forEach(item=>{
 
-            ]
+        const li=document.createElement("li");
 
-        },
+        if(item.children){
 
-        {
-            "title":"Примеры работ",
-            "link":"#"
-        },
+            li.classList.add("dropdown");
 
-        {
-            "title":"Контакты",
-            "link":"#"
-        },
+            li.innerHTML=`<a href="#">${item.title}</a>`;
 
-        {
-            "title":"Блог",
-            "link":"#"
+            const ul=document.createElement("ul");
+
+            ul.className="dropdown-menu";
+
+            item.children.forEach(child=>{
+
+                ul.innerHTML+=`
+                <li>
+                    <a href="${child.link}">
+                        ${child.title}
+                    </a>
+                </li>`;
+
+            });
+
+            li.appendChild(ul);
+
         }
 
-    ]
+        else{
+
+            li.innerHTML=`
+            <a href="${item.link}">
+                ${item.title}
+            </a>`;
+
+        }
+
+        nav.appendChild(li);
+
+    });
+
 }
