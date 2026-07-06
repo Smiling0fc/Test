@@ -1,3 +1,29 @@
 {
-    "collections":[]
+    "collections":[
+
+        {
+
+            "title":"Свадьбы",
+
+            "image":"images/collections/wedding.jpg"
+
+        },
+
+        {
+
+            "title":"Мероприятия",
+
+            "image":"images/collections/events.jpg"
+
+        },
+
+        {
+
+            "title":"Сессии",
+
+            "image":"images/collections/session.jpg"
+
+        }
+
+    ]
 }
