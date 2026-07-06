@@ -1,0 +1,13 @@
+{
+    "siteName": "Имя фотографа",
+
+    "logo": "images/logo.png",
+
+    "background": "images/background.jpg",
+
+    "heroTitle": "Имя фотографа",
+
+    "heroSubtitle": "Фотография, которая рассказывает историю.",
+
+    "maintenance": false
+}
