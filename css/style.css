@@ -74,7 +74,9 @@ header{
 
 .logo img{
 
-    height:46px;
+    height:60px;
+
+    display:block;
 
 }
 
