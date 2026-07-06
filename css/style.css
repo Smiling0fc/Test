@@ -54,33 +54,17 @@ header{
 
     top:25px;
 
-    left:50%;
+    left:0;
 
-    transform:translateX(-50%);
+    width:100%;
 
-    width:92%;
-
-    height:75px;
+    padding:0 60px;
 
     display:flex;
 
     justify-content:space-between;
 
-    align-items:center;
-
-    padding:0 40px;
-
-    background:rgba(255,255,255,.13);
-
-    backdrop-filter:blur(20px);
-
-    border:1px solid rgba(255,255,255,.18);
-
-    border-radius:22px;
-
-    box-shadow:
-
-        0 8px 30px rgba(0,0,0,.18);
+    align-items:flex-start;
 
     z-index:999;
 
