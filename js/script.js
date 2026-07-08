@@ -10,5 +10,6 @@ window.onload=async()=>{
     document.querySelector(".logo img").src=config.logo;
 
     await buildMenu();
+    await buildCollections();
 
 }
