@@ -1,28 +1,25 @@
 {
-    "collections":[
+    "collections": [
 
         {
-
-            "title":"Свадьбы",
-
-            "image":"images/collections/wedding.jpg"
-
+            "title": "Свадьбы",
+            "image": "images/collections/wedding.jpg",
+            "size": "large",
+            "order": 1
         },
 
         {
-
-            "title":"Мероприятия",
-
-            "image":"images/collections/events.jpg"
-
+            "title": "Love Story",
+            "image": "images/collections/love.jpg",
+            "size": "small",
+            "order": 2
         },
 
         {
-
-            "title":"Сессии",
-
-            "image":"images/collections/session.jpg"
-
+            "title": "Мероприятия",
+            "image": "images/collections/events.jpg",
+            "size": "medium",
+            "order": 3
         }
 
     ]
