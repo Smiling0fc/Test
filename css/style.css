@@ -178,27 +178,39 @@ nav a:hover{
 
 .collections{
 
-    width:90%;
+    width:min(1500px,92%);
 
-    margin:180px auto 100px;
+    margin:180px auto 120px;
 
-    display:flex;
+    display:grid;
 
-    flex-direction:column;
+    grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
 
-    gap:80px;
+    gap:50px;
+
+    align-items:start;
 
 }
 
 .collection-card{
 
-    width:fit-content;
+    transition:.35s;
+
+}
+
+.collection-card:hover{
+
+    transform:translateY(-8px);
 
 }
 
 .collection-glass{
 
+    display:inline-block;
+
     padding:18px;
+
+    border-radius:28px;
 
     background:rgba(255,255,255,.12);
 
@@ -206,17 +218,15 @@ nav a:hover{
 
     border:1px solid rgba(255,255,255,.18);
 
-    border-radius:28px;
-
-    display:inline-block;
-
 }
 
 .collection-glass img{
 
     display:block;
 
-    max-width:100%;
+    width:100%;
+
+    height:auto;
 
     border-radius:18px;
 
@@ -232,58 +242,20 @@ nav a:hover{
 
 }
 
-.collections{
+.collection-card.small{
 
-    width:90%;
-
-    margin:180px auto 100px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:80px;
+    max-width:340px;
 
 }
 
-.collection-card{
+.collection-card.medium{
 
-    width:fit-content;
-
-}
-
-.collection-glass{
-
-    padding:18px;
-
-    background:rgba(255,255,255,.12);
-
-    backdrop-filter:blur(20px);
-
-    border:1px solid rgba(255,255,255,.18);
-
-    border-radius:28px;
-
-    display:inline-block;
+    max-width:520px;
 
 }
 
-.collection-glass img{
+.collection-card.large{
 
-    display:block;
-
-    max-width:100%;
-
-    border-radius:18px;
-
-}
-
-.collection-title{
-
-    margin-top:18px;
-
-    color:white;
-
-    font-size:28px;
+    max-width:760px;
 
 }
