@@ -18,29 +18,34 @@ class Navigation {
 
                 Header.render(button.textContent.trim());
 
-                switch(page){
+                const routes = {
 
-                    case "dashboard":
-                        Dashboard.render();
-                        break;
+                    dashboard: Dashboard,
+                    collections: Collections
 
-                    default:
+                };
 
-                        document.getElementById("content").innerHTML = `
+                if (routes[page]) {
 
-                            <div class="dashboard fade">
+                    routes[page].render();
 
-                                <h1>${button.textContent}</h1>
+                } else {
 
-                                <p>
+                    document.getElementById("content").innerHTML = `
 
-                                    Раздел находится в разработке.
+                        <div class="dashboard fade">
 
-                                </p>
+                            <h1>${button.textContent}</h1>
 
-                            </div>
+                            <p>
 
-                        `;
+                                Раздел находится в разработке.
+
+                            </p>
+
+                        </div>
+
+                    `;
 
                 }
 
