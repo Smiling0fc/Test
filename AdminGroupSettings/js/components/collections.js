@@ -113,16 +113,22 @@ class Collections {
 
     }
 
-    static create(){
+    static create() {
 
-        const name = prompt("Название коллекции");
+        const name = prompt("Введите название коллекции");
 
-        if(!name) return;
+        if (name === null) return;
 
-        CollectionService.create(name);
+        const trimmed = name.trim();
 
-        Collections.render();
+        if (trimmed === "") return;
 
-    }
+        if (CollectionService.create(trimmed)) {
+
+            Collections.render();
+
+      }
+
+}
 
 }
