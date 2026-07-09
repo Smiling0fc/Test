@@ -67,11 +67,11 @@ class Collections {
                 </div>
 
             `;
-
+            Collections.bindEvents();
             return;
 
         }
-
+        
         container.innerHTML = collections.map(collection=>`
 
             <div class="collection-card glass">
@@ -89,27 +89,31 @@ class Collections {
 
                 </div>
 
-                <div class="collection-actions">
+          <div class="collection-actions">
 
-                    <button
-                        class="iconButton">
+               <button
+                     class="iconButton renameButton"
+                     data-id="${collection.id}">
 
-                        ✏️
+                     ✏️
 
-                    </button>
+                     </button>
 
-                    <button
-                        class="iconButton">
+               <button
+                     class="iconButton deleteButton"
+                     data-id="${collection.id}">
 
-                        🗑️
+                     🗑️
 
-                    </button>
+               </button>
 
-                </div>
+          </div>
 
             </div>
 
         `).join("");
+
+        Collections.bindEvents();
 
     }
 
@@ -131,4 +135,61 @@ class Collections {
 
 }
 
+static bindEvents(){
+
+    document
+        .querySelectorAll(".renameButton")
+        .forEach(button=>{
+
+            button.onclick=()=>{
+
+                Collections.rename(
+                    Number(button.dataset.id)
+                );
+
+            };
+
+        });
+
+    document
+        .querySelectorAll(".deleteButton")
+        .forEach(button=>{
+
+            button.onclick=()=>{
+
+                Collections.remove(
+                    Number(button.dataset.id)
+                );
+
+            };
+
+        });
+
+}
+   static rename(id){
+
+    const name = prompt("Новое название");
+
+    if(name===null) return;
+
+    const trimmed=name.trim();
+
+    if(trimmed==="") return;
+
+    CollectionService.rename(id, trimmed);
+
+    Collections.render();
+
+}
+    static remove(id){
+
+    if(!confirm("Удалить коллекцию?"))
+        return;
+
+    CollectionService.remove(id);
+
+    Collections.render();
+
+}
+    
 }
