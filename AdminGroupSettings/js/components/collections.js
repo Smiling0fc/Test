@@ -140,6 +140,25 @@ class Collections {
 static bindEvents(){
 
     document
+    .querySelectorAll(".collection-card")
+    .forEach(card => {
+
+        card.onclick = event => {
+
+            if (
+                event.target.closest(".iconButton")
+            ) return;
+
+            CollectionView.open(
+
+                Number(card.dataset.id)
+
+            );
+
+        };
+
+    });
+    document
         .querySelectorAll(".renameButton")
         .forEach(button=>{
 
