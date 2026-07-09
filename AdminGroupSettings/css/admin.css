@@ -626,3 +626,27 @@ COLLECTIONS
     margin-bottom:15px;
 
 }
+
+.collection-card{
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.collection-card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+.collection-view{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:25px;
+
+}
