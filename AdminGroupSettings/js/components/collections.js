@@ -74,7 +74,9 @@ class Collections {
         
         container.innerHTML = collections.map(collection=>`
 
-            <div class="collection-card glass">
+            <div
+                class="collection-card glass"
+                data-id="${collection.id}">
 
                 <div>
 
