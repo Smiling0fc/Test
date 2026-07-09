@@ -10,6 +10,8 @@ class App {
 
         }
 
+        CollectionService.load();
+
         Layout.render();
 
         Sidebar.render();
