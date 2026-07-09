@@ -8,25 +8,35 @@ class CollectionService {
 
     }
 
-    static create(name) {
+static create(name){
 
-        const collection = {
-
-            id: Date.now(),
-
-            name: name,
-
-            photos: [],
-
-            created: new Date(),
-
-            cover: null
-
-        };
-
-        this.collections.push(collection);
-
+    if(this.collections.some(
+        collection =>
+        collection.name.toLowerCase() === name.toLowerCase()
+    )){
+        alert("Такая коллекция уже существует.");
+        return false;
     }
+
+    const collection = {
+
+        id: Date.now(),
+
+        name,
+
+        photos: [],
+
+        created: new Date(),
+
+        cover: null
+
+    };
+
+    this.collections.push(collection);
+
+    return true;
+
+}
 
     static remove(id) {
 
