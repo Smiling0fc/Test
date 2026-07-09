@@ -113,3 +113,116 @@
     background:rgba(255,255,255,.20);
 
 }
+/*==========================
+SIDEBAR
+==========================*/
+
+.sidebar{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    width:260px;
+
+    min-height:100vh;
+
+    padding:25px;
+
+}
+
+.sidebar-logo{
+
+    text-align:center;
+
+    margin-bottom:35px;
+
+}
+
+.sidebar-logo-image{
+
+    width:70px;
+
+    margin-bottom:15px;
+
+}
+
+.sidebar-logo h2{
+
+    font-size:22px;
+
+}
+
+.sidebar-menu{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+.menu-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:14px 18px;
+
+    border:none;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    background:transparent;
+
+    transition:.25s;
+
+    font-size:16px;
+
+}
+
+.menu-item:hover{
+
+    transform:translateX(5px);
+
+}
+
+.menu-item.active{
+
+    background:rgba(255,255,255,.12);
+
+}
+
+.icon{
+
+    width:24px;
+
+    text-align:center;
+
+}
+
+.sidebar-footer{
+
+    text-align:center;
+
+    opacity:.6;
+
+    margin-top:30px;
+
+}
+
+.sidebar-footer small{
+
+    display:block;
+
+    margin-top:8px;
+
+}
