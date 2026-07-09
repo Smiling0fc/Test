@@ -494,3 +494,135 @@ SIDEBAR
     margin-top:8px;
 
 }
+
+/*==========================
+COLLECTIONS
+==========================*/
+
+.collections{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:25px;
+
+}
+
+.page-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.primaryButton{
+
+    padding:14px 22px;
+
+    border:none;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    background:var(--primary);
+
+    color:white;
+
+    font-size:15px;
+
+    transition:.25s;
+
+}
+
+.primaryButton:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.collections-container{
+
+    display:grid;
+
+    gap:20px;
+
+}
+
+.collection-card{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:24px;
+
+}
+
+.collection-card h2{
+
+    margin-bottom:10px;
+
+}
+
+.collection-card p{
+
+    color:var(--text-secondary);
+
+}
+
+.collection-actions{
+
+    display:flex;
+
+    gap:12px;
+
+}
+
+.iconButton{
+
+    width:44px;
+
+    height:44px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    background:rgba(255,255,255,.08);
+
+    color:white;
+
+    font-size:18px;
+
+    transition:.25s;
+
+}
+
+.iconButton:hover{
+
+    background:rgba(255,255,255,.16);
+
+}
+
+.empty-state{
+
+    padding:60px;
+
+    text-align:center;
+
+}
+
+.empty-state h2{
+
+    margin-bottom:15px;
+
+}
