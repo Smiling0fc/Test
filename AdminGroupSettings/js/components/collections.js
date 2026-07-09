@@ -4,51 +4,124 @@ class Collections {
 
         const content = document.getElementById("content");
 
+        const collections = CollectionService.getAll();
+
         content.innerHTML = `
 
-        <div class="collections fade">
+            <div class="collections fade">
 
-            <div class="page-header">
+                <div class="page-header">
 
-                <h1>Коллекции</h1>
+                    <h1>Коллекции</h1>
 
-                <button id="createCollection" class="primaryButton">
+                    <button
+                        id="createCollection"
+                        class="primaryButton">
 
-                    + Создать коллекцию
+                        + Создать коллекцию
 
-                </button>
+                    </button>
+
+                </div>
+
+                <div
+                    id="collectionsContainer"
+                    class="collections-container">
+
+                </div>
 
             </div>
-
-            <div id="collectionsList" class="collections-list">
-
-            </div>
-
-        </div>
 
         `;
 
-        Collections.renderEmpty();
+        document
+            .getElementById("createCollection")
+            .addEventListener(
+                "click",
+                Collections.create
+            );
+
+        Collections.renderList(collections);
 
     }
 
-    static renderEmpty(){
+    static renderList(collections){
 
-        document.getElementById("collectionsList").innerHTML = `
+        const container = document.getElementById("collectionsContainer");
 
-            <div class="empty-state glass">
+        if(collections.length===0){
 
-                <h2>Коллекций пока нет</h2>
+            container.innerHTML=`
 
-                <p>
+                <div class="empty-state glass">
 
-                    Создайте первую коллекцию фотографий.
+                    <h2>Коллекций пока нет</h2>
 
-                </p>
+                    <p>
+
+                        Нажмите "Создать коллекцию",
+                        чтобы добавить первую.
+
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+        container.innerHTML = collections.map(collection=>`
+
+            <div class="collection-card glass">
+
+                <div>
+
+                    <h2>${collection.name}</h2>
+
+                    <p>
+
+                        ${collection.photos.length}
+                        фотографий
+
+                    </p>
+
+                </div>
+
+                <div class="collection-actions">
+
+                    <button
+                        class="iconButton">
+
+                        ✏️
+
+                    </button>
+
+                    <button
+                        class="iconButton">
+
+                        🗑️
+
+                    </button>
+
+                </div>
 
             </div>
 
-        `;
+        `).join("");
+
+    }
+
+    static create(){
+
+        const name = prompt("Название коллекции");
+
+        if(!name) return;
+
+        CollectionService.create(name);
+
+        Collections.render();
 
     }
 
