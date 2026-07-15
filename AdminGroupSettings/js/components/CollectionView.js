@@ -2,13 +2,15 @@ class CollectionView {
 
     static currentId = null;
 
-    static open(id) {
+      static open(id) {
 
-        this.currentId = id;
+    alert("Коллекция открылась!");
+
+       this.currentId = id;
 
         const collection = CollectionService
-            .getAll()
-            .find(item => item.id === id);
+           .getAll()
+           .find(item => item.id === id);
 
         if (!collection) {
 
