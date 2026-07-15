@@ -42,7 +42,7 @@ class Collections {
             );
 
         Collections.renderList(collections);
-
+Collections.bindEvents();
     }
 
     static renderList(collections){
@@ -67,7 +67,7 @@ class Collections {
                 </div>
 
             `;
-            Collections.bindEvents();
+            renderList()
             return;
 
         }
@@ -139,15 +139,47 @@ class Collections {
 
 static bindEvents(){
 
-    document
-    .querySelectorAll(".collection-card")
-    .forEach(card => {
+    const container =
+        document.getElementById("collectionsContainer");
 
-        card.onclick = event => {
+    if(!container) return;
 
-            if (
-                event.target.closest(".iconButton")
-            ) return;
+    container.onclick = event => {
+
+        const renameButton =
+            event.target.closest(".renameButton");
+
+        if(renameButton){
+
+            Collections.rename(
+
+                Number(renameButton.dataset.id)
+
+            );
+
+            return;
+
+        }
+
+        const deleteButton =
+            event.target.closest(".deleteButton");
+
+        if(deleteButton){
+
+            Collections.remove(
+
+                Number(deleteButton.dataset.id)
+
+            );
+
+            return;
+
+        }
+
+        const card =
+            event.target.closest(".collection-card");
+
+        if(card){
 
             CollectionView.open(
 
@@ -155,9 +187,11 @@ static bindEvents(){
 
             );
 
-        };
+        }
 
-    });
+    };
+
+}
     document
         .querySelectorAll(".renameButton")
         .forEach(button=>{
