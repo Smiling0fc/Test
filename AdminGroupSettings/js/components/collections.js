@@ -145,7 +145,7 @@ class Collections {
             if (renameButton) {
 
                 Collections.rename(
-                    Number(renameButton.dataset.id)
+                    renameButton.dataset.id
                 );
 
                 return;
@@ -158,7 +158,7 @@ class Collections {
             if (deleteButton) {
 
                 Collections.remove(
-                    Number(deleteButton.dataset.id)
+                    deleteButton.dataset.id
                 );
 
                 return;
@@ -171,7 +171,7 @@ class Collections {
             if (card) {
 
                 CollectionView.open(
-                    Number(card.dataset.id)
+                    card.dataset.id
                 );
 
             }
