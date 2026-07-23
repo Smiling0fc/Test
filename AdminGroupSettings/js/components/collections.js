@@ -114,21 +114,32 @@ class Collections {
 
     }
 
-    static create() {
+   static async create() {
 
-        const name = prompt("Введите название коллекции");
+    const name =
+        prompt("Введите название коллекции");
 
-        if (name === null) return;
+    if (name === null) return;
 
-        const trimmed = name.trim();
+    const trimmed = name.trim();
 
-        if (trimmed === "") return;
+    if (!trimmed) return;
 
-        if (CollectionService.create(trimmed)) {
-            Collections.render();
-        }
+    try {
+
+        await CollectionService.create(
+            trimmed
+        );
+
+        Collections.render();
+
+    } catch (error) {
+
+        alert(error.message);
 
     }
+
+}
 
     static bindEvents() {
 
@@ -180,27 +191,54 @@ class Collections {
 
     }
 
-    static rename(id) {
+    static async rename(id) {
 
-        const name = prompt("Новое название");
+    const name =
+        prompt("Новое название");
 
-        if (name === null) return;
+    if (name === null) return;
 
-        const trimmed = name.trim();
+    const trimmed = name.trim();
 
-        if (trimmed === "") return;
+    if (!trimmed) return;
 
-        CollectionService.rename(id, trimmed);
+    try {
+
+        await CollectionService.rename(
+            id,
+            trimmed
+        );
+
         Collections.render();
+
+    } catch (error) {
+
+        alert(error.message);
 
     }
 
-    static remove(id) {
+}
 
-        if (!confirm("Удалить коллекцию?")) return;
 
-        CollectionService.remove(id);
+   static async remove(id) {
+
+    if (
+        !confirm(
+            "Удалить коллекцию и все её фотографии?"
+        )
+    ) {
+        return;
+    }
+
+    try {
+
+        await CollectionService.remove(id);
+
         Collections.render();
+
+    } catch (error) {
+
+        alert(error.message);
 
     }
 
