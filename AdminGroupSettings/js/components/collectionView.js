@@ -44,13 +44,6 @@ class CollectionView {
 
                     <div class="collection-view-actions">
 
-                        <button
-                            id="addPhotosButton"
-                            class="primaryButton">
-
-                            + Добавить фотографии
-
-                        </button>
 
                         <button
                             id="backCollections"
