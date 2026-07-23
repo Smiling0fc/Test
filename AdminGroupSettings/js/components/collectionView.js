@@ -64,18 +64,38 @@ class CollectionView {
 
                 </div>
 
-                <input
-                    id="photoInput"
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    hidden>
+              <input
+    id="photoInput"
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    multiple
+    hidden>
 
-                <div
-                    id="photoGallery"
-                    class="photo-gallery">
+<div
+    id="photoDropzone"
+    class="photo-dropzone glass"
+    role="button"
+    tabindex="0">
 
-                </div>
+    <div class="dropzone-icon">📷</div>
+
+    <h2>Добавить фотографии</h2>
+
+    <p>
+        Перетащите изображения сюда
+        или нажмите для выбора
+    </p>
+
+    <span>
+        JPG, PNG и WebP
+    </span>
+
+</div>
+
+<div
+    id="photoGallery"
+    class="photo-gallery">
+</div>
 
             </div>
 
