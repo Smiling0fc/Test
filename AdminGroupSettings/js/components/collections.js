@@ -2,10 +2,14 @@ class Collections {
 
     static render() {
 
-        const content = document.getElementById("content");
-        const collections = CollectionService.getAll();
+        const content =
+            document.getElementById("content");
+
+        const collections =
+            CollectionService.getAll();
 
         content.innerHTML = `
+
             <div class="collections fade">
 
                 <div class="page-header">
@@ -26,16 +30,18 @@ class Collections {
                 <div
                     id="collectionsContainer"
                     class="collections-container">
+
                 </div>
 
             </div>
+
         `;
 
         document
             .getElementById("createCollection")
             .addEventListener(
                 "click",
-                Collections.create
+                () => Collections.create()
             );
 
         Collections.renderList(collections);
@@ -46,11 +52,18 @@ class Collections {
     static renderList(collections) {
 
         const container =
-            document.getElementById("collectionsContainer");
+            document.getElementById(
+                "collectionsContainer"
+            );
+
+        if (!container) {
+            return;
+        }
 
         if (collections.length === 0) {
 
             container.innerHTML = `
+
                 <div class="empty-state glass">
 
                     <h2>Коллекций пока нет</h2>
@@ -61,6 +74,7 @@ class Collections {
                     </p>
 
                 </div>
+
             `;
 
             return;
@@ -68,90 +82,79 @@ class Collections {
         }
 
         container.innerHTML = collections
-            .map(collection => `
-                <div
-                    class="collection-card glass"
-                    data-id="${collection.id}">
+            .map(collection => {
 
-                    <div>
+                const photoCount =
+                    Array.isArray(collection.photos)
+                        ? collection.photos.length
+                        : 0;
 
-                        <h2>${collection.name}</h2>
+                return `
 
-                        <p>
-                            ${collection.photos.length}
-                            фотографий
-                        </p>
+                    <div
+                        class="collection-card glass"
+                        data-id="${collection.id}">
+
+                        <div>
+
+                            <h2>${collection.name}</h2>
+
+                            <p>
+                                ${photoCount} фотографий
+                            </p>
+
+                        </div>
+
+                        <div class="collection-actions">
+
+                            <button
+                                class="iconButton renameButton"
+                                data-id="${collection.id}"
+                                type="button"
+                                title="Переименовать">
+
+                                ✏️
+
+                            </button>
+
+                            <button
+                                class="iconButton deleteButton"
+                                data-id="${collection.id}"
+                                type="button"
+                                title="Удалить">
+
+                                🗑️
+
+                            </button>
+
+                        </div>
 
                     </div>
 
-                    <div class="collection-actions">
+                `;
 
-                        <button
-                            class="iconButton renameButton"
-                            data-id="${collection.id}"
-                            type="button"
-                            title="Переименовать коллекцию">
-
-                            ✏️
-
-                        </button>
-
-                        <button
-                            class="iconButton deleteButton"
-                            data-id="${collection.id}"
-                            type="button"
-                            title="Удалить коллекцию">
-
-                            🗑️
-
-                        </button>
-
-                    </div>
-
-                </div>
-            `)
+            })
             .join("");
 
     }
 
-   static async create() {
-
-    const name =
-        prompt("Введите название коллекции");
-
-    if (name === null) return;
-
-    const trimmed = name.trim();
-
-    if (!trimmed) return;
-
-    try {
-
-        await CollectionService.create(
-            trimmed
-        );
-
-        Collections.render();
-
-    } catch (error) {
-
-        alert(error.message);
-
-    }
-
-}
-
     static bindEvents() {
 
         const container =
-            document.getElementById("collectionsContainer");
+            document.getElementById(
+                "collectionsContainer"
+            );
 
-        if (!container) return;
+        if (!container) {
+            return;
+        }
 
         container.onclick = event => {
 
             const renameButton =
-                event.target.closest(".renameButton");
+                event.target.closest(
+                    ".renameButton"
+                );
 
             if (renameButton) {
 
@@ -164,7 +167,9 @@ class Collections {
             }
 
             const deleteButton =
-                event.target.closest(".deleteButton");
+                event.target.closest(
+                    ".deleteButton"
+                );
 
             if (deleteButton) {
 
@@ -177,7 +182,9 @@ class Collections {
             }
 
             const card =
-                event.target.closest(".collection-card");
+                event.target.closest(
+                    ".collection-card"
+                );
 
             if (card) {
 
@@ -191,54 +198,105 @@ class Collections {
 
     }
 
+    static async create() {
+
+        const name =
+            prompt("Введите название коллекции");
+
+        if (name === null) {
+            return;
+        }
+
+        const trimmed = name.trim();
+
+        if (!trimmed) {
+            return;
+        }
+
+        try {
+
+            await CollectionService.create(
+                trimmed
+            );
+
+            Collections.render();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                error.message ||
+                "Не удалось создать коллекцию."
+            );
+
+        }
+
+    }
+
     static async rename(id) {
 
-    const name =
-        prompt("Новое название");
+        const name =
+            prompt("Новое название");
 
-    if (name === null) return;
+        if (name === null) {
+            return;
+        }
 
-    const trimmed = name.trim();
+        const trimmed = name.trim();
 
-    if (!trimmed) return;
+        if (!trimmed) {
+            return;
+        }
 
-    try {
+        try {
 
-        await CollectionService.rename(
-            id,
-            trimmed
+            await CollectionService.rename(
+                id,
+                trimmed
+            );
+
+            Collections.render();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                error.message ||
+                "Не удалось переименовать коллекцию."
+            );
+
+        }
+
+    }
+
+    static async remove(id) {
+
+        const confirmed = confirm(
+            "Удалить коллекцию и все её фотографии?"
         );
 
-        Collections.render();
+        if (!confirmed) {
+            return;
+        }
 
-    } catch (error) {
+        try {
 
-        alert(error.message);
+            await CollectionService.remove(id);
 
-    }
+            Collections.render();
 
-}
+        } catch (error) {
 
+            console.error(error);
 
-   static async remove(id) {
+            alert(
+                error.message ||
+                "Не удалось удалить коллекцию."
+            );
 
-    if (
-        !confirm(
-            "Удалить коллекцию и все её фотографии?"
-        )
-    ) {
-        return;
-    }
-
-    try {
-
-        await CollectionService.remove(id);
-
-        Collections.render();
-
-    } catch (error) {
-
-        alert(error.message);
+        }
 
     }
 
