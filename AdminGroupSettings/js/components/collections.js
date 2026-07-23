@@ -115,8 +115,6 @@ Collections.bindEvents();
 
         `).join("");
 
-        Collections.bindEvents();
-
     }
 
     static create() {
@@ -137,24 +135,22 @@ Collections.bindEvents();
 
 }
 
-static bindEvents(){
+static bindEvents() {
 
     const container =
         document.getElementById("collectionsContainer");
 
-    if(!container) return;
+    if (!container) return;
 
     container.onclick = event => {
 
         const renameButton =
             event.target.closest(".renameButton");
 
-        if(renameButton){
+        if (renameButton) {
 
             Collections.rename(
-
                 Number(renameButton.dataset.id)
-
             );
 
             return;
@@ -164,12 +160,10 @@ static bindEvents(){
         const deleteButton =
             event.target.closest(".deleteButton");
 
-        if(deleteButton){
+        if (deleteButton) {
 
             Collections.remove(
-
                 Number(deleteButton.dataset.id)
-
             );
 
             return;
@@ -179,12 +173,10 @@ static bindEvents(){
         const card =
             event.target.closest(".collection-card");
 
-        if(card){
+        if (card) {
 
             CollectionView.open(
-
                 Number(card.dataset.id)
-
             );
 
         }
@@ -192,53 +184,26 @@ static bindEvents(){
     };
 
 }
-    document
-        .querySelectorAll(".renameButton")
-        .forEach(button=>{
 
-            button.onclick=()=>{
-
-                Collections.rename(
-                    Number(button.dataset.id)
-                );
-
-            };
-
-        });
-
-    document
-        .querySelectorAll(".deleteButton")
-        .forEach(button=>{
-
-            button.onclick=()=>{
-
-                Collections.remove(
-                    Number(button.dataset.id)
-                );
-
-            };
-
-        });
-
-}
-   static rename(id){
+static rename(id) {
 
     const name = prompt("Новое название");
 
-    if(name===null) return;
+    if (name === null) return;
 
-    const trimmed=name.trim();
+    const trimmed = name.trim();
 
-    if(trimmed==="") return;
+    if (trimmed === "") return;
 
     CollectionService.rename(id, trimmed);
 
     Collections.render();
 
 }
-    static remove(id){
 
-    if(!confirm("Удалить коллекцию?"))
+static remove(id) {
+
+    if (!confirm("Удалить коллекцию?"))
         return;
 
     CollectionService.remove(id);
@@ -246,5 +211,5 @@ static bindEvents(){
     Collections.render();
 
 }
-    
+
 }
