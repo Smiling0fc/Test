@@ -1,6 +1,5 @@
 class CollectionService {
 
-    static storageKey = "photographer_collections";
     static collections = [];
 
     static getAll() {
@@ -8,93 +7,127 @@ class CollectionService {
         return this.collections;
 
     }
-    static load() {
 
-    const data = localStorage.getItem(this.storageKey);
+    static getById(id) {
 
-    if (!data) {
-
-        this.collections = [];
-
-        return;
+        return this.collections.find(
+            collection =>
+                collection.id === String(id)
+        ) || null;
 
     }
 
-    try {
+    static async load() {
 
-        this.collections = JSON.parse(data);
+        const response =
+            await ApiService.getCollections();
 
-    } catch {
+        this.collections =
+            Array.isArray(response.collections)
+                ? response.collections.map(
+                    collection => ({
+                        ...collection,
+                        photos: []
+                    })
+                )
+                : [];
 
-        this.collections = [];
-
-    }
-
-    }
-    
-    static save() {
-
-    localStorage.setItem(
-
-        this.storageKey,
-
-        JSON.stringify(this.collections)
-
-    );
-
-}
-
-static create(name){
-
-    if(this.collections.some(
-        collection =>
-        collection.name.toLowerCase() === name.toLowerCase()
-    )){
-        alert("Такая коллекция уже существует.");
-        return false;
-    }
-
-    const collection = {
-
-        id: Date.now(),
-
-        name,
-
-        photos: [],
-
-        created: new Date(),
-
-        cover: null
-
-    };
-
-    this.collections.push(collection);
-    this.save();
-    return true;
-
-}
-
-    static remove(id) {
-
-        this.collections = this.collections.filter(
-            collection => collection.id !== id
-        );
-        this.save();
+        return this.collections;
 
     }
 
-    static rename(id, newName) {
+    static async create(name) {
 
-        const collection = this.collections.find(
-            collection => collection.id === id
-        );
+        const trimmed =
+            String(name || "").trim();
 
-        if(collection){
+        if (!trimmed) {
+            throw new Error(
+                "Введите название коллекции."
+            );
+        }
 
-            collection.name = newName;
-            this.save();
+        const response =
+            await ApiService.createCollection({
+                name: trimmed,
+                size: "medium",
+                published: true
+            });
+
+        const collection = {
+            ...response.collection,
+            photos: []
+        };
+
+        this.collections.push(collection);
+
+        this.sort();
+
+        return collection;
+
+    }
+
+    static async rename(id, newName) {
+
+        const trimmed =
+            String(newName || "").trim();
+
+        if (!trimmed) {
+            throw new Error(
+                "Введите новое название."
+            );
+        }
+
+        const response =
+            await ApiService.updateCollection(
+                String(id),
+                {
+                    name: trimmed
+                }
+            );
+
+        const index =
+            this.collections.findIndex(
+                collection =>
+                    collection.id === String(id)
+            );
+
+        if (index !== -1) {
+
+            this.collections[index] = {
+                ...this.collections[index],
+                ...response.collection
+            };
 
         }
+
+        return response.collection;
+
+    }
+
+    static async remove(id) {
+
+        const collectionId = String(id);
+
+        await ApiService.deleteCollection(
+            collectionId
+        );
+
+        this.collections =
+            this.collections.filter(
+                collection =>
+                    collection.id !== collectionId
+            );
+
+    }
+
+    static sort() {
+
+        this.collections.sort(
+            (a, b) =>
+                Number(a.order || 0) -
+                Number(b.order || 0)
+        );
 
     }
 
