@@ -169,5 +169,18 @@ class ApiService {
         );
 
     }
+    static updateCollection(
+        collectionId,
+        data
+    ) {
 
+        return this.post(
+             "updateCollection",
+            {
+                collectionId,
+                 ...data
+            }
+        );
+
+}
 }
