@@ -813,3 +813,13 @@ PHOTO GALLERY
     background:rgba(255,80,80,.25);
 
 }
+
+.build-number{
+
+    margin-top:4px;
+
+    font-size:11px;
+
+    opacity:.7;
+
+}
