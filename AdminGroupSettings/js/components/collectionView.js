@@ -101,18 +101,44 @@ class CollectionView {
                 () => Collections.render()
             );
 
-        document
-            .getElementById("addPhotosButton")
-            .addEventListener(
-                "click",
-                () => {
+const photoInput =
+    document.getElementById("photoInput");
 
-                    document
-                        .getElementById("photoInput")
-                        .click();
+const dropzone =
+    document.getElementById("photoDropzone");
 
-                }
-            );
+dropzone.addEventListener("click", () => {
+
+    photoInput.click();
+
+});
+
+dropzone.addEventListener("keydown", event => {
+
+    if (
+        event.key === "Enter" ||
+        event.key === " "
+    ) {
+
+        event.preventDefault();
+
+        photoInput.click();
+
+    }
+
+});
+
+photoInput.addEventListener("change", event => {
+
+    CollectionView.addPhotos(
+        event.target.files
+    );
+
+    event.target.value = "";
+
+});
+
+CollectionView.bindDropzoneEvents();
 
         document
             .getElementById("photoInput")
@@ -132,21 +158,110 @@ class CollectionView {
         this.renderPhotos();
 
     }
+static bindDropzoneEvents() {
 
-    static addPhotos(files) {
+    const dropzone =
+        document.getElementById("photoDropzone");
 
-        if (!files || files.length === 0) {
-            return;
-        }
+    if (!dropzone) {
+        return;
+    }
 
-        PhotoService.addFiles(
-            this.currentId,
-            files
+    const preventDefaults = event => {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+    };
+
+    [
+        "dragenter",
+        "dragover",
+        "dragleave",
+        "drop"
+    ].forEach(eventName => {
+
+        dropzone.addEventListener(
+            eventName,
+            preventDefaults
         );
 
-        this.renderPhotos();
+    });
+
+    [
+        "dragenter",
+        "dragover"
+    ].forEach(eventName => {
+
+        dropzone.addEventListener(
+            eventName,
+            () => {
+
+                dropzone.classList.add(
+                    "drag-active"
+                );
+
+            }
+        );
+
+    });
+
+    [
+        "dragleave",
+        "drop"
+    ].forEach(eventName => {
+
+        dropzone.addEventListener(
+            eventName,
+            () => {
+
+                dropzone.classList.remove(
+                    "drag-active"
+                );
+
+            }
+        );
+
+    });
+
+    dropzone.addEventListener("drop", event => {
+
+        CollectionView.addPhotos(
+            event.dataTransfer.files
+        );
+
+    });
+
+}
+static addPhotos(files) {
+
+    if (!files || files.length === 0) {
+        return;
+    }
+
+    const imageFiles = Array.from(files)
+        .filter(file =>
+            file.type.startsWith("image/")
+        );
+
+    if (imageFiles.length === 0) {
+
+        alert(
+            "Выберите изображения в формате JPG, PNG или WebP."
+        );
+
+        return;
 
     }
+
+    PhotoService.addFiles(
+        this.currentId,
+        imageFiles
+    );
+
+    this.renderPhotos();
+
+}
 
     static renderPhotos() {
 
