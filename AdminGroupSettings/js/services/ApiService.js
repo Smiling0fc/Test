@@ -183,4 +183,23 @@ class ApiService {
         );
 
 }
+    static uploadPhoto(data) {
+
+    return this.post(
+        "uploadPhoto",
+        data
+    );
+
+}
+
+static deletePhoto(photoId) {
+
+    return this.post(
+        "deletePhoto",
+        {
+            photoId
+        }
+    );
+
+}
 }
