@@ -823,3 +823,87 @@ PHOTO GALLERY
     opacity:.7;
 
 }
+/*==========================
+PHOTO DROPZONE
+==========================*/
+
+.photo-dropzone{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    min-height:230px;
+
+    padding:40px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    border:2px dashed var(--glass-border);
+
+    transition:
+        transform .25s,
+        background .25s,
+        border-color .25s;
+
+}
+
+.photo-dropzone:hover{
+
+    transform:translateY(-3px);
+
+    background:rgba(255,255,255,.11);
+
+    border-color:rgba(255,255,255,.3);
+
+}
+
+.photo-dropzone.drag-active{
+
+    transform:scale(1.01);
+
+    background:rgba(79,140,255,.16);
+
+    border-color:var(--primary);
+
+}
+
+.dropzone-icon{
+
+    margin-bottom:15px;
+
+    font-size:46px;
+
+}
+
+.photo-dropzone h2{
+
+    margin-bottom:10px;
+
+}
+
+.photo-dropzone p{
+
+    color:var(--text-secondary);
+
+    line-height:1.6;
+
+}
+
+.photo-dropzone span{
+
+    margin-top:12px;
+
+    color:var(--text-secondary);
+
+    font-size:13px;
+
+    opacity:.7;
+
+}
