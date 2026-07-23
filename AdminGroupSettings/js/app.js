@@ -1,6 +1,6 @@
 class App {
 
-    static start() {
+    static async start() {
 
         if (!Auth.isLogged()) {
 
@@ -10,24 +10,67 @@ class App {
 
         }
 
-        CollectionService.load();
-
         Layout.render();
-
         Sidebar.render();
-
         Header.render("Dashboard");
 
-        Dashboard.render();
+        document
+            .getElementById("content")
+            .innerHTML = `
 
-        Navigation.init();
+                <div class="dashboard fade">
+
+                    <h1>Загрузка...</h1>
+
+                    <p>
+                        Получаем данные с сервера.
+                    </p>
+
+                </div>
+
+            `;
+
+        try {
+
+            await CollectionService.load();
+
+            Dashboard.render();
+
+            Navigation.init();
+
+        } catch (error) {
+
+            console.error(error);
+
+            document
+                .getElementById("content")
+                .innerHTML = `
+
+                    <div class="dashboard fade">
+
+                        <h1>
+                            Не удалось загрузить CMS
+                        </h1>
+
+                        <p>
+                            ${error.message}
+                        </p>
+
+                    </div>
+
+                `;
+
+        }
 
     }
 
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    App.start();
+        App.start();
 
-});
+    }
+);
