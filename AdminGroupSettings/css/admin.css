@@ -907,3 +907,89 @@ PHOTO DROPZONE
     opacity:.7;
 
 }
+
+/*==========================
+UPLOAD STATUS
+==========================*/
+
+.upload-status{
+
+    padding:20px;
+
+}
+
+.upload-status-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+    margin-bottom:14px;
+
+}
+
+.upload-progress{
+
+    width:100%;
+
+    height:10px;
+
+    overflow:hidden;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,.08);
+
+}
+
+.upload-progress-bar{
+
+    width:0;
+
+    height:100%;
+
+    border-radius:inherit;
+
+    background:var(--primary);
+
+    transition:width .25s ease;
+
+}
+
+.upload-current-file{
+
+    margin-top:12px;
+
+    overflow:hidden;
+
+    color:var(--text-secondary);
+
+    font-size:13px;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+
+}
+
+.photo-dropzone.upload-disabled{
+
+    cursor:wait;
+
+    opacity:.55;
+
+    pointer-events:none;
+
+}
+
+.deletePhotoButton:disabled{
+
+    cursor:wait;
+
+    opacity:.5;
+
+}
