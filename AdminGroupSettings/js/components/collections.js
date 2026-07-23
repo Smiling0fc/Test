@@ -3,11 +3,9 @@ class Collections {
     static render() {
 
         const content = document.getElementById("content");
-
         const collections = CollectionService.getAll();
 
         content.innerHTML = `
-
             <div class="collections fade">
 
                 <div class="page-header">
@@ -16,7 +14,8 @@ class Collections {
 
                     <button
                         id="createCollection"
-                        class="primaryButton">
+                        class="primaryButton"
+                        type="button">
 
                         + Создать коллекцию
 
@@ -27,11 +26,9 @@ class Collections {
                 <div
                     id="collectionsContainer"
                     class="collections-container">
-
                 </div>
 
             </div>
-
         `;
 
         document
@@ -42,78 +39,78 @@ class Collections {
             );
 
         Collections.renderList(collections);
-Collections.bindEvents();
+        Collections.bindEvents();
+
     }
 
-    static renderList(collections){
+    static renderList(collections) {
 
-        const container = document.getElementById("collectionsContainer");
+        const container =
+            document.getElementById("collectionsContainer");
 
-        if(collections.length===0){
+        if (collections.length === 0) {
 
-            container.innerHTML=`
-
+            container.innerHTML = `
                 <div class="empty-state glass">
 
                     <h2>Коллекций пока нет</h2>
 
                     <p>
-
-                        Нажмите "Создать коллекцию",
+                        Нажмите «Создать коллекцию»,
                         чтобы добавить первую.
-
                     </p>
 
                 </div>
-
             `;
-            renderList()
+
             return;
 
         }
-        
-        container.innerHTML = collections.map(collection=>`
 
-            <div
-                class="collection-card glass"
-                data-id="${collection.id}">
+        container.innerHTML = collections
+            .map(collection => `
+                <div
+                    class="collection-card glass"
+                    data-id="${collection.id}">
 
-                <div>
+                    <div>
 
-                    <h2>${collection.name}</h2>
+                        <h2>${collection.name}</h2>
 
-                    <p>
+                        <p>
+                            ${collection.photos.length}
+                            фотографий
+                        </p>
 
-                        ${collection.photos.length}
-                        фотографий
+                    </div>
 
-                    </p>
+                    <div class="collection-actions">
+
+                        <button
+                            class="iconButton renameButton"
+                            data-id="${collection.id}"
+                            type="button"
+                            title="Переименовать коллекцию">
+
+                            ✏️
+
+                        </button>
+
+                        <button
+                            class="iconButton deleteButton"
+                            data-id="${collection.id}"
+                            type="button"
+                            title="Удалить коллекцию">
+
+                            🗑️
+
+                        </button>
+
+                    </div>
 
                 </div>
-
-          <div class="collection-actions">
-
-               <button
-                     class="iconButton renameButton"
-                     data-id="${collection.id}">
-
-                     ✏️
-
-                     </button>
-
-               <button
-                     class="iconButton deleteButton"
-                     data-id="${collection.id}">
-
-                     🗑️
-
-               </button>
-
-          </div>
-
-            </div>
-
-        `).join("");
+            `)
+            .join("");
 
     }
 
@@ -128,88 +125,83 @@ Collections.bindEvents();
         if (trimmed === "") return;
 
         if (CollectionService.create(trimmed)) {
-
             Collections.render();
-
-      }
-
-}
-
-static bindEvents() {
-
-    const container =
-        document.getElementById("collectionsContainer");
-
-    if (!container) return;
-
-    container.onclick = event => {
-
-        const renameButton =
-            event.target.closest(".renameButton");
-
-        if (renameButton) {
-
-            Collections.rename(
-                Number(renameButton.dataset.id)
-            );
-
-            return;
-
         }
 
-        const deleteButton =
-            event.target.closest(".deleteButton");
+    }
 
-        if (deleteButton) {
+    static bindEvents() {
 
-            Collections.remove(
-                Number(deleteButton.dataset.id)
-            );
+        const container =
+            document.getElementById("collectionsContainer");
 
-            return;
+        if (!container) return;
 
-        }
+        container.onclick = event => {
 
-        const card =
-            event.target.closest(".collection-card");
+            const renameButton =
+                event.target.closest(".renameButton");
 
-        if (card) {
+            if (renameButton) {
 
-            CollectionView.open(
-                Number(card.dataset.id)
-            );
+                Collections.rename(
+                    Number(renameButton.dataset.id)
+                );
 
-        }
+                return;
 
-    };
+            }
 
-}
+            const deleteButton =
+                event.target.closest(".deleteButton");
 
-static rename(id) {
+            if (deleteButton) {
 
-    const name = prompt("Новое название");
+                Collections.remove(
+                    Number(deleteButton.dataset.id)
+                );
 
-    if (name === null) return;
+                return;
 
-    const trimmed = name.trim();
+            }
 
-    if (trimmed === "") return;
+            const card =
+                event.target.closest(".collection-card");
 
-    CollectionService.rename(id, trimmed);
+            if (card) {
 
-    Collections.render();
+                CollectionView.open(
+                    Number(card.dataset.id)
+                );
 
-}
+            }
 
-static remove(id) {
+        };
 
-    if (!confirm("Удалить коллекцию?"))
-        return;
+    }
 
-    CollectionService.remove(id);
+    static rename(id) {
 
-    Collections.render();
+        const name = prompt("Новое название");
 
-}
+        if (name === null) return;
+
+        const trimmed = name.trim();
+
+        if (trimmed === "") return;
+
+        CollectionService.rename(id, trimmed);
+        Collections.render();
+
+    }
+
+    static remove(id) {
+
+        if (!confirm("Удалить коллекцию?")) return;
+
+        CollectionService.remove(id);
+        Collections.render();
+
+    }
 
 }
