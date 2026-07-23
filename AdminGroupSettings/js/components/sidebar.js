@@ -67,21 +67,21 @@ class Sidebar {
 
             </nav>
 
-            <div class="sidebar-footer">
+      <div class="sidebar-footer">
 
-                <span>
+           <span>
+               Photographer CMS
+            </span>
 
-                    Photographer CMS
+            <small>
+                   Version ${CMS_CONFIG.version}
+            </small>
 
-                </span>
+            <small class="build-number">
+        Build ${CMS_CONFIG.build}
+    </small>
 
-                <small>
-
-                    Version 0.3.0
-
-                </small>
-
-            </div>
+</div>
 
         `;
 
