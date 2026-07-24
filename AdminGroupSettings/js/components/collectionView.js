@@ -579,12 +579,21 @@ class CollectionView {
 
                     <div class="photo-preview">
 
-                        <img
-                            src="https://lh3.googleusercontent.com/d/${photo.fileId}=w1600"
-                            alt="${this.escapeHtml(
-                                photo.name
-                            )}"
-                            loading="lazy">
+                    <img
+                   src="https://lh3.googleusercontent.com/d/${photo.fileId}=w600"
+                   srcset="
+                   https://lh3.googleusercontent.com/d/${photo.fileId}=w400 400w,
+                   https://lh3.googleusercontent.com/d/${photo.fileId}=w600 600w,
+                   https://lh3.googleusercontent.com/d/${photo.fileId}=w900 900w
+                   "
+                    sizes="
+                   (max-width: 700px) 100vw,
+                   (max-width: 1200px) 50vw,
+                    300px
+                    "
+                    alt="${this.escapeHtml(photo.name)}"
+                    loading="lazy"
+                    decoding="async">
 
                     </div>
 
