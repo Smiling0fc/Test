@@ -580,7 +580,7 @@ class CollectionView {
                     <div class="photo-preview">
 
                         <img
-                            src="${photo.url}"
+                            src="https://lh3.googleusercontent.com/d/${photo.fileId}=w1600"
                             alt="${this.escapeHtml(
                                 photo.name
                             )}"
