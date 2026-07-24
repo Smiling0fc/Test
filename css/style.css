@@ -259,3 +259,347 @@ nav a:hover{
     max-width:760px;
 
 }
+
+/*==========================
+PUBLIC GALLERY
+==========================*/
+
+.collection-card{
+
+    cursor:pointer;
+
+    outline:none;
+
+}
+
+.collection-card:focus-visible{
+
+    border-radius:28px;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(255,255,255,.55);
+
+}
+
+.collection-cover{
+
+    overflow:hidden;
+
+    aspect-ratio:4 / 3;
+
+    border-radius:18px;
+
+    background:
+        rgba(255,255,255,.08);
+
+}
+
+.collection-cover img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:transform .6s ease;
+
+}
+
+.collection-card:hover
+.collection-cover img{
+
+    transform:scale(1.04);
+
+}
+
+.collection-placeholder{
+
+    width:100%;
+
+    height:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    color:rgba(255,255,255,.7);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.12),
+            rgba(255,255,255,.04)
+        );
+
+}
+
+.collection-card-info{
+
+    padding:0 8px;
+
+}
+
+.collection-count{
+
+    margin-top:8px;
+
+    color:rgba(255,255,255,.7);
+
+    font-size:15px;
+
+}
+
+.gallery-state{
+
+    min-height:70vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:160px 20px 80px;
+
+}
+
+.gallery-message{
+
+    text-align:center;
+
+    padding:35px;
+
+    border-radius:24px;
+
+    background:
+        rgba(255,255,255,.10);
+
+    backdrop-filter:blur(20px);
+
+    border:
+        1px solid
+        rgba(255,255,255,.16);
+
+}
+
+.gallery-message h2{
+
+    margin-bottom:12px;
+
+}
+
+.gallery-message p{
+
+    color:rgba(255,255,255,.72);
+
+    line-height:1.6;
+
+}
+
+.gallery-loader{
+
+    width:42px;
+
+    height:42px;
+
+    margin:0 auto 18px;
+
+    border-radius:50%;
+
+    border:
+        3px solid
+        rgba(255,255,255,.18);
+
+    border-top-color:white;
+
+    animation:
+        gallerySpin .8s linear infinite;
+
+}
+
+@keyframes gallerySpin{
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+.public-collection-view{
+
+    width:min(1500px,92%);
+
+    margin:160px auto 100px;
+
+}
+
+.public-collection-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-end;
+
+    gap:30px;
+
+    margin-bottom:40px;
+
+}
+
+.public-collection-header h1{
+
+    font-size:42px;
+
+}
+
+.public-collection-header p{
+
+    margin-top:8px;
+
+    color:rgba(255,255,255,.7);
+
+}
+
+.public-back-button{
+
+    padding:13px 20px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    border-radius:16px;
+
+    color:white;
+
+    background:
+        rgba(255,255,255,.12);
+
+    backdrop-filter:blur(18px);
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.public-back-button:hover{
+
+    transform:translateY(-2px);
+
+    background:
+        rgba(255,255,255,.18);
+
+}
+
+.public-photo-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(280px,1fr)
+        );
+
+    gap:24px;
+
+}
+
+.public-photo{
+
+    overflow:hidden;
+
+    border-radius:22px;
+
+    background:
+        rgba(255,255,255,.10);
+
+    border:
+        1px solid
+        rgba(255,255,255,.14);
+
+    backdrop-filter:blur(18px);
+
+}
+
+.public-photo img{
+
+    display:block;
+
+    width:100%;
+
+    height:100%;
+
+    aspect-ratio:4 / 3;
+
+    object-fit:cover;
+
+    transition:transform .5s ease;
+
+}
+
+.public-photo:hover img{
+
+    transform:scale(1.025);
+
+}
+
+@media(max-width:700px){
+
+    header{
+
+        padding:0 20px;
+
+    }
+
+    .glass-menu{
+
+        padding:16px 20px;
+
+    }
+
+    nav ul{
+
+        gap:18px;
+
+    }
+
+    .collections{
+
+        grid-template-columns:1fr;
+
+        gap:30px;
+
+        margin-top:140px;
+
+    }
+
+    .public-collection-header{
+
+        align-items:flex-start;
+
+        flex-direction:column-reverse;
+
+    }
+
+    .public-collection-header h1{
+
+        font-size:32px;
+
+    }
+
+    .public-photo-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
