@@ -354,40 +354,52 @@ class CollectionView {
         );
 
     }
+static bindGalleryEvents() {
 
-    static bindGalleryEvents() {
+    const gallery =
+        document.getElementById(
+            "photoGallery"
+        );
 
-        const gallery =
-            document.getElementById(
-                "photoGallery"
+    if (!gallery) {
+        return;
+    }
+
+    gallery.onclick = async event => {
+
+        const coverButton =
+            event.target.closest(
+                ".setCoverButton"
             );
 
-        if (!gallery) {
+        if (coverButton) {
+
+            await this.setCoverPhoto(
+                coverButton.dataset.photoId,
+                coverButton
+            );
+
+            return;
+
+        }
+
+        const deleteButton =
+            event.target.closest(
+                ".deletePhotoButton"
+            );
+
+        if (!deleteButton) {
             return;
         }
 
-        gallery.onclick = async event => {
+        await this.removePhoto(
+            deleteButton.dataset.photoId,
+            deleteButton
+        );
 
-            const deleteButton =
-                event.target.closest(
-                    ".deletePhotoButton"
-                );
+    };
 
-            if (!deleteButton) {
-                return;
-            }
-
-            const photoId =
-                deleteButton.dataset.photoId;
-
-            await this.removePhoto(
-                photoId,
-                deleteButton
-            );
-
-        };
-
-    }
+}
 
     static async addPhotos(files) {
 
@@ -479,7 +491,46 @@ class CollectionView {
         }
 
     }
+static async setCoverPhoto(
+    photoId,
+    button
+) {
 
+    if (!photoId || button.disabled) {
+        return;
+    }
+
+    button.disabled = true;
+
+    const oldText =
+        button.textContent;
+
+    button.textContent = "…";
+
+    try {
+
+        await CollectionService.setCover(
+            this.currentId,
+            photoId
+        );
+
+        this.renderPhotos();
+
+    } catch (error) {
+
+        console.error(error);
+
+        button.disabled = false;
+        button.textContent = oldText;
+
+        alert(
+            error.message ||
+            "Не удалось изменить обложку."
+        );
+
+    }
+
+}
     static async removePhoto(
         photoId,
         button
@@ -541,6 +592,15 @@ class CollectionView {
             PhotoService.getByCollection(
                 this.currentId
             );
+        const collection =
+    CollectionService.getById(
+        this.currentId
+    );
+
+const coverPhotoId =
+    String(
+        collection?.coverPhotoId || ""
+    );
 
         countElement.textContent =
             `${photos.length} ${this.getPhotoWord(
@@ -570,46 +630,89 @@ class CollectionView {
 
         }
 
-        gallery.innerHTML = photos
-            .map(photo => `
+gallery.innerHTML = photos
+    .map(photo => {
 
-                <article
-                    class="photo-card glass"
-                    data-photo-id="${photo.id}">
+        const isCover =
+            String(photo.id) ===
+            coverPhotoId;
 
-                    <div class="photo-preview">
+        return `
+
+            <article
+                class="photo-card glass ${isCover
+                    ? "is-cover"
+                    : ""
+                }"
+                data-photo-id="${photo.id}">
+
+                <div class="photo-preview">
 
                     <img
-                   src="https://lh3.googleusercontent.com/d/${photo.fileId}=w600"
-                   srcset="
-                   https://lh3.googleusercontent.com/d/${photo.fileId}=w400 400w,
-                   https://lh3.googleusercontent.com/d/${photo.fileId}=w600 600w,
-                   https://lh3.googleusercontent.com/d/${photo.fileId}=w900 900w
-                   "
-                    sizes="
-                   (max-width: 700px) 100vw,
-                   (max-width: 1200px) 50vw,
-                    300px
-                    "
-                    alt="${this.escapeHtml(photo.name)}"
-                    loading="lazy"
-                    decoding="async">
+                        src="https://lh3.googleusercontent.com/d/${photo.fileId}=w600"
+                        srcset="
+                            https://lh3.googleusercontent.com/d/${photo.fileId}=w400 400w,
+                            https://lh3.googleusercontent.com/d/${photo.fileId}=w600 600w,
+                            https://lh3.googleusercontent.com/d/${photo.fileId}=w900 900w
+                        "
+                        sizes="
+                            (max-width: 700px) 100vw,
+                            (max-width: 1200px) 50vw,
+                            300px
+                        "
+                        alt="${this.escapeHtml(
+                            photo.name
+                        )}"
+                        loading="lazy"
+                        decoding="async">
 
-                    </div>
+                    ${isCover
+                        ? `
+                            <span class="cover-badge">
+                                Обложка
+                            </span>
+                        `
+                        : ""
+                    }
 
-                    <div class="photo-info">
+                </div>
 
-                        <span
-                            class="photo-name"
-                            title="${this.escapeHtml(
-                                photo.name
-                            )}">
+                <div class="photo-info">
 
-                            ${this.escapeHtml(
-                                photo.name
-                            )}
+                    <span
+                        class="photo-name"
+                        title="${this.escapeHtml(
+                            photo.name
+                        )}">
 
-                        </span>
+                        ${this.escapeHtml(
+                            photo.name
+                        )}
+
+                    </span>
+
+                    <div class="photo-actions">
+
+                        <button
+                            class="setCoverButton ${isCover
+                                ? "is-active"
+                                : ""
+                            }"
+                            data-photo-id="${photo.id}"
+                            type="button"
+                            aria-pressed="${isCover}"
+                            title="${isCover
+                                ? "Текущая обложка"
+                                : "Сделать обложкой"
+                            }"
+                            ${isCover
+                                ? "disabled"
+                                : ""
+                            }>
+
+                            ${isCover ? "★" : "☆"}
+
+                        </button>
 
                         <button
                             class="deletePhotoButton"
@@ -623,10 +726,14 @@ class CollectionView {
 
                     </div>
 
-                </article>
+                </div>
 
-            `)
-            .join("");
+            </article>
+
+        `;
+
+    })
+    .join("");
 
     }
 
