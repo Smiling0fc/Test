@@ -1,0 +1,311 @@
+/* =========================================
+   COLLECTION VIEW
+========================================= */
+
+.public-collection-view {
+    width: min(1480px, calc(100% - 100px));
+    margin: 50px auto 110px;
+}
+
+.public-collection-header {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    align-items: start;
+    gap: 42px;
+    margin-bottom: 54px;
+}
+
+.public-back-button {
+    align-self: start;
+    width: max-content;
+    padding: 11px 0;
+    border: 0;
+    color: var(--text-main);
+    background: none;
+    font-family: var(--sans);
+    font-size: 14px;
+    cursor: pointer;
+    opacity: .72;
+    transition: opacity .25s ease, transform .25s ease;
+}
+
+.public-back-button:hover,
+.public-back-button:focus-visible {
+    opacity: 1;
+    transform: translateX(-4px);
+}
+
+.public-collection-intro {
+    max-width: 760px;
+}
+
+.public-collection-intro h1 {
+    margin: 0;
+    color: var(--text-main);
+    font-family: var(--serif);
+    font-size: clamp(42px, 5vw, 72px);
+    font-weight: 400;
+    line-height: 1.02;
+}
+
+.public-collection-description {
+    max-width: 680px;
+    margin-top: 22px;
+    color: var(--text-muted);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.public-collection-count {
+    display: block;
+    margin-top: 18px;
+    color: var(--text-main);
+    font-family: var(--sans);
+    font-size: 13px;
+    opacity: .56;
+}
+
+/* =========================================
+   PHOTO STREAM
+========================================= */
+
+.public-photo-grid {
+    display: block;
+    width: 100%;
+    column-count: auto;
+    column-width: auto;
+    column-gap: 0;
+}
+
+.photo-masonry {
+    width: 100%;
+    margin-bottom: 24px;
+    column-count: 3;
+    column-gap: 24px;
+}
+
+.public-photo,
+.photo-masonry .public-photo {
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    margin: 0 0 24px;
+    overflow: hidden;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border-radius: 14px;
+    vertical-align: top;
+    cursor: zoom-in;
+    outline: none;
+    background: rgba(218, 202, 184, .32);
+    box-shadow: 0 14px 38px rgba(80, 58, 38, .08);
+    transition: transform .35s ease, box-shadow .35s ease;
+}
+
+.public-photo:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 48px rgba(80, 58, 38, .13);
+}
+
+.public-photo:focus-visible {
+    box-shadow: 0 0 0 3px rgba(184, 148, 108, .35);
+}
+
+.public-photo img,
+.photo-masonry .public-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    border-radius: 14px;
+    aspect-ratio: auto;
+    object-fit: contain;
+    transition: transform .6s ease;
+}
+
+.public-photo:hover img {
+    transform: scale(1.018);
+}
+
+/* =========================================
+   STORY BLOCKS
+========================================= */
+
+.photo-story {
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(260px, .85fr);
+    align-items: center;
+    width: 100%;
+    margin: clamp(54px, 8vw, 110px) 0;
+    gap: clamp(32px, 5vw, 80px);
+    break-inside: auto;
+}
+
+.photo-story.story-right {
+    grid-template-columns: minmax(260px, .85fr) minmax(0, 1.65fr);
+}
+
+.photo-story.story-right .photo-story-image {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.photo-story.story-right .photo-story-text {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.photo-story-image {
+    display: block;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 16px;
+    background: rgba(218, 202, 184, .28);
+    box-shadow: 0 18px 52px rgba(80, 58, 38, .11);
+}
+
+.photo-story-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    border-radius: 16px;
+    aspect-ratio: auto;
+    object-fit: contain;
+}
+
+.photo-story-text {
+    max-width: 440px;
+    padding: clamp(8px, 2vw, 28px);
+}
+
+.photo-story-label {
+    display: block;
+    margin-bottom: 18px;
+    color: var(--text-muted);
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+
+.photo-story-text p {
+    margin: 0;
+    color: var(--text-main);
+    font-family: var(--serif);
+    font-size: clamp(22px, 2.4vw, 36px);
+    line-height: 1.4;
+}
+
+/* =========================================
+   LIGHTBOX
+========================================= */
+
+body.lightbox-open {
+    overflow: hidden;
+}
+
+.photo-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 35px 90px;
+    background: rgba(8, 8, 10, .88);
+    backdrop-filter: blur(24px);
+    animation: lightboxFadeIn .25s ease;
+}
+
+.lightbox-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.lightbox-image {
+    display: block;
+    max-width: 100%;
+    max-height: calc(100vh - 120px);
+    border-radius: 18px;
+    object-fit: contain;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, .4);
+    transition: opacity .2s ease;
+}
+
+.lightbox-image.is-loading {
+    opacity: .35;
+}
+
+.lightbox-caption {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1100px;
+    gap: 25px;
+    padding-top: 16px;
+    color: rgba(255, 255, 255, .78);
+    font-family: var(--sans);
+    font-size: 14px;
+}
+
+.lightbox-close,
+.lightbox-arrow {
+    position: absolute;
+    z-index: 2;
+    border: 1px solid rgba(255, 255, 255, .18);
+    color: white;
+    background: rgba(255, 255, 255, .1);
+    backdrop-filter: blur(18px);
+    cursor: pointer;
+    transition: background .25s ease;
+}
+
+.lightbox-close:hover,
+.lightbox-arrow:hover {
+    background: rgba(255, 255, 255, .2);
+}
+
+.lightbox-close {
+    top: 24px;
+    right: 28px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    font-size: 30px;
+    line-height: 1;
+}
+
+.lightbox-arrow {
+    top: 50%;
+    width: 54px;
+    height: 70px;
+    border-radius: 18px;
+    font-size: 42px;
+    transform: translateY(-50%);
+}
+
+.lightbox-prev {
+    left: 24px;
+}
+
+.lightbox-next {
+    right: 24px;
+}
+
+@keyframes lightboxFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
