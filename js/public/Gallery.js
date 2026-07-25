@@ -429,7 +429,9 @@ class Gallery {
         });
 
     }
-
+this.bindPhotoEvents(
+    photos
+);
     static renderLoading(message) {
 
         this.container.className =
