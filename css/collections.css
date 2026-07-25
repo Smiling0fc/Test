@@ -1,0 +1,134 @@
+/* =========================================
+   COLLECTION LIST
+========================================= */
+
+.collections {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    width: min(1480px, calc(100% - 120px));
+    margin: 70px auto 110px;
+    column-gap: 48px;
+    row-gap: 72px;
+}
+
+.collection-card,
+.collection-card.small,
+.collection-card.medium,
+.collection-card.large {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    cursor: pointer;
+    outline: none;
+    transition: transform .35s ease;
+}
+
+.collection-card:hover {
+    transform: translateY(-4px);
+}
+
+.collection-card:focus-visible {
+    border-radius: var(--card-radius);
+    box-shadow: 0 0 0 3px rgba(184, 148, 108, .35);
+}
+
+.collection-heading {
+    min-height: 105px;
+    padding: 0 8px 22px;
+}
+
+.collection-title {
+    margin: 0 0 12px;
+    color: var(--text-main);
+    font-family: var(--serif);
+    font-size: clamp(30px, 2.5vw, 46px);
+    font-weight: 400;
+    line-height: 1.08;
+}
+
+.collection-description {
+    max-width: 620px;
+    min-height: 24px;
+    color: var(--text-muted);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+.collection-glass {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--card-radius);
+    background: rgba(221, 205, 187, .28);
+    box-shadow: 0 16px 40px rgba(80, 58, 38, .09);
+}
+
+.collection-cover {
+    width: 100%;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--card-radius);
+    background: rgba(216, 198, 180, .35);
+}
+
+.collection-cover img,
+.collection-glass img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    object-fit: cover;
+    transition: transform .65s ease;
+}
+
+.collection-card:hover .collection-cover img,
+.collection-card:hover .collection-glass img {
+    transform: scale(1.025);
+}
+
+.collection-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    color: var(--text-muted);
+    background: linear-gradient(135deg, rgba(255, 255, 255, .28), rgba(255, 255, 255, .08));
+    font-family: var(--sans);
+    text-align: center;
+}
+
+.collection-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 72px;
+    padding: 18px 14px 16px;
+    border-bottom: 1px solid var(--line);
+}
+
+.collection-count {
+    margin: 0;
+    color: var(--text-main);
+    font-family: var(--sans);
+    font-size: 15px;
+}
+
+.collection-arrow {
+    color: var(--text-main);
+    font-family: var(--sans);
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 1;
+    transition: transform .3s ease;
+}
+
+.collection-card:hover .collection-arrow {
+    transform: translateX(7px);
+}
