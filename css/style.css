@@ -2365,3 +2365,73 @@ nav a:hover::after{
     }
 
 }
+/* =========================================
+   STORY STREAM COLUMN FIX
+========================================= */
+
+.public-collection-view
+.public-photo-grid{
+
+    display:block;
+
+    column-count:auto;
+    column-width:auto;
+    column-gap:0;
+
+}
+
+.public-collection-view
+.photo-masonry{
+
+    display:block;
+
+    column-count:3;
+    column-gap:24px;
+
+    width:100%;
+
+}
+
+.public-collection-view
+.photo-story{
+
+    width:100%;
+
+    break-inside:auto;
+
+    column-span:none;
+
+}
+
+.public-collection-view
+.photo-story-image{
+
+    display:block;
+
+    width:100%;
+
+    margin:0;
+
+}
+
+@media(max-width:1050px){
+
+    .public-collection-view
+    .photo-masonry{
+
+        column-count:2;
+
+    }
+
+}
+
+@media(max-width:700px){
+
+    .public-collection-view
+    .photo-masonry{
+
+        column-count:1;
+
+    }
+
+}
