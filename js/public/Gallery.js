@@ -105,8 +105,14 @@ class Gallery {
                             collection.id
                         );
 
-                    const cover =
-                        photos[0] || null;
+        const cover =
+                    photos.find(
+                    photo =>
+                            String(photo.id) ===
+                               String(
+                               collection.coverPhotoId || ""
+                                                    )
+                               ) || photos[0] || null;;
 
                     const coverMarkup =
                         cover
