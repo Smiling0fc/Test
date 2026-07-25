@@ -1,0 +1,78 @@
+/* =========================================
+   FOUNDATION
+========================================= */
+
+:root {
+    --page-bg: #eee4d7;
+    --surface: rgba(255, 248, 239, .76);
+    --surface-strong: rgba(255, 249, 242, .9);
+    --text-main: #3d342c;
+    --text-muted: #8e8175;
+    --line: rgba(91, 70, 51, .12);
+    --accent: #b8946c;
+    --page-radius: 26px;
+    --card-radius: 22px;
+    --sans: Arial, Helvetica, sans-serif;
+    --serif: Georgia, "Times New Roman", serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: var(--text-main);
+    background: linear-gradient(135deg, #eadfce 0%, #f3eadf 48%, #e8dccb 100%);
+    font-family: var(--serif);
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 20px 24px;
+    z-index: -1;
+    pointer-events: none;
+    border: 1px solid rgba(255, 255, 255, .58);
+    border-radius: var(--page-radius);
+    background: var(--surface);
+    box-shadow: 0 18px 60px rgba(85, 64, 43, .12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+button,
+a,
+input,
+textarea {
+    font: inherit;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.background {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+        radial-gradient(circle at 20% 5%, rgba(255, 250, 242, .95), transparent 36%),
+        radial-gradient(circle at 82% 12%, rgba(246, 226, 205, .7), transparent 38%),
+        linear-gradient(180deg, rgba(255, 248, 239, .82), rgba(238, 226, 210, .55));
+}
+
+.background::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .18), transparent);
+}
