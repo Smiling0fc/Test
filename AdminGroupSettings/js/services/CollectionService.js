@@ -104,7 +104,61 @@ class CollectionService {
         return response.collection;
 
     }
+static async updateDetails(
+    id,
+    data
+) {
 
+    const collectionId =
+        String(id);
+
+    const name =
+        String(
+            data.name || ""
+        ).trim();
+
+    const description =
+        String(
+            data.description || ""
+        ).trim();
+
+    if (!name) {
+        throw new Error(
+            "Введите название коллекции."
+        );
+    }
+
+    const response =
+        await ApiService.updateCollection(
+            collectionId,
+            {
+                name,
+                description
+            }
+        );
+
+    const updatedCollection =
+        response.collection;
+
+    const index =
+        this.collections.findIndex(
+            collection =>
+                collection.id ===
+                collectionId
+        );
+
+    if (index !== -1) {
+
+        this.collections[index] = {
+            ...this.collections[index],
+            ...updatedCollection
+        };
+
+    }
+
+    return updatedCollection;
+
+}
     static async remove(id) {
 
         const collectionId = String(id);
