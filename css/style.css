@@ -878,3 +878,563 @@ body.lightbox-open{
     }
 
 }
+/* =========================================
+   PUBLIC DESIGN 0.4
+========================================= */
+
+:root{
+
+    --page-background:#eee4d7;
+    --page-surface:rgba(255,248,239,.76);
+    --page-surface-strong:rgba(255,249,242,.9);
+
+    --text-main:#3d342c;
+    --text-muted:#8e8175;
+
+    --line:rgba(91,70,51,.12);
+    --accent:#b8946c;
+
+    --page-radius:26px;
+    --card-radius:20px;
+
+}
+
+/* Общая подложка */
+
+body{
+
+    min-height:100vh;
+
+    color:var(--text-main);
+
+    background:
+        linear-gradient(
+            135deg,
+            #eadfce 0%,
+            #f3eadf 48%,
+            #e8dccb 100%
+        );
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+}
+
+/* Мягкий верхний background-hover */
+
+.background{
+
+    position:fixed;
+
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    background:
+        radial-gradient(
+            circle at 20% 5%,
+            rgba(255,250,242,.95),
+            transparent 36%
+        ),
+        radial-gradient(
+            circle at 82% 12%,
+            rgba(246,226,205,.7),
+            transparent 38%
+        ),
+        linear-gradient(
+            180deg,
+            rgba(255,248,239,.82),
+            rgba(238,226,210,.55)
+        );
+
+    z-index:-2;
+
+}
+
+/* Убираем старое затемнение */
+
+.background::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.18),
+            rgba(255,255,255,0)
+        );
+
+}
+
+/* Светлая центральная поверхность */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    top:20px;
+    left:24px;
+    right:24px;
+    bottom:20px;
+
+    border-radius:var(--page-radius);
+
+    background:
+        var(--page-surface);
+
+    border:
+        1px solid rgba(255,255,255,.58);
+
+    box-shadow:
+        0 18px 60px
+        rgba(85,64,43,.12);
+
+    backdrop-filter:
+        blur(20px);
+
+    -webkit-backdrop-filter:
+        blur(20px);
+
+    pointer-events:none;
+
+    z-index:-1;
+
+}
+
+/* Header */
+
+header{
+
+    position:relative;
+
+    top:auto;
+    left:auto;
+
+    width:min(1480px, calc(100% - 80px));
+
+    margin:20px auto 0;
+
+    padding:22px 24px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    z-index:20;
+
+}
+
+/* Логотип слева */
+
+.logo{
+
+    flex:0 0 auto;
+
+}
+
+.logo img{
+
+    height:64px;
+
+    width:auto;
+
+    object-fit:contain;
+
+    filter:
+        sepia(.25)
+        saturate(.55)
+        contrast(.85);
+
+}
+
+/* Меню полностью справа */
+
+.glass-menu{
+
+    margin-left:auto;
+
+    padding:14px 20px;
+
+    background:
+        rgba(255,249,242,.44);
+
+    border:
+        1px solid rgba(91,70,51,.08);
+
+    border-radius:18px;
+
+    box-shadow:none;
+
+    backdrop-filter:
+        blur(16px);
+
+    -webkit-backdrop-filter:
+        blur(16px);
+
+}
+
+nav ul{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    align-items:center;
+
+    gap:34px;
+
+}
+
+nav a{
+
+    position:relative;
+
+    color:var(--text-main);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size:14px;
+
+    font-weight:500;
+
+}
+
+nav a::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    right:0;
+    bottom:-8px;
+
+    height:1px;
+
+    background:var(--accent);
+
+    transform:scaleX(0);
+
+    transform-origin:center;
+
+    transition:.25s;
+
+}
+
+nav a:hover{
+
+    opacity:1;
+
+}
+
+nav a:hover::after{
+
+    transform:scaleX(1);
+
+}
+
+/* Выпадающее меню */
+
+.dropdown-menu{
+
+    top:34px;
+
+    padding:10px;
+
+    background:
+        rgba(255,249,242,.94);
+
+    border:
+        1px solid var(--line);
+
+    box-shadow:
+        0 16px 40px
+        rgba(82,60,40,.12);
+
+}
+
+.dropdown-menu li{
+
+    padding:10px 14px;
+
+}
+
+.dropdown-menu li:hover{
+
+    background:
+        rgba(184,148,108,.10);
+
+}
+
+/* Контейнер коллекций */
+
+.collections{
+
+    width:min(1420px, calc(100% - 100px));
+
+    margin:70px auto 100px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap:
+        56px 28px;
+
+    align-items:start;
+
+}
+
+/* Карточка */
+
+.collection-card,
+.collection-card.small,
+.collection-card.medium,
+.collection-card.large{
+
+    width:100%;
+
+    max-width:none;
+
+    min-width:0;
+
+    cursor:pointer;
+
+    transition:
+        transform .35s ease;
+
+}
+
+.collection-card:hover{
+
+    transform:
+        translateY(-5px);
+
+}
+
+.collection-glass{
+
+    display:block;
+
+    width:100%;
+
+    padding:0;
+
+    overflow:hidden;
+
+    border-radius:var(--card-radius);
+
+    background:
+        var(--page-surface-strong);
+
+    border:
+        1px solid rgba(91,70,51,.10);
+
+    box-shadow:
+        0 14px 38px
+        rgba(80,58,38,.10);
+
+    backdrop-filter:none;
+
+}
+
+.collection-cover{
+
+    width:100%;
+
+    aspect-ratio:4 / 3;
+
+    overflow:hidden;
+
+    background:
+        rgba(216,198,180,.35);
+
+}
+
+.collection-glass img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    border-radius:0;
+
+    transition:
+        transform .65s ease;
+
+}
+
+.collection-card:hover
+.collection-glass img{
+
+    transform:
+        scale(1.025);
+
+}
+
+/* Информация под обложкой */
+
+.collection-card-info{
+
+    padding:
+        18px 6px 0;
+
+}
+
+.collection-title{
+
+    margin:0 0 8px;
+
+    color:var(--text-main);
+
+    font-size:
+        clamp(24px, 2vw, 34px);
+
+    font-weight:400;
+
+    line-height:1.1;
+
+}
+
+.collection-count{
+
+    color:var(--text-muted);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size:14px;
+
+}
+
+/* Состояния загрузки */
+
+.gallery-state,
+.gallery-message{
+
+    color:var(--text-main);
+
+}
+
+.public-back-button{
+
+    color:var(--text-main);
+
+    border:
+        1px solid var(--line);
+
+    background:
+        rgba(255,249,242,.72);
+
+}
+
+/* Адаптив */
+
+@media(max-width:900px){
+
+    body::before{
+
+        left:10px;
+        right:10px;
+        top:10px;
+        bottom:10px;
+
+        border-radius:20px;
+
+    }
+
+    header{
+
+        width:calc(100% - 28px);
+
+        padding:
+            18px 12px;
+
+    }
+
+    .logo img{
+
+        height:50px;
+
+    }
+
+    .glass-menu{
+
+        padding:12px 14px;
+
+    }
+
+    nav ul{
+
+        gap:18px;
+
+    }
+
+    nav a{
+
+        font-size:13px;
+
+    }
+
+    .collections{
+
+        width:calc(100% - 40px);
+
+        margin-top:45px;
+
+        grid-template-columns:1fr;
+
+        gap:44px;
+
+    }
+
+}
+
+@media(max-width:650px){
+
+    header{
+
+        align-items:flex-start;
+
+    }
+
+    .glass-menu{
+
+        max-width:72%;
+
+        overflow-x:auto;
+
+    }
+
+    nav ul{
+
+        width:max-content;
+
+    }
+
+    .collection-cover{
+
+        aspect-ratio:1 / 1;
+
+    }
+
+}
