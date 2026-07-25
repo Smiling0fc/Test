@@ -382,7 +382,20 @@ static bindGalleryEvents() {
             return;
 
         }
+const editButton =
+    event.target.closest(
+        ".editPhotoButton"
+    );
 
+if (editButton) {
+
+    this.openPhotoEditor(
+        editButton.dataset.photoId
+    );
+
+    return;
+
+}
         const deleteButton =
             event.target.closest(
                 ".deletePhotoButton"
@@ -529,6 +542,363 @@ static async setCoverPhoto(
         );
 
     }
+
+}
+    static openPhotoEditor(photoId) {
+
+    const photo =
+        PhotoService.getById(
+            this.currentId,
+            photoId
+        );
+
+    if (!photo) {
+        return;
+    }
+
+    const oldOverlay =
+        document.querySelector(
+            ".photo-editor-overlay"
+        );
+
+    if (oldOverlay) {
+        oldOverlay.remove();
+    }
+
+    const overlay =
+        document.createElement("div");
+
+    overlay.className =
+        "photo-editor-overlay";
+
+    overlay.innerHTML = `
+
+        <div
+            class="photo-editor glass"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="photoEditorTitle">
+
+            <div class="photo-editor-header">
+
+                <div>
+
+                    <span class="editor-kicker">
+                        Фотография
+                    </span>
+
+                    <h2 id="photoEditorTitle">
+                        Редактирование
+                    </h2>
+
+                </div>
+
+                <button
+                    class="photo-editor-close"
+                    type="button"
+                    aria-label="Закрыть">
+
+                    ×
+
+                </button>
+
+            </div>
+
+            <div class="photo-editor-preview">
+
+                <img
+                    src="https://lh3.googleusercontent.com/d/${photo.fileId}=w900"
+                    alt="${this.escapeHtml(
+                        photo.name
+                    )}">
+
+            </div>
+
+            <form id="photoEditorForm">
+
+                <label class="editor-field">
+
+                    <span>
+                        Описание
+                    </span>
+
+                    <textarea
+                        id="photoDescriptionInput"
+                        maxlength="1200"
+                        rows="6"
+                        placeholder="Расскажите историю этого кадра"></textarea>
+
+                    <small>
+                        До 1200 символов
+                    </small>
+
+                </label>
+
+                <fieldset class="photo-layout-options">
+
+                    <legend>
+                        Расположение
+                    </legend>
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="photoLayout"
+                            value="default">
+
+                        <span>
+                            Обычная фотография
+                        </span>
+
+                    </label>
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="photoLayout"
+                            value="story-left">
+
+                        <span>
+                            Фото слева, текст справа
+                        </span>
+
+                    </label>
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="photoLayout"
+                            value="story-right">
+
+                        <span>
+                            Текст слева, фото справа
+                        </span>
+
+                    </label>
+
+                </fieldset>
+
+                <div class="photo-editor-note">
+
+                    При пустом описании фотография
+                    автоматически вернётся в обычную сетку.
+
+                </div>
+
+                <div class="photo-editor-actions">
+
+                    <button
+                        class="secondaryButton photo-editor-cancel"
+                        type="button">
+
+                        Отмена
+
+                    </button>
+
+                    <button
+                        class="primaryButton photo-editor-save"
+                        type="submit">
+
+                        Сохранить
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    `;
+
+    document.body.appendChild(
+        overlay
+    );
+
+    document.body.classList.add(
+        "editor-open"
+    );
+
+    const form =
+        overlay.querySelector(
+            "#photoEditorForm"
+        );
+
+    const descriptionInput =
+        overlay.querySelector(
+            "#photoDescriptionInput"
+        );
+
+    const saveButton =
+        overlay.querySelector(
+            ".photo-editor-save"
+        );
+
+    descriptionInput.value =
+        photo.description || "";
+
+    const currentLayout =
+        [
+            "default",
+            "story-left",
+            "story-right"
+        ].includes(photo.layout)
+            ? photo.layout
+            : "default";
+
+    const checkedInput =
+        overlay.querySelector(
+            `input[name="photoLayout"][value="${currentLayout}"]`
+        );
+
+    if (checkedInput) {
+        checkedInput.checked = true;
+    }
+
+    const closeEditor = () => {
+
+        document.removeEventListener(
+            "keydown",
+            handleKeyboard
+        );
+
+        document.body.classList.remove(
+            "editor-open"
+        );
+
+        overlay.remove();
+
+    };
+
+    const handleKeyboard = event => {
+
+        if (event.key === "Escape") {
+            closeEditor();
+        }
+
+    };
+
+    overlay
+        .querySelector(
+            ".photo-editor-close"
+        )
+        .addEventListener(
+            "click",
+            closeEditor
+        );
+
+    overlay
+        .querySelector(
+            ".photo-editor-cancel"
+        )
+        .addEventListener(
+            "click",
+            closeEditor
+        );
+
+    overlay.addEventListener(
+        "click",
+        event => {
+
+            if (event.target === overlay) {
+                closeEditor();
+            }
+
+        }
+    );
+
+    form.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+            const description =
+                descriptionInput
+                    .value
+                    .trim();
+
+            const layoutInput =
+                form.querySelector(
+                    'input[name="photoLayout"]:checked'
+                );
+
+            const layout =
+                description
+                    ? String(
+                        layoutInput?.value ||
+                        "default"
+                    )
+                    : "default";
+
+            saveButton.disabled = true;
+            saveButton.textContent =
+                "Сохраняем...";
+
+            try {
+
+                await PhotoService.update(
+                    this.currentId,
+                    photo.id,
+                    {
+                        description,
+                        layout
+                    }
+                );
+
+                closeEditor();
+
+                this.renderPhotos();
+
+            } catch (error) {
+
+                console.error(error);
+
+                saveButton.disabled = false;
+                saveButton.textContent =
+                    "Сохранить";
+
+                alert(
+                    error.message ||
+                    "Не удалось сохранить фотографию."
+                );
+
+            }
+
+        }
+    );
+
+    document.addEventListener(
+        "keydown",
+        handleKeyboard
+    );
+
+    requestAnimationFrame(
+        () => descriptionInput.focus()
+    );
+
+}
+
+static getPhotoLayoutLabel(layout) {
+
+    const labels = {
+
+        "default":
+            "Обычная сетка",
+
+        "story-left":
+            "Фото слева",
+
+        "story-right":
+            "Фото справа"
+
+    };
+
+    return labels[layout] ||
+        labels.default;
 
 }
     static async removePhoto(
@@ -690,7 +1060,30 @@ gallery.innerHTML = photos
                         )}
 
                     </span>
+${photo.description
+    ? `
+        <p class="photo-description-preview">
 
+            ${this.escapeHtml(
+                photo.description
+            )}
+
+        </p>
+
+        <span class="photo-layout-badge">
+
+            ${this.getPhotoLayoutLabel(
+                photo.layout
+            )}
+
+        </span>
+    `
+    : `
+        <p class="photo-description-empty">
+            Описание не добавлено
+        </p>
+    `
+}
                     <div class="photo-actions">
 
                         <button
@@ -713,7 +1106,15 @@ gallery.innerHTML = photos
                             ${isCover ? "★" : "☆"}
 
                         </button>
+<button
+    class="editPhotoButton"
+    data-photo-id="${photo.id}"
+    type="button"
+    title="Редактировать фотографию">
 
+    ✏️
+
+</button>
                         <button
                             class="deletePhotoButton"
                             data-photo-id="${photo.id}"
