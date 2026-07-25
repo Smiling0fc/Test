@@ -278,7 +278,204 @@ class Gallery {
         };
 
     }
+static renderPhotoStream(photos) {
 
+    const sections = [];
+
+    let regularPhotos = [];
+
+    const flushRegularPhotos = () => {
+
+        if (regularPhotos.length === 0) {
+            return;
+        }
+
+        sections.push(`
+
+            <div class="photo-masonry">
+
+                ${regularPhotos
+                    .map(photo =>
+                        this.renderRegularPhoto(
+                            photo
+                        )
+                    )
+                    .join("")
+                }
+
+            </div>
+
+        `);
+
+        regularPhotos = [];
+
+    };
+
+    photos.forEach(photo => {
+
+        const description =
+            String(
+                photo.description || ""
+            ).trim();
+
+        const isStory =
+            description &&
+            [
+                "story-left",
+                "story-right"
+            ].includes(
+                photo.layout
+            );
+
+        if (!isStory) {
+
+            regularPhotos.push(
+                photo
+            );
+
+            return;
+
+        }
+
+        flushRegularPhotos();
+
+        sections.push(
+            this.renderStoryPhoto(
+                photo
+            )
+        );
+
+    });
+
+    flushRegularPhotos();
+
+    return sections.join("");
+
+}
+    static renderRegularPhoto(photo) {
+
+    return `
+
+        <figure
+            class="public-photo"
+            data-photo-id="${photo.id}"
+            data-file-id="${photo.fileId}"
+            data-photo-name="${this.escapeHtml(
+                photo.name
+            )}"
+            tabindex="0"
+            role="button">
+
+            <img
+                src="${GalleryService.getThumbnailUrl(
+                    photo.fileId,
+                    900
+                )}"
+                srcset="
+                    ${GalleryService.getThumbnailUrl(
+                        photo.fileId,
+                        500
+                    )} 500w,
+                    ${GalleryService.getThumbnailUrl(
+                        photo.fileId,
+                        900
+                    )} 900w,
+                    ${GalleryService.getThumbnailUrl(
+                        photo.fileId,
+                        1600
+                    )} 1600w
+                "
+                sizes="
+                    (max-width: 700px) 100vw,
+                    (max-width: 1200px) 50vw,
+                    33vw
+                "
+                alt="${this.escapeHtml(
+                    photo.name
+                )}"
+                loading="lazy"
+                decoding="async">
+
+        </figure>
+
+    `;
+
+}
+    static renderStoryPhoto(photo) {
+
+    const layout =
+        photo.layout ===
+            "story-right"
+            ? "story-right"
+            : "story-left";
+
+    return `
+
+        <article
+            class="photo-story ${layout}">
+
+            <figure
+                class="public-photo photo-story-image"
+                data-photo-id="${photo.id}"
+                data-file-id="${photo.fileId}"
+                data-photo-name="${this.escapeHtml(
+                    photo.name
+                )}"
+                tabindex="0"
+                role="button">
+
+                <img
+                    src="${GalleryService.getThumbnailUrl(
+                        photo.fileId,
+                        1600
+                    )}"
+                    srcset="
+                        ${GalleryService.getThumbnailUrl(
+                            photo.fileId,
+                            900
+                        )} 900w,
+                        ${GalleryService.getThumbnailUrl(
+                            photo.fileId,
+                            1600
+                        )} 1600w,
+                        ${GalleryService.getThumbnailUrl(
+                            photo.fileId,
+                            2200
+                        )} 2200w
+                    "
+                    sizes="
+                        (max-width: 700px) 100vw,
+                        65vw
+                    "
+                    alt="${this.escapeHtml(
+                        photo.name
+                    )}"
+                    loading="lazy"
+                    decoding="async">
+
+            </figure>
+
+            <div class="photo-story-text">
+
+                <span class="photo-story-label">
+                    История кадра
+                </span>
+
+                <p>
+
+                    ${this.escapeHtml(
+                        photo.description
+                    )}
+
+                </p>
+
+            </div>
+
+        </article>
+
+    `;
+
+}
 static openCollection(collectionId) {
 
     const collection =
@@ -356,71 +553,26 @@ static openCollection(collectionId) {
 
         </div>
 
-        <div class="public-photo-grid">
+<div class="public-photo-grid">
 
-            ${photos.length > 0
-                ? photos
-                    .map(photo => `
+    ${photos.length > 0
+        ? this.renderPhotoStream(
+            photos
+        )
+        : `
 
-                        <figure
-                            class="public-photo"
-                            data-photo-id="${photo.id}"
-                            data-file-id="${photo.fileId}"
-                            data-photo-name="${this.escapeHtml(
-                                photo.name
-                            )}"
-                            tabindex="0"
-                            role="button">
+            <div class="gallery-message">
 
-                            <img
-                                src="${GalleryService.getThumbnailUrl(
-                                    photo.fileId,
-                                    900
-                                )}"
-                                srcset="
-                                    ${GalleryService.getThumbnailUrl(
-                                        photo.fileId,
-                                        500
-                                    )} 500w,
-                                    ${GalleryService.getThumbnailUrl(
-                                        photo.fileId,
-                                        900
-                                    )} 900w,
-                                    ${GalleryService.getThumbnailUrl(
-                                        photo.fileId,
-                                        1600
-                                    )} 1600w
-                                "
-                                sizes="
-                                    (max-width: 700px) 100vw,
-                                    (max-width: 1200px) 50vw,
-                                    33vw
-                                "
-                                alt="${this.escapeHtml(
-                                    photo.name
-                                )}"
-                                loading="lazy"
-                                decoding="async">
+                <h2>
+                    В этой коллекции пока нет фотографий
+                </h2>
 
-                        </figure>
+            </div>
 
-                    `)
-                    .join("")
-                : `
+        `
+    }
 
-                    <div class="gallery-message">
-
-                        <h2>
-                            В этой коллекции пока нет фотографий
-                        </h2>
-
-                    </div>
-
-                `
-            }
-
-        </div>
-
+</div>
     `;
 
     document
