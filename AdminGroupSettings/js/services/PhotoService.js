@@ -144,7 +144,72 @@ class PhotoService {
         return uploaded;
 
     }
+static getById(
+    collectionId,
+    photoId
+) {
 
+    return this
+        .getByCollection(
+            collectionId
+        )
+        .find(
+            photo =>
+                String(photo.id) ===
+                String(photoId)
+        ) || null;
+
+}
+
+static async update(
+    collectionId,
+    photoId,
+    data
+) {
+
+    const collectionKey =
+        String(collectionId);
+
+    const id =
+        String(photoId);
+
+    const response =
+        await ApiService.updatePhoto(
+            id,
+            data
+        );
+
+    const updatedPhoto =
+        response.photo;
+
+    const photos =
+        this.getByCollection(
+            collectionKey
+        );
+
+    const index =
+        photos.findIndex(
+            photo =>
+                String(photo.id) === id
+        );
+
+    if (index !== -1) {
+
+        photos[index] = {
+            ...photos[index],
+            ...updatedPhoto
+        };
+
+        this.photos.set(
+            collectionKey,
+            photos
+        );
+
+    }
+
+    return updatedPhoto;
+
+}
     static async remove(
         collectionId,
         photoId
