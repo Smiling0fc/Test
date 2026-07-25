@@ -216,4 +216,18 @@ static deletePhoto(photoId) {
     );
 
 }
+    static updatePhoto(
+    photoId,
+    data
+) {
+
+    return this.post(
+        "updatePhoto",
+        {
+            photoId,
+            ...data
+        }
+    );
+
+}
 }
