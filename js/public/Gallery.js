@@ -359,33 +359,6 @@ class Gallery {
         decoding="async">
 
 </figure>
-                                    srcset="
-                                        ${GalleryService.getThumbnailUrl(
-                                            photo.fileId,
-                                            500
-                                        )} 500w,
-                                        ${GalleryService.getThumbnailUrl(
-                                            photo.fileId,
-                                            900
-                                        )} 900w,
-                                        ${GalleryService.getThumbnailUrl(
-                                            photo.fileId,
-                                            1600
-                                        )} 1600w
-                                    "
-                                    sizes="
-                                        (max-width: 700px) 100vw,
-                                        (max-width: 1200px) 50vw,
-                                        33vw
-                                    "
-                                    alt="${this.escapeHtml(
-                                        photo.name
-                                    )}"
-                                    loading="lazy"
-                                    decoding="async">
-
-                            </figure>
-
                         `)
                         .join("")
                     : `
