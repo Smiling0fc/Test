@@ -202,4 +202,18 @@ static deletePhoto(photoId) {
     );
 
 }
+    static setCollectionCover(
+    collectionId,
+    photoId
+) {
+
+    return this.post(
+        "setCollectionCover",
+        {
+            collectionId,
+            photoId
+        }
+    );
+
+}
 }
