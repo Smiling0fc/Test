@@ -120,7 +120,40 @@ class CollectionService {
             );
 
     }
+static async setCover(
+    collectionId,
+    photoId
+) {
 
+    const id =
+        String(collectionId);
+
+    const coverPhotoId =
+        String(photoId);
+
+    const response =
+        await ApiService
+            .setCollectionCover(
+                id,
+                coverPhotoId
+            );
+
+    const collection =
+        this.getById(id);
+
+    if (collection) {
+
+        collection.coverPhotoId =
+            String(
+                response.coverPhotoId ||
+                coverPhotoId
+            );
+
+    }
+
+    return collection;
+
+}
     static sort() {
 
         this.collections.sort(
