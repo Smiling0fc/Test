@@ -10,8 +10,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 
 </head>
@@ -22,10 +21,8 @@
 
 <header>
 
-    <a class="logo" href="./" aria-label="ViJoy’s Photo Gallery, на главную">
-        <img
-            src="images/brand/vijoys-logo.svg"
-            alt="ViJoy’s Photo Gallery">
+    <a class="logo" href="./" aria-label="ViJoy’s Photo Gallery">
+        <img src="images/brand/vijoys-logo.svg" alt="ViJoy’s Photo Gallery">
     </a>
 
     <nav class="glass-menu">
@@ -47,8 +44,8 @@
             </li>
 
             <li><a href="#collections">Примеры работ</a></li>
-            <li><a href="#">Контакты</a></li>
             <li><a href="#">Блог</a></li>
+            <li><a href="#" class="contact-link">Связаться <span aria-hidden="true">→</span></a></li>
 
         </ul>
 
@@ -58,6 +55,24 @@
 
 <main>
 
+    <section class="collections-intro" aria-labelledby="collectionsTitle">
+
+        <div>
+            <p class="collections-kicker">Портфолио</p>
+            <h1 id="collectionsTitle">Коллекции</h1>
+            <p class="collections-lead">
+                Истории в каждом кадре. Выберите коллекцию
+                и погрузитесь в атмосферу момента.
+            </p>
+        </div>
+
+        <div class="collections-index" aria-hidden="true">
+            <span>Авторские истории</span>
+            <i></i>
+        </div>
+
+    </section>
+
     <section
         id="collections"
         class="collections">
@@ -65,10 +80,7 @@
 
 </main>
 
-<!--<script src="js/configLoader.js"></script>-->
 <script src="js/menu.js"></script>
-<!--<script src="js/script.js"></script>-->
-
 <script src="js/publicConfig.js"></script>
 <script src="js/public/PublicApi.js"></script>
 <script src="js/public/GalleryService.js"></script>
