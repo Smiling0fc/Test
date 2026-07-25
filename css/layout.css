@@ -1,0 +1,151 @@
+/* =========================================
+   HEADER AND NAVIGATION
+========================================= */
+
+header {
+    position: relative;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: min(1480px, calc(100% - 80px));
+    margin: 20px auto 0;
+    padding: 22px 24px;
+}
+
+.logo {
+    flex: 0 0 auto;
+}
+
+.logo img {
+    display: block;
+    width: auto;
+    height: 64px;
+    object-fit: contain;
+    filter: sepia(.25) saturate(.55) contrast(.85);
+}
+
+.glass-menu {
+    margin-left: auto;
+    padding: 14px 20px;
+    border: 1px solid rgba(91, 70, 51, .08);
+    border-radius: 18px;
+    background: rgba(255, 249, 242, .44);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+nav ul {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 34px;
+    list-style: none;
+}
+
+nav li {
+    position: relative;
+}
+
+nav a {
+    position: relative;
+    color: var(--text-main);
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+nav a::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -8px;
+    left: 0;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform .25s ease;
+}
+
+nav a:hover::after,
+nav a:focus-visible::after {
+    transform: scaleX(1);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 34px;
+    left: 0;
+    display: none;
+    min-width: 190px;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: rgba(255, 249, 242, .95);
+    box-shadow: 0 16px 40px rgba(82, 60, 40, .12);
+    backdrop-filter: blur(16px);
+}
+
+.dropdown-menu li {
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+
+.dropdown-menu li:hover {
+    background: rgba(184, 148, 108, .1);
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown:focus-within .dropdown-menu {
+    display: block;
+}
+
+/* =========================================
+   LOADING AND EMPTY STATES
+========================================= */
+
+.gallery-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    padding: 100px 20px 80px;
+}
+
+.gallery-message {
+    padding: 35px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    color: var(--text-main);
+    background: rgba(255, 249, 242, .72);
+    backdrop-filter: blur(20px);
+    text-align: center;
+}
+
+.gallery-message h2 {
+    margin-bottom: 12px;
+}
+
+.gallery-message p {
+    color: var(--text-muted);
+    font-family: var(--sans);
+    line-height: 1.6;
+}
+
+.gallery-loader {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 18px;
+    border: 3px solid rgba(91, 70, 51, .14);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: gallerySpin .8s linear infinite;
+}
+
+@keyframes gallerySpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
