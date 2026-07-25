@@ -378,34 +378,36 @@ class Gallery {
 
         `;
 
-        document
-            .getElementById(
-                "backToCollections"
-            )
-            .addEventListener(
-                "click",
-                () => {
+document
+    .getElementById(
+        "backToCollections"
+    )
+    .addEventListener(
+        "click",
+        () => {
 
-                    this.renderCollections();
+            this.renderCollections();
 
-                    window.scrollTo({
-                        top: 0,
-                        behavior: "smooth"
-                    });
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
 
-                }
-            );
+        }
+    );
+
 this.bindPhotoEvents(
     photos
 );
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
 
-    }
+window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+});
 
-    static renderLoading(message) {
+}
+
+static renderLoading(message) {
 
         this.container.className =
             "gallery-state";
