@@ -322,13 +322,43 @@ class Gallery {
                     ? photos
                         .map(photo => `
 
-                            <figure class="public-photo">
+<figure
+    class="public-photo"
+    data-photo-id="${photo.id}"
+    data-file-id="${photo.fileId}"
+    data-photo-name="${this.escapeHtml(photo.name)}"
+    tabindex="0"
+    role="button">
 
-                                <img
-                                    src="${GalleryService.getThumbnailUrl(
-                                        photo.fileId,
-                                        900
-                                    )}"
+    <img
+        src="${GalleryService.getThumbnailUrl(
+            photo.fileId,
+            900
+        )}"
+        srcset="
+            ${GalleryService.getThumbnailUrl(
+                photo.fileId,
+                500
+            )} 500w,
+            ${GalleryService.getThumbnailUrl(
+                photo.fileId,
+                900
+            )} 900w,
+            ${GalleryService.getThumbnailUrl(
+                photo.fileId,
+                1600
+            )} 1600w
+        "
+        sizes="
+            (max-width: 700px) 100vw,
+            (max-width: 1200px) 50vw,
+            33vw
+        "
+        alt="${this.escapeHtml(photo.name)}"
+        loading="lazy"
+        decoding="async">
+
+</figure>
                                     srcset="
                                         ${GalleryService.getThumbnailUrl(
                                             photo.fileId,
