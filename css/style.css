@@ -2015,3 +2015,92 @@ nav a:hover::after{
     }
 
 }
+/* =========================================
+   TRUE MASONRY FIX
+========================================= */
+
+.public-collection-view
+.public-photo-grid{
+
+    display:block;
+
+    column-count:3;
+
+    column-gap:24px;
+
+}
+
+.public-collection-view
+.public-photo{
+
+    display:inline-block;
+
+    width:100%;
+
+    height:auto;
+
+    margin:0 0 24px;
+
+    break-inside:avoid;
+
+    page-break-inside:avoid;
+
+    overflow:hidden;
+
+    border-radius:14px;
+
+    vertical-align:top;
+
+}
+
+.public-collection-view
+.public-photo img{
+
+    display:block;
+
+    width:100%;
+
+    height:auto;
+
+    max-height:none;
+
+    aspect-ratio:auto;
+
+    object-fit:contain;
+
+    border-radius:14px;
+
+}
+
+/* Планшет */
+
+@media(max-width:1050px){
+
+    .public-collection-view
+    .public-photo-grid{
+
+        column-count:2;
+
+    }
+
+}
+
+/* Телефон */
+
+@media(max-width:650px){
+
+    .public-collection-view
+    .public-photo-grid{
+
+        column-count:1;
+
+    }
+
+    .public-collection-view
+    .public-photo{
+
+        margin-bottom:16px;
+
+    }
+
+}
