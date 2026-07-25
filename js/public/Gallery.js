@@ -493,7 +493,312 @@ this.bindPhotoEvents(
             );
 
     }
+static bindPhotoEvents(photos) {
 
+    const grid =
+        this.container.querySelector(
+            ".public-photo-grid"
+        );
+
+    if (!grid) {
+        return;
+    }
+
+    const openPhoto = element => {
+
+        const photoId =
+            element.dataset.photoId;
+
+        const index =
+            photos.findIndex(
+                photo =>
+                    String(photo.id) ===
+                    String(photoId)
+            );
+
+        if (index === -1) {
+            return;
+        }
+
+        this.openLightbox(
+            photos,
+            index
+        );
+
+    };
+
+    grid.addEventListener(
+        "click",
+        event => {
+
+            const photo =
+                event.target.closest(
+                    ".public-photo"
+                );
+
+            if (!photo) {
+                return;
+            }
+
+            openPhoto(photo);
+
+        }
+    );
+
+    grid.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key !== "Enter" &&
+                event.key !== " "
+            ) {
+                return;
+            }
+
+            const photo =
+                event.target.closest(
+                    ".public-photo"
+                );
+
+            if (!photo) {
+                return;
+            }
+
+            event.preventDefault();
+
+            openPhoto(photo);
+
+        }
+    );
+
+}
+
+static openLightbox(
+    photos,
+    startIndex
+) {
+
+    let currentIndex =
+        startIndex;
+
+    const lightbox =
+        document.createElement(
+            "div"
+        );
+
+    lightbox.className =
+        "photo-lightbox";
+
+    lightbox.innerHTML = `
+
+        <button
+            class="lightbox-close"
+            type="button"
+            aria-label="Закрыть">
+
+            ×
+
+        </button>
+
+        <button
+            class="lightbox-arrow lightbox-prev"
+            type="button"
+            aria-label="Предыдущая фотография">
+
+            ‹
+
+        </button>
+
+        <div class="lightbox-content">
+
+            <img
+                class="lightbox-image"
+                alt="">
+
+            <div class="lightbox-caption">
+
+                <span class="lightbox-name"></span>
+
+                <span class="lightbox-counter"></span>
+
+            </div>
+
+        </div>
+
+        <button
+            class="lightbox-arrow lightbox-next"
+            type="button"
+            aria-label="Следующая фотография">
+
+            ›
+
+        </button>
+
+    `;
+
+    document.body.appendChild(
+        lightbox
+    );
+
+    document.body.classList.add(
+        "lightbox-open"
+    );
+
+    const image =
+        lightbox.querySelector(
+            ".lightbox-image"
+        );
+
+    const name =
+        lightbox.querySelector(
+            ".lightbox-name"
+        );
+
+    const counter =
+        lightbox.querySelector(
+            ".lightbox-counter"
+        );
+
+    const showPhoto = index => {
+
+        currentIndex =
+            (
+                index +
+                photos.length
+            ) %
+            photos.length;
+
+        const photo =
+            photos[currentIndex];
+
+        image.classList.add(
+            "is-loading"
+        );
+
+        image.src =
+            GalleryService.getThumbnailUrl(
+                photo.fileId,
+                PUBLIC_CONFIG.imageSizes.original
+            );
+
+        image.alt =
+            photo.name || "";
+
+        name.textContent =
+            photo.name || "";
+
+        counter.textContent =
+            `${currentIndex + 1} / ${photos.length}`;
+
+        image.onload = () => {
+
+            image.classList.remove(
+                "is-loading"
+            );
+
+        };
+
+    };
+
+    const close = () => {
+
+        document.body.classList.remove(
+            "lightbox-open"
+        );
+
+        document.removeEventListener(
+            "keydown",
+            handleKeyboard
+        );
+
+        lightbox.remove();
+
+    };
+
+    const handleKeyboard = event => {
+
+        if (event.key === "Escape") {
+            close();
+        }
+
+        if (event.key === "ArrowLeft") {
+            showPhoto(
+                currentIndex - 1
+            );
+        }
+
+        if (event.key === "ArrowRight") {
+            showPhoto(
+                currentIndex + 1
+            );
+        }
+
+    };
+
+    lightbox
+        .querySelector(
+            ".lightbox-close"
+        )
+        .addEventListener(
+            "click",
+            close
+        );
+
+    lightbox
+        .querySelector(
+            ".lightbox-prev"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                showPhoto(
+                    currentIndex - 1
+                );
+
+            }
+        );
+
+    lightbox
+        .querySelector(
+            ".lightbox-next"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                showPhoto(
+                    currentIndex + 1
+                );
+
+            }
+        );
+
+    lightbox.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target ===
+                lightbox
+            ) {
+                close();
+            }
+
+        }
+    );
+
+    document.addEventListener(
+        "keydown",
+        handleKeyboard
+    );
+
+    showPhoto(
+        currentIndex
+    );
+
+}
     static normalizeSize(size) {
 
         return [
