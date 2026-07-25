@@ -279,155 +279,176 @@ class Gallery {
 
     }
 
-    static openCollection(collectionId) {
+static openCollection(collectionId) {
 
-        const collection =
-            GalleryService.getCollectionById(
-                collectionId
-            );
+    const collection =
+        GalleryService.getCollectionById(
+            collectionId
+        );
 
-        const photos =
-            GalleryService.getPhotos(
-                collectionId
-            );
+    const photos =
+        GalleryService.getPhotos(
+            collectionId
+        );
 
-        if (!collection) {
+    if (!collection) {
 
-            this.renderError(
-                "Коллекция не найдена."
-            );
+        this.renderError(
+            "Коллекция не найдена."
+        );
 
-            return;
+        return;
 
-        }
+    }
 
-        this.container.className =
-            "public-collection-view";
+    const description =
+        this.escapeHtml(
+            collection.description || ""
+        );
 
-        this.container.innerHTML = `
+    this.container.className =
+        "public-collection-view";
 
-            <div class="public-collection-header">
+    this.container.innerHTML = `
 
-                <button
-                    id="backToCollections"
-                    class="public-back-button"
-                    type="button">
+        <div class="public-collection-header">
 
-                    ← Все коллекции
+            <button
+                id="backToCollections"
+                class="public-back-button"
+                type="button">
 
-                </button>
+                ← Все коллекции
 
-                <div>
+            </button>
 
-                    <h1>
+            <div class="public-collection-intro">
 
-                        ${this.escapeHtml(
-                            collection.name
-                        )}
+                <h1>
 
-                    </h1>
+                    ${this.escapeHtml(
+                        collection.name
+                    )}
 
-                    <p>
+                </h1>
 
-                        ${photos.length}
-                        ${this.getPhotoWord(
-                            photos.length
-                        )}
+                ${description
+                    ? `
+                        <p class="public-collection-description">
 
-                    </p>
+                            ${description}
 
-                </div>
-
-            </div>
-
-            <div class="public-photo-grid">
-
-                ${photos.length > 0
-                    ? photos
-                        .map(photo => `
-
-<figure
-    class="public-photo"
-    data-photo-id="${photo.id}"
-    data-file-id="${photo.fileId}"
-    data-photo-name="${this.escapeHtml(photo.name)}"
-    tabindex="0"
-    role="button">
-
-    <img
-        src="${GalleryService.getThumbnailUrl(
-            photo.fileId,
-            900
-        )}"
-        srcset="
-            ${GalleryService.getThumbnailUrl(
-                photo.fileId,
-                500
-            )} 500w,
-            ${GalleryService.getThumbnailUrl(
-                photo.fileId,
-                900
-            )} 900w,
-            ${GalleryService.getThumbnailUrl(
-                photo.fileId,
-                1600
-            )} 1600w
-        "
-        sizes="
-            (max-width: 700px) 100vw,
-            (max-width: 1200px) 50vw,
-            50vw
-        "
-        alt="${this.escapeHtml(photo.name)}"
-        loading="lazy"
-        decoding="async">
-
-</figure>
-                        `)
-                        .join("")
-                    : `
-
-                        <div class="gallery-message">
-
-                            <h2>
-                                В этой коллекции пока нет фотографий
-                            </h2>
-
-                        </div>
-
+                        </p>
                     `
+                    : ""
                 }
 
+                <span class="public-collection-count">
+
+                    ${photos.length}
+                    ${this.getPhotoWord(
+                        photos.length
+                    )}
+
+                </span>
+
             </div>
 
-        `;
+        </div>
 
-document
-    .getElementById(
-        "backToCollections"
-    )
-    .addEventListener(
-        "click",
-        () => {
+        <div class="public-photo-grid">
 
-            this.renderCollections();
+            ${photos.length > 0
+                ? photos
+                    .map(photo => `
 
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
+                        <figure
+                            class="public-photo"
+                            data-photo-id="${photo.id}"
+                            data-file-id="${photo.fileId}"
+                            data-photo-name="${this.escapeHtml(
+                                photo.name
+                            )}"
+                            tabindex="0"
+                            role="button">
 
-        }
+                            <img
+                                src="${GalleryService.getThumbnailUrl(
+                                    photo.fileId,
+                                    900
+                                )}"
+                                srcset="
+                                    ${GalleryService.getThumbnailUrl(
+                                        photo.fileId,
+                                        500
+                                    )} 500w,
+                                    ${GalleryService.getThumbnailUrl(
+                                        photo.fileId,
+                                        900
+                                    )} 900w,
+                                    ${GalleryService.getThumbnailUrl(
+                                        photo.fileId,
+                                        1600
+                                    )} 1600w
+                                "
+                                sizes="
+                                    (max-width: 700px) 100vw,
+                                    (max-width: 1200px) 50vw,
+                                    33vw
+                                "
+                                alt="${this.escapeHtml(
+                                    photo.name
+                                )}"
+                                loading="lazy"
+                                decoding="async">
+
+                        </figure>
+
+                    `)
+                    .join("")
+                : `
+
+                    <div class="gallery-message">
+
+                        <h2>
+                            В этой коллекции пока нет фотографий
+                        </h2>
+
+                    </div>
+
+                `
+            }
+
+        </div>
+
+    `;
+
+    document
+        .getElementById(
+            "backToCollections"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                this.renderCollections();
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+
+            }
+        );
+
+    this.bindPhotoEvents(
+        photos
     );
 
-this.bindPhotoEvents(
-    photos
-);
-
-window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-});
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 
 }
 
