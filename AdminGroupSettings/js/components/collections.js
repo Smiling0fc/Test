@@ -107,15 +107,15 @@ class Collections {
 
                         <div class="collection-actions">
 
-                            <button
-                                class="iconButton renameButton"
-                                data-id="${collection.id}"
-                                type="button"
-                                title="Переименовать">
+<button
+    class="iconButton editButton"
+    data-id="${collection.id}"
+    type="button"
+    title="Редактировать коллекцию">
 
-                                ✏️
+    ✏️
 
-                            </button>
+</button>
 
                             <button
                                 class="iconButton deleteButton"
@@ -151,20 +151,20 @@ class Collections {
 
         container.onclick = event => {
 
-            const renameButton =
-                event.target.closest(
-                    ".renameButton"
-                );
+const editButton =
+    event.target.closest(
+        ".editButton"
+    );
 
-            if (renameButton) {
+if (editButton) {
 
-                Collections.rename(
-                    renameButton.dataset.id
-                );
+    Collections.openEditor(
+        editButton.dataset.id
+    );
 
-                return;
+    return;
 
-            }
+}
 
             const deleteButton =
                 event.target.closest(
@@ -234,42 +234,279 @@ class Collections {
 
     }
 
-    static async rename(id) {
+static openEditor(id) {
 
-        const name =
-            prompt("Новое название");
+    const collection =
+        CollectionService.getById(id);
 
-        if (name === null) {
-            return;
-        }
-
-        const trimmed = name.trim();
-
-        if (!trimmed) {
-            return;
-        }
-
-        try {
-
-            await CollectionService.rename(
-                id,
-                trimmed
-            );
-
-            Collections.render();
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert(
-                error.message ||
-                "Не удалось переименовать коллекцию."
-            );
-
-        }
-
+    if (!collection) {
+        return;
     }
+
+    const existingModal =
+        document.querySelector(
+            ".collection-editor-overlay"
+        );
+
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    const overlay =
+        document.createElement("div");
+
+    overlay.className =
+        "collection-editor-overlay";
+
+    overlay.innerHTML = `
+
+        <div
+            class="collection-editor glass"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="collectionEditorTitle">
+
+            <div class="collection-editor-header">
+
+                <div>
+
+                    <span class="editor-kicker">
+                        Коллекция
+                    </span>
+
+                    <h2 id="collectionEditorTitle">
+                        Редактирование
+                    </h2>
+
+                </div>
+
+                <button
+                    class="collection-editor-close"
+                    type="button"
+                    aria-label="Закрыть">
+
+                    ×
+
+                </button>
+
+            </div>
+
+            <form id="collectionEditorForm">
+
+                <label class="editor-field">
+
+                    <span>
+                        Название
+                    </span>
+
+                    <input
+                        id="collectionNameInput"
+                        type="text"
+                        maxlength="120"
+                        autocomplete="off"
+                        required>
+
+                </label>
+
+                <label class="editor-field">
+
+                    <span>
+                        Краткое описание
+                    </span>
+
+                    <textarea
+                        id="collectionDescriptionInput"
+                        maxlength="300"
+                        rows="5"
+                        placeholder="Например: Истории любви, важные моменты и тёплые эмоции"></textarea>
+
+                    <small>
+                        До 300 символов
+                    </small>
+
+                </label>
+
+                <div class="collection-editor-actions">
+
+                    <button
+                        class="secondaryButton editor-cancel"
+                        type="button">
+
+                        Отмена
+
+                    </button>
+
+                    <button
+                        class="primaryButton editor-save"
+                        type="submit">
+
+                        Сохранить
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    `;
+
+    document.body.appendChild(
+        overlay
+    );
+
+    document.body.classList.add(
+        "editor-open"
+    );
+
+    const form =
+        overlay.querySelector(
+            "#collectionEditorForm"
+        );
+
+    const nameInput =
+        overlay.querySelector(
+            "#collectionNameInput"
+        );
+
+    const descriptionInput =
+        overlay.querySelector(
+            "#collectionDescriptionInput"
+        );
+
+    const saveButton =
+        overlay.querySelector(
+            ".editor-save"
+        );
+
+    nameInput.value =
+        collection.name || "";
+
+    descriptionInput.value =
+        collection.description || "";
+
+    const closeEditor = () => {
+
+        document.removeEventListener(
+            "keydown",
+            handleKeyboard
+        );
+
+        document.body.classList.remove(
+            "editor-open"
+        );
+
+        overlay.remove();
+
+    };
+
+    const handleKeyboard = event => {
+
+        if (event.key === "Escape") {
+            closeEditor();
+        }
+
+    };
+
+    overlay
+        .querySelector(
+            ".collection-editor-close"
+        )
+        .addEventListener(
+            "click",
+            closeEditor
+        );
+
+    overlay
+        .querySelector(
+            ".editor-cancel"
+        )
+        .addEventListener(
+            "click",
+            closeEditor
+        );
+
+    overlay.addEventListener(
+        "click",
+        event => {
+
+            if (event.target === overlay) {
+                closeEditor();
+            }
+
+        }
+    );
+
+    form.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+            const name =
+                nameInput.value.trim();
+
+            const description =
+                descriptionInput
+                    .value
+                    .trim();
+
+            if (!name) {
+
+                nameInput.focus();
+
+                return;
+
+            }
+
+            saveButton.disabled = true;
+            saveButton.textContent =
+                "Сохраняем...";
+
+            try {
+
+                await CollectionService
+                    .updateDetails(
+                        collection.id,
+                        {
+                            name,
+                            description
+                        }
+                    );
+
+                closeEditor();
+
+                Collections.render();
+
+            } catch (error) {
+
+                console.error(error);
+
+                saveButton.disabled = false;
+                saveButton.textContent =
+                    "Сохранить";
+
+                alert(
+                    error.message ||
+                    "Не удалось сохранить коллекцию."
+                );
+
+            }
+
+        }
+    );
+
+    document.addEventListener(
+        "keydown",
+        handleKeyboard
+    );
+
+    requestAnimationFrame(
+        () => nameInput.focus()
+    );
+
+}
 
     static async remove(id) {
 
