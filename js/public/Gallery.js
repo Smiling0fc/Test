@@ -395,16 +395,16 @@ class Gallery {
 
                 }
             );
-
+this.bindPhotoEvents(
+    photos
+);
         window.scrollTo({
             top: 0,
             behavior: "smooth"
         });
 
     }
-this.bindPhotoEvents(
-    photos
-);
+
     static renderLoading(message) {
 
         this.container.className =
