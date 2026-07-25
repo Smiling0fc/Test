@@ -7,9 +7,9 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
     width: min(1480px, calc(100% - 120px));
-    margin: 70px auto 110px;
-    column-gap: 48px;
-    row-gap: 72px;
+    margin: 88px auto 128px;
+    column-gap: 40px;
+    row-gap: 92px;
 }
 
 .collection-card,
@@ -23,30 +23,26 @@
     max-width: none;
     cursor: pointer;
     outline: none;
-    transition: transform .35s ease;
-}
-
-.collection-card:hover {
-    transform: translateY(-4px);
 }
 
 .collection-card:focus-visible {
-    border-radius: var(--card-radius);
-    box-shadow: 0 0 0 3px rgba(184, 148, 108, .35);
+    border-radius: 10px;
+    box-shadow: 0 0 0 2px var(--accent);
 }
 
 .collection-heading {
-    min-height: 105px;
-    padding: 0 8px 22px;
+    min-height: 112px;
+    padding: 0 2px 24px;
 }
 
 .collection-title {
-    margin: 0 0 12px;
+    margin: 0 0 10px;
     color: var(--text-main);
     font-family: var(--serif);
-    font-size: clamp(30px, 2.5vw, 46px);
+    font-size: clamp(34px, 3vw, 52px);
     font-weight: 400;
-    line-height: 1.08;
+    line-height: 1;
+    letter-spacing: -.025em;
 }
 
 .collection-description {
@@ -54,8 +50,8 @@
     min-height: 24px;
     color: var(--text-muted);
     font-family: var(--sans);
-    font-size: 16px;
-    line-height: 1.55;
+    font-size: 14px;
+    line-height: 1.65;
 }
 
 .collection-glass {
@@ -63,17 +59,17 @@
     width: 100%;
     overflow: hidden;
     border: 0;
-    border-radius: var(--card-radius);
-    background: rgba(221, 205, 187, .28);
-    box-shadow: 0 16px 40px rgba(80, 58, 38, .09);
+    border-radius: 8px;
+    background: #e8e8e5;
+    box-shadow: none;
 }
 
 .collection-cover {
     width: 100%;
     overflow: hidden;
     aspect-ratio: 4 / 3;
-    border-radius: var(--card-radius);
-    background: rgba(216, 198, 180, .35);
+    border-radius: 8px;
+    background: #e8e8e5;
 }
 
 .collection-cover img,
@@ -83,12 +79,13 @@
     height: 100%;
     border-radius: 0;
     object-fit: cover;
-    transition: transform .65s ease;
+    transform: scale(1.001);
+    transition: transform .7s cubic-bezier(.2, .65, .25, 1), filter .35s ease;
 }
 
 .collection-card:hover .collection-cover img,
 .collection-card:hover .collection-glass img {
-    transform: scale(1.025);
+    transform: scale(1.018);
 }
 
 .collection-placeholder {
@@ -99,36 +96,68 @@
     height: 100%;
     padding: 30px;
     color: var(--text-muted);
-    background: linear-gradient(135deg, rgba(255, 255, 255, .28), rgba(255, 255, 255, .08));
+    background: #e8e8e5;
     font-family: var(--sans);
+    font-size: 13px;
     text-align: center;
 }
 
 .collection-footer {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 72px;
-    padding: 18px 14px 16px;
+    min-height: 62px;
+    padding: 16px 2px 14px;
     border-bottom: 1px solid var(--line);
+}
+
+.collection-footer::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 1px;
+    background: var(--text-main);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .35s ease;
+}
+
+.collection-card:hover .collection-footer::after,
+.collection-card:focus-visible .collection-footer::after {
+    transform: scaleX(1);
 }
 
 .collection-count {
     margin: 0;
     color: var(--text-main);
     font-family: var(--sans);
-    font-size: 15px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .02em;
 }
 
 .collection-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
     color: var(--text-main);
     font-family: var(--sans);
-    font-size: 30px;
-    font-weight: 300;
+    font-size: 18px;
+    font-weight: 400;
     line-height: 1;
-    transition: transform .3s ease;
+    transition: transform .3s ease, background .3s ease, color .3s ease, border-color .3s ease;
 }
 
 .collection-card:hover .collection-arrow {
-    transform: translateX(7px);
+    border-color: var(--text-main);
+    color: #fff;
+    background: var(--text-main);
+    transform: translateX(4px);
 }
