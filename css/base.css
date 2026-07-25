@@ -3,17 +3,18 @@
 ========================================= */
 
 :root {
-    --page-bg: #eee4d7;
-    --surface: rgba(255, 248, 239, .76);
-    --surface-strong: rgba(255, 249, 242, .9);
-    --text-main: #3d342c;
-    --text-muted: #8e8175;
-    --line: rgba(91, 70, 51, .12);
-    --accent: #b8946c;
-    --page-radius: 26px;
-    --card-radius: 22px;
-    --sans: Arial, Helvetica, sans-serif;
-    --serif: Georgia, "Times New Roman", serif;
+    --page-bg: #f2f2ef;
+    --surface: rgba(247, 247, 244, .92);
+    --surface-strong: #f8f8f5;
+    --text-main: #181818;
+    --text-muted: #777772;
+    --line: rgba(20, 20, 20, .12);
+    --accent: #181818;
+    --accent-soft: rgba(24, 24, 24, .08);
+    --page-radius: 0;
+    --card-radius: 10px;
+    --sans: "Inter", Arial, Helvetica, sans-serif;
+    --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
 }
 
 * {
@@ -30,22 +31,14 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     color: var(--text-main);
-    background: linear-gradient(135deg, #eadfce 0%, #f3eadf 48%, #e8dccb 100%);
+    background: var(--page-bg);
     font-family: var(--serif);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 }
 
 body::before {
-    content: "";
-    position: fixed;
-    inset: 20px 24px;
-    z-index: -1;
-    pointer-events: none;
-    border: 1px solid rgba(255, 255, 255, .58);
-    border-radius: var(--page-radius);
-    background: var(--surface);
-    box-shadow: 0 18px 60px rgba(85, 64, 43, .12);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    content: none;
 }
 
 button,
@@ -60,19 +53,25 @@ a {
     -webkit-tap-highlight-color: transparent;
 }
 
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--text-main);
+    outline-offset: 4px;
+}
+
 .background {
     position: fixed;
     inset: 0;
     z-index: -2;
     background:
-        radial-gradient(circle at 20% 5%, rgba(255, 250, 242, .95), transparent 36%),
-        radial-gradient(circle at 82% 12%, rgba(246, 226, 205, .7), transparent 38%),
-        linear-gradient(180deg, rgba(255, 248, 239, .82), rgba(238, 226, 210, .55));
+        radial-gradient(circle at 18% 0%, rgba(255, 255, 255, .9), transparent 34%),
+        radial-gradient(circle at 84% 8%, rgba(224, 228, 230, .44), transparent 36%),
+        linear-gradient(180deg, #f5f5f2 0%, #efefec 100%);
 }
 
 .background::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(255, 255, 255, .18), transparent);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .28), transparent 34%);
 }
