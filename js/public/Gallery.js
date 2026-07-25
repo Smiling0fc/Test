@@ -161,52 +161,70 @@ class Gallery {
                                 </div>
 
                             `;
-
+             const description =
+             this.escapeHtml(
+                  collection.description || ""
+             );
                     return `
 
-                        <article
-                            class="collection-card ${this.normalizeSize(
-                                collection.size
-                            )}"
-                            data-collection-id="${collection.id}"
-                            tabindex="0"
-                            role="button">
+    <article
+        class="collection-card"
+        data-collection-id="${collection.id}"
+        tabindex="0"
+        role="button">
 
-                            <div class="collection-glass">
+        <div class="collection-heading">
 
-                                <div class="collection-cover">
+            <h2 class="collection-title">
 
-                                    ${coverMarkup}
+                ${this.escapeHtml(
+                    collection.name
+                )}
 
-                                </div>
+            </h2>
 
-                            </div>
+            <p class="collection-description">
 
-                            <div class="collection-card-info">
+                ${description}
 
-                                <h2 class="collection-title">
+            </p>
 
-                                    ${this.escapeHtml(
-                                        collection.name
-                                    )}
+        </div>
 
-                                </h2>
+        <div class="collection-glass">
 
-                                <p class="collection-count">
+            <div class="collection-cover">
 
-                                    ${photos.length}
-                                    ${this.getPhotoWord(
-                                        photos.length
-                                    )}
+                ${coverMarkup}
 
-                                </p>
+            </div>
 
-                            </div>
+        </div>
 
-                        </article>
+        <div class="collection-footer">
 
-                    `;
+            <p class="collection-count">
 
+                ${photos.length}
+                ${this.getPhotoWord(
+                    photos.length
+                )}
+
+            </p>
+
+            <span
+                class="collection-arrow"
+                aria-hidden="true">
+
+                →
+
+            </span>
+
+        </div>
+
+    </article>
+
+`;
                 })
                 .join("");
 
@@ -358,7 +376,7 @@ class Gallery {
         sizes="
             (max-width: 700px) 100vw,
             (max-width: 1200px) 50vw,
-            33vw
+            50vw
         "
         alt="${this.escapeHtml(photo.name)}"
         loading="lazy"
