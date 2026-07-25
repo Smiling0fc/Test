@@ -112,7 +112,7 @@ class Gallery {
                                String(
                                collection.coverPhotoId || ""
                                                     )
-                               ) || photos[0] || null;;
+                               ) || photos[0] || null;
 
                     const coverMarkup =
                         cover
