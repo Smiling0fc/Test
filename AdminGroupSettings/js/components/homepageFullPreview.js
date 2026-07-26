@@ -12,11 +12,30 @@
             : "medium";
     };
 
+    const getCollectionWord = count => {
+        const value = Math.abs(Number(count)) % 100;
+        const last = value % 10;
+
+        if (value > 10 && value < 20) {
+            return "историй";
+        }
+
+        if (last === 1) {
+            return "история";
+        }
+
+        if (last >= 2 && last <= 4) {
+            return "истории";
+        }
+
+        return "историй";
+    };
+
     const getPublishedCollections = () =>
         CollectionService
             .getAll()
             .filter(collection =>
-                collection.published !== false
+                collection.published === true
             )
             .slice()
             .sort(
@@ -150,11 +169,22 @@
         const toolbarValue = document.querySelector(
             ".homepage-stage-toolbar span:last-child"
         );
+        const hint = document.querySelector(
+            ".homepage-editor-hint"
+        );
 
         if (toolbarValue) {
             toolbarValue.textContent = collections.length
                 ? `Hero + ${collections.length} коллекций`
                 : "Hero";
+        }
+
+        if (hint) {
+            hint.innerHTML = `
+                <span>◇</span>
+                Нажмите на Hero или карточку коллекции,
+                чтобы открыть её настройки в Inspector.
+            `;
         }
 
         preview.innerHTML = `
@@ -200,10 +230,7 @@
 
                 <span>
                     ${collections.length}
-                    ${collections.length === 1
-                        ? "история"
-                        : "историй"
-                    }
+                    ${getCollectionWord(collections.length)}
                 </span>
             </div>
 
@@ -213,7 +240,7 @@
 
             <div class="homepage-footer-preview">
                 <span>ViJoy's Photo Gallery</span>
-                <small>© 2026 · Все права защищены</small>
+                <small>© 2025 · Все права защищены</small>
             </div>
         `;
 
