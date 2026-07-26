@@ -15,7 +15,6 @@ class ApiService {
         }
 
         return url;
-
     }
 
     static async get(action, parameters = {}) {
@@ -55,7 +54,6 @@ class ApiService {
         );
 
         return this.parseResponse(response);
-
     }
 
     static async post(action, payload = {}) {
@@ -78,7 +76,6 @@ class ApiService {
         );
 
         return this.parseResponse(response);
-
     }
 
     static async parseResponse(response) {
@@ -121,7 +118,6 @@ class ApiService {
         }
 
         return data;
-
     }
 
     static health() {
@@ -130,6 +126,20 @@ class ApiService {
 
     static getDashboardStats() {
         return this.get("getDashboardStats");
+    }
+
+    static getActivity(limit = 8) {
+        return this.get(
+            "getActivity",
+            { limit }
+        );
+    }
+
+    static logActivity(data) {
+        return this.post(
+            "logActivity",
+            data
+        );
     }
 
     static getCollections() {
