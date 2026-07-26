@@ -25,8 +25,6 @@
         this.updateConnectionNote(
             connected ? "connected" : "offline"
         );
-
-        await WatermarkSettings.render();
     };
 
     Settings.bindThemeEvents = function () {
