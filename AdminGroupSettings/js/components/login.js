@@ -12,13 +12,13 @@ class Login {
 
                 <img src="images/logo.png"
                      class="login-logo"
-                     alt="Logo">
+                     alt="ViJoy Studio">
 
-                <h1>Photographer CMS</h1>
+                <h1>ViJoy Studio</h1>
 
                 <p>
 
-                    Управление сайтом фотографа
+                    Craft beautiful photographic stories.
 
                 </p>
 
@@ -31,7 +31,7 @@ class Login {
                 </button>
 
                 <span class="version">
-                      Version ${CMS_CONFIG.version}
+                    v${CMS_CONFIG.version} • ${CMS_CONFIG.codename}
                 </span>
 
             </div>
