@@ -19,6 +19,12 @@ header {
     border-bottom: 1px solid rgba(255, 255, 255, .22);
 
     transform: none;
+    transition:
+      background .3s ease,
+      border-color .3s ease,
+      box-shadow .3s ease,
+      color .3s ease;
+   background: transparent;
 }
 
 .header-on-hero {
