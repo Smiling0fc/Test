@@ -1,4 +1,3 @@
-
 class Sidebar {
 
     static render() {
@@ -67,21 +66,21 @@ class Sidebar {
 
             </nav>
 
-      <div class="sidebar-footer">
+            <div class="sidebar-footer">
 
-           <span>
-               Photographer CMS
-            </span>
+                <span>
+                    ViJoy Studio
+                </span>
 
-            <small>
-                   Version ${CMS_CONFIG.version}
-            </small>
+                <small>
+                    v${CMS_CONFIG.version} ${CMS_CONFIG.codename}
+                </small>
 
-            <small class="build-number">
-        Build ${CMS_CONFIG.build}
-    </small>
+                <small class="build-number">
+                    Build ${CMS_CONFIG.build}
+                </small>
 
-</div>
+            </div>
 
         `;
 
