@@ -12,11 +12,13 @@
     color: #fff;
 
     background-image:
-        var(--hero-image),
-        linear-gradient(
-            135deg,
-            #40464b,
-            #1e2225
+        var(
+            --hero-image,
+            linear-gradient(
+                135deg,
+                #40464b,
+                #1e2225
+            )
         );
 
     background-position: center;
@@ -117,14 +119,73 @@
     text-decoration: none;
 
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
     transition:
         color .25s ease,
         background .25s ease,
         transform .25s ease;
 }
 
-.hero-button:hover {
+.hero-button:hover,
+.hero-button:focus-visible {
     color: #171717;
     background: #fff;
     transform: translateY(-2px);
+}
+
+.hero-marker {
+    position: absolute;
+    bottom: 42px;
+    left: 42px;
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    color: rgba(255, 255, 255, .72);
+}
+
+.hero-marker span {
+    width: 5px;
+    height: 5px;
+
+    border: 1px solid currentColor;
+    border-radius: 50%;
+}
+
+.hero-marker i {
+    width: 1px;
+    height: 72px;
+
+    background: currentColor;
+}
+
+.hero-marker small {
+    font-family: var(--sans);
+    font-size: 9px;
+    font-style: normal;
+    letter-spacing: .24em;
+    writing-mode: vertical-rl;
+}
+
+@media (max-width: 700px) {
+    .hero-content h1 {
+        font-size: clamp(54px, 17vw, 86px);
+    }
+
+    .hero-description {
+        font-size: 14px;
+    }
+
+    .hero-marker {
+        bottom: 24px;
+        left: 20px;
+    }
+
+    .hero-marker i {
+        height: 48px;
+    }
 }
