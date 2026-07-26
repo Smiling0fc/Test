@@ -1,35 +1,54 @@
 class AppearanceService {
 
-    static defaultTheme = "pearl";
+    static defaults = {
+        backgroundTheme: "pearl",
+        siteName: "ViJoy’s Photo Gallery",
+        siteDescription: "Истории, которые хочется сохранить.",
+        location: "",
+        contactButtonText: "Связаться",
+        phone: "",
+        email: "",
+        telegramUrl: "",
+        vkUrl: "",
+        instagramUrl: "",
+        footerYear: String(new Date().getFullYear())
+    };
+
+    static normalize(data = {}) {
+        return Object.fromEntries(
+            Object.entries(this.defaults).map(([key, fallback]) => [
+                key,
+                String(data[key] ?? fallback)
+            ])
+        );
+    }
 
     static async load() {
         const response = await ApiService.get(
             "getSiteAppearance"
         );
 
-        return {
-            backgroundTheme: String(
-                response.appearance?.backgroundTheme ||
-                this.defaultTheme
-            )
-        };
+        return this.normalize(
+            response.appearance || {}
+        );
     }
 
     static async save(backgroundTheme) {
+        return this.saveAll({
+            backgroundTheme: String(
+                backgroundTheme || this.defaults.backgroundTheme
+            )
+        });
+    }
+
+    static async saveAll(data = {}) {
         const response = await ApiService.post(
             "updateSiteAppearance",
-            {
-                backgroundTheme: String(
-                    backgroundTheme || this.defaultTheme
-                )
-            }
+            data
         );
 
-        return {
-            backgroundTheme: String(
-                response.appearance?.backgroundTheme ||
-                this.defaultTheme
-            )
-        };
+        return this.normalize(
+            response.appearance || data
+        );
     }
 }
