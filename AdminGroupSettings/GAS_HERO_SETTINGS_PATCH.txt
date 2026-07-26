@@ -1,0 +1,44 @@
+ViJoy Studio — Hero Settings GAS patch
+======================================
+
+1. Добавьте файл SiteSettings.gs в тот же проект Google Apps Script,
+   где находится Code.gs.
+
+2. В функции doGet(e), внутри switch (action), ДО блока default,
+   добавьте:
+
+case "getSiteSettings":
+    return jsonResponse({
+        success: true,
+        settings: getSiteSettings()
+    });
+
+3. В функции doPost(e), внутри switch (action), ДО блока default,
+   добавьте:
+
+case "updateSiteSettings":
+    return jsonResponse(
+        updateSiteSettings(body)
+    );
+
+4. В текущем doGet(e) удалите ошибочный блок, расположенный после default:
+
+case "setCollectionCover":
+    return jsonResponse(
+        setCollectionCover(data)
+    );
+
+setCollectionCover должен оставаться только в doPost(e).
+
+5. Сохраните проект Apps Script.
+
+6. Откройте:
+   Развертывание → Управление развертываниями → Изменить
+
+7. Выберите:
+   Новая версия → Развернуть
+
+После публикации станут доступны действия:
+
+GET  ?action=getSiteSettings
+POST { action: "updateSiteSettings", heroCollectionId: "..." }
