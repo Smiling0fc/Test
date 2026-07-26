@@ -12,7 +12,7 @@ class App {
 
         Layout.render();
         Sidebar.render();
-        Header.render("Studio Home");
+        Header.render("Studio Home", "dashboard");
 
         document
             .getElementById("content")
@@ -58,7 +58,6 @@ class App {
                     </div>
 
                 `;
-
         }
 
     }
