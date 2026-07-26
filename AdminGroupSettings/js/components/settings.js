@@ -58,8 +58,7 @@ class Settings {
                         <span class="settings-kicker">SITE PREFERENCES</span>
                         <h1>Настройки сайта</h1>
                         <p>
-                            Общий характер публичной галереи, фон,
-                            обработка изображений и публикация.
+                            Общий характер публичной галереи и её оформление.
                         </p>
                     </div>
                 </div>
@@ -118,26 +117,10 @@ class Settings {
                         <div>
                             <strong>Предпросмотр Studio</strong>
                             <small>
-                                Сейчас выбор сохраняется локально. После
-                                утверждения палитры подключим его к GAS и
-                                публичному сайту.
+                                Выбранный фон сохраняется через GAS и
+                                применяется на публичном сайте.
                             </small>
                         </div>
-                    </div>
-                </section>
-
-                <section class="settings-panel settings-panel-muted">
-                    <div class="settings-panel-heading compact">
-                        <div>
-                            <span>Изображения</span>
-                            <h2>Водяной знак</h2>
-                            <p>
-                                Следующий блок настроек: загрузка логотипа,
-                                позиция, прозрачность и области показа.
-                            </p>
-                        </div>
-
-                        <span class="settings-coming-soon">Следующий этап</span>
                     </div>
                 </section>
             </div>
