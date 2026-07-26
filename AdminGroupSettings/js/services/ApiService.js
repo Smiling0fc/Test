@@ -128,6 +128,10 @@ class ApiService {
         return this.get("health");
     }
 
+    static getDashboardStats() {
+        return this.get("getDashboardStats");
+    }
+
     static getCollections() {
         return this.get("getCollections");
     }
