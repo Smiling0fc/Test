@@ -1,6 +1,6 @@
 class HomePage {
 
-    static render(collections) {
+    static async render(collections) {
 
         const hero =
             document.getElementById("homeHero");
@@ -14,8 +14,31 @@ class HomePage {
             return;
         }
 
+        let heroCollectionId = "";
+
+        try {
+
+            const response =
+                await PublicApi.getSiteSettings();
+
+            heroCollectionId = String(
+                response.settings?.heroCollectionId || ""
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "Настройки Hero пока недоступны:",
+                error.message
+            );
+
+        }
+
         const collection =
-            collections[0] || null;
+            collections.find(item =>
+                String(item.id) ===
+                heroCollectionId
+            ) || collections[0] || null;
 
         if (!collection) {
             hero.hidden = true;
@@ -42,27 +65,16 @@ class HomePage {
             return;
         }
 
-        const heroImageUrl =
+        const imageUrl =
             GalleryService.getThumbnailUrl(
                 cover.fileId,
                 2200
             );
 
-        const featuredImageUrl =
-            GalleryService.getThumbnailUrl(
-                cover.fileId,
-                1000
-            );
-
-        const description =
-            String(
-                collection.description || ""
-            ).trim();
-
         hero.hidden = false;
         hero.style.setProperty(
             "--hero-image",
-            `url("${heroImageUrl}")`
+            `url("${imageUrl}")`
         );
 
         featured.hidden = false;
@@ -75,7 +87,7 @@ class HomePage {
 
             <div class="featured-copy">
                 <span class="featured-kicker">
-                    Последняя коллекция
+                    Выбранная история
                 </span>
 
                 <h2>
@@ -84,21 +96,10 @@ class HomePage {
                     )}
                 </h2>
 
-                ${description
-                    ? `
-                        <p class="featured-description">
-                            ${Gallery.escapeHtml(
-                                description
-                            )}
-                        </p>
-                    `
-                    : `
-                        <p class="featured-description">
-                            Новая история в кадрах, настроении
-                            и деталях момента.
-                        </p>
-                    `
-                }
+                <p class="featured-description">
+                    Откройте коллекцию целиком и
+                    погрузитесь в атмосферу этой истории.
+                </p>
 
                 <span class="featured-count">
                     ${photos.length}
@@ -125,12 +126,10 @@ class HomePage {
                 )}">
 
                 <img
-                    src="${featuredImageUrl}"
+                    src="${imageUrl}"
                     alt="${Gallery.escapeHtml(
                         collection.name
-                    )}"
-                    loading="lazy"
-                    decoding="async">
+                    )}">
             </button>
         `;
 
