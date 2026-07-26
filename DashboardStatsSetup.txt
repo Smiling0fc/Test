@@ -1,0 +1,21 @@
+ViJoy Studio — Dashboard Stats
+
+1. Добавьте файл DashboardStats.gs в проект Google Apps Script.
+
+2. В Code.gs внутри switch (action) функции doGet(e) добавьте:
+
+case "getDashboardStats":
+    return jsonResponse({
+        success: true,
+        stats: getDashboardStats()
+    });
+
+Разместите case рядом с getCollections, getPhotos и health.
+
+3. Сохраните проект.
+
+4. Развернуть → Управление развертываниями → Изменить → Новая версия → Развернуть.
+
+После публикации обновите ViJoy Studio через Ctrl + Shift + R.
+
+Без нового маршрута Dashboard продолжит работать в запасном режиме: покажет коллекции и доступность сайта/API, но точное число фотографий и проверки Drive/Sheets будут помечены как недоступные.
