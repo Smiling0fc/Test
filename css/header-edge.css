@@ -1,0 +1,53 @@
+/* Full-width visual layer for the fixed header.
+   Header content keeps the editorial grid width. */
+
+header {
+    isolation: isolate;
+}
+
+header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    z-index: -1;
+
+    width: 100vw;
+    transform: translateX(-50%);
+
+    border-bottom: 1px solid transparent;
+    background: transparent;
+    pointer-events: none;
+
+    transition:
+        background .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
+}
+
+.header-on-hero {
+    border-bottom-color: transparent;
+}
+
+.header-on-hero::before {
+    border-bottom-color: rgba(255, 255, 255, .22);
+}
+
+.header-scrolled {
+    border-bottom-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.header-scrolled::before {
+    border-bottom-color: rgba(0, 0, 0, .08);
+    background: rgba(247, 245, 241, .88);
+
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .06);
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+}
