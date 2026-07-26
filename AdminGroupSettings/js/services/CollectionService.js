@@ -3,22 +3,17 @@ class CollectionService {
     static collections = [];
 
     static getAll() {
-
         return this.collections;
-
     }
 
     static getById(id) {
-
         return this.collections.find(
             collection =>
                 collection.id === String(id)
         ) || null;
-
     }
 
     static async load() {
-
         const response =
             await ApiService.getCollections();
 
@@ -33,11 +28,9 @@ class CollectionService {
                 : [];
 
         return this.collections;
-
     }
 
     static async create(name) {
-
         const trimmed =
             String(name || "").trim();
 
@@ -60,15 +53,12 @@ class CollectionService {
         };
 
         this.collections.push(collection);
-
         this.sort();
 
         return collection;
-
     }
 
     static async rename(id, newName) {
-
         const trimmed =
             String(newName || "").trim();
 
@@ -78,89 +68,93 @@ class CollectionService {
             );
         }
 
+        return this.updateDetails(
+            id,
+            {
+                name: trimmed,
+                description:
+                    this.getById(id)?.description || ""
+            }
+        );
+    }
+
+    static async updateDetails(id, data) {
+        const collectionId = String(id);
+        const current = this.getById(collectionId);
+
+        const name = String(
+            data.name ?? current?.name ?? ""
+        ).trim();
+
+        const description = String(
+            data.description ??
+            current?.description ??
+            ""
+        ).trim();
+
+        if (!name) {
+            throw new Error(
+                "Введите название коллекции."
+            );
+        }
+
+        const payload = {
+            name,
+            description
+        };
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                data,
+                "size"
+            )
+        ) {
+            payload.size = [
+                "small",
+                "medium",
+                "large"
+            ].includes(String(data.size))
+                ? String(data.size)
+                : "medium";
+        }
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                data,
+                "published"
+            )
+        ) {
+            payload.published =
+                Boolean(data.published);
+        }
+
         const response =
             await ApiService.updateCollection(
-                String(id),
-                {
-                    name: trimmed
-                }
+                collectionId,
+                payload
             );
+
+        const updatedCollection =
+            response.collection;
 
         const index =
             this.collections.findIndex(
                 collection =>
-                    collection.id === String(id)
+                    collection.id ===
+                    collectionId
             );
 
         if (index !== -1) {
-
             this.collections[index] = {
                 ...this.collections[index],
-                ...response.collection
+                ...updatedCollection
             };
-
         }
 
-        return response.collection;
-
-    }
-static async updateDetails(
-    id,
-    data
-) {
-
-    const collectionId =
-        String(id);
-
-    const name =
-        String(
-            data.name || ""
-        ).trim();
-
-    const description =
-        String(
-            data.description || ""
-        ).trim();
-
-    if (!name) {
-        throw new Error(
-            "Введите название коллекции."
-        );
+        return updatedCollection;
     }
 
-    const response =
-        await ApiService.updateCollection(
-            collectionId,
-            {
-                name,
-                description
-            }
-        );
-
-    const updatedCollection =
-        response.collection;
-
-    const index =
-        this.collections.findIndex(
-            collection =>
-                collection.id ===
-                collectionId
-        );
-
-    if (index !== -1) {
-
-        this.collections[index] = {
-            ...this.collections[index],
-            ...updatedCollection
-        };
-
-    }
-
-    return updatedCollection;
-
-}
     static async remove(id) {
-
         const collectionId = String(id);
 
         await ApiService.deleteCollection(
@@ -172,50 +166,39 @@ static async updateDetails(
                 collection =>
                     collection.id !== collectionId
             );
-
     }
-static async setCover(
-    collectionId,
-    photoId
-) {
 
-    const id =
-        String(collectionId);
+    static async setCover(
+        collectionId,
+        photoId
+    ) {
+        const id = String(collectionId);
+        const coverPhotoId = String(photoId);
 
-    const coverPhotoId =
-        String(photoId);
-
-    const response =
-        await ApiService
-            .setCollectionCover(
+        const response =
+            await ApiService.setCollectionCover(
                 id,
                 coverPhotoId
             );
 
-    const collection =
-        this.getById(id);
+        const collection = this.getById(id);
 
-    if (collection) {
-
-        collection.coverPhotoId =
-            String(
+        if (collection) {
+            collection.coverPhotoId = String(
                 response.coverPhotoId ||
                 coverPhotoId
             );
+        }
 
+        return collection;
     }
 
-    return collection;
-
-}
     static sort() {
-
         this.collections.sort(
             (a, b) =>
                 Number(a.order || 0) -
                 Number(b.order || 0)
         );
-
     }
 
 }
