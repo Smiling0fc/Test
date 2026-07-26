@@ -1,21 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 170" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 160" role="img" aria-labelledby="title desc">
   <title id="title">ViJoy’s Photo Gallery</title>
   <desc id="desc">Elegant ViJoy’s monogram and wordmark with a subtle camera outline.</desc>
 
-  <g transform="translate(8 10)">
+  <g transform="translate(8 2)">
     <g fill="none" stroke="#181818" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M22 52h108a14 14 0 0 1 14 14v54a14 14 0 0 1-14 14H22A14 14 0 0 1 8 120V66a14 14 0 0 1 14-14Z" stroke-width="1.5" opacity=".48"/>
-      <path d="M42 52 54 35h42l12 17" stroke-width="1.5" opacity=".48"/>
-      <circle cx="121" cy="72" r="3.5" fill="#181818" stroke="none" opacity=".62"/>
-      <circle cx="76" cy="92" r="24" stroke-width="1.2" opacity=".25"/>
-      <path d="M76 68 88 82 86 101 68 112 53 100 57 80Z" stroke-width="1.1" opacity=".2"/>
+      <path d="M20 46h102a13 13 0 0 1 13 13v52a13 13 0 0 1-13 13H20A13 13 0 0 1 7 111V59a13 13 0 0 1 13-13Z" stroke-width="1.35" opacity=".34"/>
+      <path d="M39 46 51 29h40l12 17" stroke-width="1.35" opacity=".34"/>
+      <circle cx="113" cy="65" r="3" fill="#181818" stroke="none" opacity=".46"/>
+      <circle cx="71" cy="84" r="22" stroke-width="1.05" opacity=".17"/>
     </g>
 
-    <text x="18" y="124" fill="#181818" font-family="'Cormorant Garamond', Georgia, 'Times New Roman', serif" font-size="94" font-weight="500" letter-spacing="-9">VJ</text>
+    <text x="18" y="119" fill="#181818" font-family="'Cormorant Garamond', Georgia, 'Times New Roman', serif" font-size="91" font-weight="400" letter-spacing="-9.5">VJ</text>
   </g>
 
-  <line x1="178" y1="28" x2="178" y2="142" stroke="#181818" stroke-width="1" opacity=".24"/>
-
-  <text x="214" y="86" fill="#181818" font-family="'Cormorant Garamond', Georgia, 'Times New Roman', serif" font-size="62" font-weight="500" letter-spacing="-.8">ViJoy’s</text>
-  <text x="218" y="122" fill="#181818" font-family="Inter, Arial, Helvetica, sans-serif" font-size="14" font-weight="500" letter-spacing="7.2">PHOTO GALLERY</text>
+  <text x="151" y="74" fill="#181818" font-family="'Cormorant Garamond', Georgia, 'Times New Roman', serif" font-size="60" font-weight="400" letter-spacing="-.9">ViJoy’s</text>
+  <text x="155" y="108" fill="#181818" font-family="Inter, Arial, Helvetica, sans-serif" font-size="13" font-weight="400" letter-spacing="6.8">PHOTO GALLERY</text>
 </svg>
