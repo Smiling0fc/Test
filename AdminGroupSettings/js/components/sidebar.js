@@ -10,10 +10,10 @@ class Sidebar {
 
                 <img
                     src="images/logo.png"
-                    alt="Logo"
+                    alt="ViJoy Studio"
                     class="sidebar-logo-image">
 
-                <h2>Photographer CMS</h2>
+                <h2>ViJoy Studio</h2>
 
             </div>
 
@@ -24,7 +24,7 @@ class Sidebar {
 
                     <span class="icon">🏠</span>
 
-                    <span>Dashboard</span>
+                    <span>Studio Home</span>
 
                 </button>
 
@@ -33,7 +33,7 @@ class Sidebar {
 
                     <span class="icon">📷</span>
 
-                    <span>Коллекции</span>
+                    <span>Collections</span>
 
                 </button>
 
@@ -60,7 +60,7 @@ class Sidebar {
 
                     <span class="icon">⚙️</span>
 
-                    <span>Настройки</span>
+                    <span>Preferences</span>
 
                 </button>
 
@@ -72,12 +72,12 @@ class Sidebar {
                     ViJoy Studio
                 </span>
 
-                <small>
-                    v${CMS_CONFIG.version} ${CMS_CONFIG.codename}
+                <small class="studio-tagline">
+                    Craft beautiful photographic stories.
                 </small>
 
-                <small class="build-number">
-                    Build ${CMS_CONFIG.build}
+                <small>
+                    v${CMS_CONFIG.version} • ${CMS_CONFIG.codename}
                 </small>
 
             </div>
