@@ -36,7 +36,8 @@ class Navigation {
                     const routes = {
                         dashboard: Dashboard,
                         homepage: Homepage,
-                        collections: Collections
+                        collections: Collections,
+                        settings: Settings
                     };
 
                     if (routes[page]) {
@@ -60,4 +61,5 @@ class Navigation {
         });
 
     }
+
 }
