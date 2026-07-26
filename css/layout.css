@@ -183,3 +183,114 @@ nav > ul > li:nth-last-child(2) > a:hover {
         transform: rotate(360deg);
     }
 }
+
+/* =========================================
+   PUBLIC FOOTER
+========================================= */
+
+.site-footer {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: end;
+    width: min(1480px, calc(100% - 80px));
+    margin: 30px auto 0;
+    padding: 34px 0 38px;
+    border-top: 1px solid var(--line);
+    color: var(--text-muted);
+    font-family: var(--sans);
+}
+
+.site-footer-socials {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-self: start;
+}
+
+.site-footer-socials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--text-main);
+    text-decoration: none;
+    transition:
+        color .25s ease,
+        background .25s ease,
+        border-color .25s ease,
+        transform .25s ease;
+}
+
+.site-footer-socials a:hover,
+.site-footer-socials a:focus-visible {
+    color: white;
+    border-color: var(--accent);
+    background: var(--accent);
+    transform: translateY(-2px);
+}
+
+.site-footer-socials svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 1.6;
+}
+
+.site-footer-socials a:first-child svg {
+    fill: none;
+}
+
+.site-footer-copy {
+    justify-self: center;
+    text-align: center;
+}
+
+.site-footer-copy p {
+    color: var(--text-main);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .02em;
+}
+
+.site-footer-copy span {
+    display: block;
+    margin-top: 7px;
+    font-size: 11px;
+    opacity: .72;
+}
+
+.site-footer-legal {
+    display: flex;
+    align-items: center;
+    justify-self: end;
+    gap: 10px;
+    font-size: 11px;
+}
+
+.site-footer-legal a {
+    position: relative;
+    color: inherit;
+    text-decoration: none;
+}
+
+.site-footer-legal a::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -4px;
+    left: 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .25s ease;
+}
+
+.site-footer-legal a:hover::after,
+.site-footer-legal a:focus-visible::after {
+    transform: scaleX(1);
+}
