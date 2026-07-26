@@ -5,7 +5,6 @@ class HomePage {
         const hero = document.getElementById(
             "homeHero"
         );
-
         const featured = document.getElementById(
             "featuredCollection"
         );
@@ -17,18 +16,26 @@ class HomePage {
         let heroCollectionId = "";
 
         try {
-            const response =
-                await PublicApi.getSiteSettings();
+            const [siteResponse, appearanceResponse] =
+                await Promise.all([
+                    PublicApi.getSiteSettings(),
+                    PublicApi.get("getSiteAppearance")
+                ]);
 
             heroCollectionId = String(
-                response.settings?.heroCollectionId || ""
+                siteResponse.settings?.heroCollectionId || ""
+            );
+
+            this.applyBackgroundTheme(
+                appearanceResponse.appearance?.backgroundTheme
             );
 
         } catch (error) {
             console.warn(
-                "Настройки Hero пока недоступны:",
+                "Настройки сайта пока недоступны:",
                 error.message
             );
+            this.applyBackgroundTheme("pearl");
         }
 
         const collection = collections.find(item =>
@@ -76,15 +83,12 @@ class HomePage {
         const heroKicker = hero.querySelector(
             ".hero-kicker"
         );
-
         const heroTitle = hero.querySelector(
             ".hero-content h1"
         );
-
         const heroDescription = hero.querySelector(
             ".hero-description"
         );
-
         const heroButton = hero.querySelector(
             ".hero-button"
         );
@@ -194,6 +198,24 @@ class HomePage {
                 );
             });
 
+    }
+
+    static applyBackgroundTheme(value) {
+        const allowed = [
+            "pearl",
+            "ivory",
+            "linen",
+            "blush",
+            "mist",
+            "sage"
+        ];
+
+        const theme = String(value || "pearl");
+
+        document.documentElement.dataset.siteTheme =
+            allowed.includes(theme)
+                ? theme
+                : "pearl";
     }
 
 }
