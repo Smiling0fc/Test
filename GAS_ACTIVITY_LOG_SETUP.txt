@@ -1,0 +1,33 @@
+ViJoy Studio: подключение журнала действий
+
+1. В проекте Google Apps Script создайте файл ActivityLog.gs.
+2. Скопируйте в него содержимое файла ActivityLog.gs из ветки v0.4.
+3. В doGet(e), внутри switch по action, добавьте:
+
+case "getActivity":
+    return jsonResponse({
+        success: true,
+        activities: getActivity(e.parameter.limit)
+    });
+
+4. В doPost(e), внутри switch по body.action, добавьте:
+
+case "logActivity":
+    return jsonResponse({
+        success: true,
+        activity: logActivity(body)
+    });
+
+5. Необязательно: в CONFIG можно добавить:
+
+activitySheet: "ActivityLog"
+
+Без этого параметра будет использовано имя ActivityLog автоматически.
+
+6. Сохраните проект и опубликуйте новую версию веб-приложения:
+Развернуть -> Управление развертываниями -> Изменить -> Новая версия -> Развернуть.
+
+7. Обновите Studio сочетанием Ctrl + Shift + R.
+
+Лист ActivityLog создаётся автоматически при первой записи.
+Колонки: id, createdAt, type, title, details.
