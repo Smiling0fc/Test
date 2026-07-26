@@ -15,28 +15,26 @@ function getSiteAppearance() {
         }
     });
 
-    return {
-        backgroundTheme: normalizeAppearanceTheme_(
-            settings.backgroundTheme
-        )
-    };
+    return normalizeSiteAppearance_(settings);
 }
 
 function updateSiteAppearance(data) {
     const sheet = getSiteAppearanceSheet_();
-    const theme = normalizeAppearanceTheme_(
-        data.backgroundTheme
-    );
+    const current = getSiteAppearance();
+    const appearance = normalizeSiteAppearance_({
+        ...current,
+        ...data
+    });
 
-    setAppearanceValue_(
-        sheet,
-        "backgroundTheme",
-        theme
-    );
+    Object.keys(appearance).forEach(key => {
+        setAppearanceValue_(
+            sheet,
+            key,
+            appearance[key]
+        );
+    });
 
-    return {
-        backgroundTheme: theme
-    };
+    return appearance;
 }
 
 function getSiteAppearanceSheet_() {
@@ -87,6 +85,67 @@ function setAppearanceValue_(sheet, key, value) {
     }
 
     sheet.appendRow([key, value]);
+}
+
+function normalizeSiteAppearance_(data) {
+    return {
+        backgroundTheme: normalizeAppearanceTheme_(
+            data.backgroundTheme
+        ),
+        siteName: normalizeAppearanceText_(
+            data.siteName,
+            "ViJoy’s Photo Gallery",
+            100
+        ),
+        siteDescription: normalizeAppearanceText_(
+            data.siteDescription,
+            "Истории, которые хочется сохранить.",
+            220
+        ),
+        location: normalizeAppearanceText_(
+            data.location,
+            "",
+            100
+        ),
+        contactButtonText: normalizeAppearanceText_(
+            data.contactButtonText,
+            "Связаться",
+            40
+        ),
+        phone: normalizeAppearanceText_(data.phone, "", 60),
+        email: normalizeAppearanceText_(data.email, "", 120),
+        telegramUrl: normalizeAppearanceUrl_(data.telegramUrl),
+        vkUrl: normalizeAppearanceUrl_(data.vkUrl),
+        instagramUrl: normalizeAppearanceUrl_(data.instagramUrl),
+        footerYear: normalizeAppearanceYear_(data.footerYear)
+    };
+}
+
+function normalizeAppearanceText_(value, fallback, maxLength) {
+    const text = String(value || "").trim();
+    const result = text || fallback || "";
+    return result.slice(0, maxLength);
+}
+
+function normalizeAppearanceUrl_(value) {
+    const url = String(value || "").trim();
+
+    if (!url) {
+        return "";
+    }
+
+    return /^https:\/\//i.test(url)
+        ? url.slice(0, 300)
+        : "";
+}
+
+function normalizeAppearanceYear_(value) {
+    const year = Number(value);
+    const currentYear = new Date().getFullYear();
+
+    return year >= 2020 && year <= currentYear + 2
+        ? String(year)
+        : String(currentYear);
 }
 
 function normalizeAppearanceTheme_(value) {
