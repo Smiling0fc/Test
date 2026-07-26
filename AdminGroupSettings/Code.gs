@@ -50,16 +50,17 @@ function doGet(e) {
                     timestamp: new Date().toISOString()
                 });
 
+            case "getSiteSettings":
+                return jsonResponse({
+                    success: true,
+                    settings: getSiteSettings()
+                });
+
             default:
                 return jsonResponse({
                     success: false,
                     error: "Unknown GET action"
                 });
-
-            case "setCollectionCover":
-                return jsonResponse(
-                    setCollectionCover(data)
-                );
         }
 
     } catch (error) {
@@ -128,6 +129,11 @@ function doPost(e) {
             case "setCollectionCover":
                 return jsonResponse(
                     setCollectionCover(body)
+                );
+
+            case "updateSiteSettings":
+                return jsonResponse(
+                    updateSiteSettings(body)
                 );
 
             default:
