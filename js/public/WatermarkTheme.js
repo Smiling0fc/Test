@@ -2,7 +2,9 @@ class WatermarkTheme {
 
     static async init() {
         try {
-            const response = await PublicApi.getSiteSettings();
+            const response = await PublicApi.get(
+                "getSiteAppearance"
+            );
             this.apply(response.appearance || {});
         } catch (error) {
             console.warn(
