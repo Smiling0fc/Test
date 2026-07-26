@@ -14,6 +14,12 @@ class Layout {
 
                 <main id="content" class="content glass"></main>
 
+                <aside
+                    id="inspector"
+                    class="inspector"
+                    aria-label="Inspector">
+                </aside>
+
             </div>
 
         `;
