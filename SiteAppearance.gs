@@ -15,27 +15,55 @@ function getSiteAppearance() {
         }
     });
 
-    return {
-        backgroundTheme: normalizeAppearanceTheme_(
-            settings.backgroundTheme
-        )
-    };
+    return normalizeSiteAppearance_(settings);
 }
 
 function updateSiteAppearance(data) {
     const sheet = getSiteAppearanceSheet_();
-    const theme = normalizeAppearanceTheme_(
-        data.backgroundTheme
+    const current = getSiteAppearance();
+    const next = normalizeSiteAppearance_(
+        Object.assign({}, current, data || {})
     );
 
-    setAppearanceValue_(
-        sheet,
-        "backgroundTheme",
-        theme
-    );
+    Object.keys(next).forEach(key => {
+        setAppearanceValue_(sheet, key, next[key]);
+    });
 
+    return next;
+}
+
+function normalizeSiteAppearance_(data) {
     return {
-        backgroundTheme: theme
+        backgroundTheme: normalizeAppearanceTheme_(
+            data.backgroundTheme
+        ),
+        watermarkEnabled: normalizeBoolean_(
+            data.watermarkEnabled,
+            false
+        ),
+        watermarkPosition: normalizeWatermarkPosition_(
+            data.watermarkPosition
+        ),
+        watermarkSize: normalizeNumber_(
+            data.watermarkSize,
+            8,
+            30,
+            14
+        ),
+        watermarkOpacity: normalizeNumber_(
+            data.watermarkOpacity,
+            15,
+            90,
+            45
+        ),
+        watermarkOnCovers: normalizeBoolean_(
+            data.watermarkOnCovers,
+            true
+        ),
+        watermarkOnPhotos: normalizeBoolean_(
+            data.watermarkOnPhotos,
+            true
+        )
     };
 }
 
@@ -59,10 +87,6 @@ function getSiteAppearanceSheet_() {
             "value"
         ]]);
         sheet.setFrozenRows(1);
-        sheet.appendRow([
-            "backgroundTheme",
-            "pearl"
-        ]);
     }
 
     return sheet;
@@ -98,10 +122,48 @@ function normalizeAppearanceTheme_(value) {
         "mist",
         "sage"
     ];
-
     const theme = String(value || "pearl").trim();
 
     return allowed.indexOf(theme) !== -1
         ? theme
         : "pearl";
+}
+
+function normalizeWatermarkPosition_(value) {
+    const allowed = [
+        "top-left",
+        "top-right",
+        "center",
+        "bottom-left",
+        "bottom-right"
+    ];
+    const position = String(
+        value || "bottom-right"
+    ).trim();
+
+    return allowed.indexOf(position) !== -1
+        ? position
+        : "bottom-right";
+}
+
+function normalizeBoolean_(value, fallback) {
+    if (value === true || String(value) === "true") {
+        return true;
+    }
+
+    if (value === false || String(value) === "false") {
+        return false;
+    }
+
+    return fallback;
+}
+
+function normalizeNumber_(value, min, max, fallback) {
+    const number = Number(value);
+
+    if (!isFinite(number)) {
+        return fallback;
+    }
+
+    return Math.min(max, Math.max(min, number));
 }
