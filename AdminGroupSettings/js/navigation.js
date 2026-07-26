@@ -31,7 +31,7 @@ class Navigation {
                         ?.textContent
                         ?.trim() || button.textContent.trim();
 
-                    Header.render(label);
+                    Header.render(label, page);
 
                     const routes = {
                         dashboard: Dashboard,
