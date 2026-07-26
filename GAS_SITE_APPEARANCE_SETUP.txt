@@ -1,0 +1,26 @@
+SITE APPEARANCE GAS SETUP
+
+1. Add SiteAppearance.gs to the Apps Script project.
+
+2. Add to doGet(e):
+
+case "getSiteAppearance":
+    return jsonResponse({
+        success: true,
+        appearance: getSiteAppearance()
+    });
+
+3. Add to doPost(e):
+
+case "updateSiteAppearance":
+    return jsonResponse({
+        success: true,
+        appearance: updateSiteAppearance(body)
+    });
+
+4. Save the Apps Script project.
+
+5. Deploy a new web app version:
+Deploy > Manage deployments > Edit > New version > Deploy.
+
+The SiteAppearance sheet is created automatically on the first request.
