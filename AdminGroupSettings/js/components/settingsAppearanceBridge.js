@@ -25,6 +25,8 @@
         this.updateConnectionNote(
             connected ? "connected" : "offline"
         );
+
+        await SiteIdentitySettings.render();
     };
 
     Settings.bindThemeEvents = function () {
