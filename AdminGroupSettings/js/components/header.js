@@ -1,6 +1,6 @@
 class Header {
 
-    static render(title = "Dashboard"){
+    static render(title = "Studio Home") {
 
         const header = document.getElementById("header");
 
