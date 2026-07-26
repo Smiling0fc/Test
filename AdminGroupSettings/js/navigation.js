@@ -3,7 +3,7 @@ class Navigation {
     static init() {
 
         const buttons = document.querySelectorAll(
-            ".sidebar button"
+            ".menu-item[data-page]"
         );
 
         buttons.forEach(button => {
@@ -17,12 +17,21 @@ class Navigation {
                     );
 
                     button.classList.add("active");
+                    button.setAttribute("aria-current", "page");
+
+                    buttons.forEach(item => {
+                        if (item !== button) {
+                            item.removeAttribute("aria-current");
+                        }
+                    });
 
                     const page = button.dataset.page;
+                    const label = button
+                        .querySelector(".menu-label")
+                        ?.textContent
+                        ?.trim() || button.textContent.trim();
 
-                    Header.render(
-                        button.textContent.trim()
-                    );
+                    Header.render(label);
 
                     const routes = {
                         dashboard: Dashboard,
@@ -39,7 +48,7 @@ class Navigation {
                         .getElementById("content")
                         .innerHTML = `
                             <div class="dashboard fade">
-                                <h1>${button.textContent}</h1>
+                                <h1>${label}</h1>
                                 <p>
                                     Раздел находится в разработке.
                                 </p>
@@ -48,9 +57,7 @@ class Navigation {
 
                 }
             );
-
         });
 
     }
-
 }
