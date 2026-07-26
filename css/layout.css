@@ -53,8 +53,13 @@ header {
 }
 
 .header-scrolled .contact-link {
-    color: #fff;
+
+    color: white;
+
     background: var(--accent);
+
+    border-color: transparent;
+
 }
 .header-on-hero nav a {
     color: #fff;
