@@ -92,7 +92,6 @@ class ApiService {
         }
 
         const text = await response.text();
-
         let data;
 
         try {
@@ -126,108 +125,109 @@ class ApiService {
     }
 
     static health() {
-
         return this.get("health");
-
     }
 
     static getCollections() {
-
-        return this.get(
-            "getCollections"
-        );
-
+        return this.get("getCollections");
     }
 
     static createCollection(data) {
-
         return this.post(
             "createCollection",
             data
         );
-
     }
 
     static deleteCollection(collectionId) {
-
         return this.post(
             "deleteCollection",
             {
                 collectionId
             }
         );
-
     }
 
     static getPhotos(collectionId) {
-
         return this.get(
             "getPhotos",
             {
                 collectionId
             }
         );
-
     }
+
     static updateCollection(
         collectionId,
         data
     ) {
 
         return this.post(
-             "updateCollection",
+            "updateCollection",
             {
                 collectionId,
-                 ...data
+                ...data
             }
         );
 
-}
+    }
+
     static uploadPhoto(data) {
+        return this.post(
+            "uploadPhoto",
+            data
+        );
+    }
 
-    return this.post(
-        "uploadPhoto",
-        data
-    );
+    static deletePhoto(photoId) {
+        return this.post(
+            "deletePhoto",
+            {
+                photoId
+            }
+        );
+    }
 
-}
-
-static deletePhoto(photoId) {
-
-    return this.post(
-        "deletePhoto",
-        {
-            photoId
-        }
-    );
-
-}
     static setCollectionCover(
-    collectionId,
-    photoId
-) {
+        collectionId,
+        photoId
+    ) {
 
-    return this.post(
-        "setCollectionCover",
-        {
-            collectionId,
-            photoId
-        }
-    );
+        return this.post(
+            "setCollectionCover",
+            {
+                collectionId,
+                photoId
+            }
+        );
 
-}
+    }
+
     static updatePhoto(
-    photoId,
-    data
-) {
+        photoId,
+        data
+    ) {
 
-    return this.post(
-        "updatePhoto",
-        {
-            photoId,
-            ...data
-        }
-    );
+        return this.post(
+            "updatePhoto",
+            {
+                photoId,
+                ...data
+            }
+        );
 
-}
+    }
+
+    static getSiteSettings() {
+        return this.get(
+            "getSiteSettings"
+        );
+    }
+
+    static updateSiteSettings(data) {
+        return this.post(
+            "updateSiteSettings",
+            data
+        );
+    }
 }
