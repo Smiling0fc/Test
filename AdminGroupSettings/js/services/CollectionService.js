@@ -154,6 +154,77 @@ class CollectionService {
         return updatedCollection;
     }
 
+    static async reorder(collectionIds) {
+
+        const ids = Array.isArray(collectionIds)
+            ? collectionIds
+                .map(id => String(id || "").trim())
+                .filter(Boolean)
+            : [];
+
+        const currentIds = this.collections.map(
+            collection => String(collection.id)
+        );
+
+        const uniqueIds = [
+            ...new Set(ids)
+        ];
+
+        const validOrder =
+            uniqueIds.length === currentIds.length &&
+            uniqueIds.every(id =>
+                currentIds.includes(id)
+            );
+
+        if (!validOrder) {
+            throw new Error(
+                "Порядок коллекций устарел. Обновите Studio и повторите попытку."
+            );
+        }
+
+        const photosById = new Map(
+            this.collections.map(collection => [
+                String(collection.id),
+                Array.isArray(collection.photos)
+                    ? collection.photos
+                    : []
+            ])
+        );
+
+        const response =
+            await ApiService.reorderCollections(ids);
+
+        if (Array.isArray(response.collections)) {
+            this.collections = response.collections.map(
+                collection => ({
+                    ...collection,
+                    photos:
+                        photosById.get(
+                            String(collection.id)
+                        ) || []
+                })
+            );
+        } else {
+            const orderById = new Map(
+                ids.map((id, index) => [
+                    id,
+                    index + 1
+                ])
+            );
+
+            this.collections.forEach(collection => {
+                collection.order = orderById.get(
+                    String(collection.id)
+                );
+            });
+
+            this.sort();
+        }
+
+        return this.collections;
+
+    }
+
     static async remove(id) {
         const collectionId = String(id);
 
