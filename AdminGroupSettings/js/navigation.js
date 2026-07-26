@@ -2,54 +2,52 @@ class Navigation {
 
     static init() {
 
-        const buttons = document.querySelectorAll(".sidebar button");
+        const buttons = document.querySelectorAll(
+            ".sidebar button"
+        );
 
         buttons.forEach(button => {
 
-            button.addEventListener("click", () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                buttons.forEach(item =>
-                    item.classList.remove("active")
-                );
+                    buttons.forEach(item =>
+                        item.classList.remove("active")
+                    );
 
-                button.classList.add("active");
+                    button.classList.add("active");
 
-                const page = button.dataset.page;
+                    const page = button.dataset.page;
 
-                Header.render(button.textContent.trim());
+                    Header.render(
+                        button.textContent.trim()
+                    );
 
-                const routes = {
+                    const routes = {
+                        dashboard: Dashboard,
+                        homepage: Homepage,
+                        collections: Collections
+                    };
 
-                    dashboard: Dashboard,
-                    collections: Collections
+                    if (routes[page]) {
+                        routes[page].render();
+                        return;
+                    }
 
-                };
-
-                if (routes[page]) {
-
-                    routes[page].render();
-
-                } else {
-
-                    document.getElementById("content").innerHTML = `
-
-                        <div class="dashboard fade">
-
-                            <h1>${button.textContent}</h1>
-
-                            <p>
-
-                                Раздел находится в разработке.
-
-                            </p>
-
-                        </div>
-
-                    `;
+                    document
+                        .getElementById("content")
+                        .innerHTML = `
+                            <div class="dashboard fade">
+                                <h1>${button.textContent}</h1>
+                                <p>
+                                    Раздел находится в разработке.
+                                </p>
+                            </div>
+                        `;
 
                 }
-
-            });
+            );
 
         });
 
