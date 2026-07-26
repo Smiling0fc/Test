@@ -3,17 +3,36 @@
 ========================================= */
 
 header {
-    position: relative;
-    z-index: 20;
+    position: absolute;
+    top: 0;
+    left: 50%;
+
+    z-index: 50;
+
+    transform: translateX(-50%);
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+   
     width: min(1480px, calc(100% - 80px));
     margin: 0 auto;
     padding: 28px 0;
-    border-bottom: 1px solid var(--line);
+
+    border-bottom: 1px solid rgba(255, 255, 255, .22);
+}
+.header-on-hero nav a {
+    color: #fff;
 }
 
+.header-on-hero .logo img {
+    filter: brightness(0) invert(1);
+}
+
+.header-on-hero {
+    border-bottom-color:
+        rgba(255, 255, 255, .22);
+}
 .logo {
     display: inline-flex;
     flex: 0 0 auto;
