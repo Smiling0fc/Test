@@ -31,15 +31,56 @@ header {
 .header-on-hero {
     border-bottom-color: rgba(255, 255, 255, .22);
 }
+.header-scrolled {
+    background: rgba(247, 245, 241, .88);
 
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    border-bottom-color:
+        rgba(0, 0, 0, .08);
+
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, .06);
+}
+
+.header-scrolled nav a {
+    color: var(--text-main);
+}
+
+.header-scrolled .logo img {
+    filter: none;
+}
+
+.header-scrolled .contact-link {
+    color: #fff;
+    background: var(--accent);
+}
 .header-on-hero nav a {
     color: #fff;
 }
+.header-scrolled nav a {
 
+    color: var(--text-primary);
+
+}
 .header-on-hero .logo img {
     filter: brightness(0) invert(1);
 }
+.header-scrolled .logo img {
 
+    filter: none;
+
+}
+.header-scrolled .contact-link {
+
+    color: white;
+
+    background: var(--accent);
+
+    border-color: transparent;
+
+}
 .logo {
     display: inline-flex;
     flex: 0 0 auto;
