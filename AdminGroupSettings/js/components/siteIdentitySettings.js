@@ -97,13 +97,11 @@ class SiteIdentitySettings {
             status.textContent = "Основные данные сайта обновлены.";
             status.dataset.state = "saved";
 
-            Promise.resolve(
-                ActivityService.log({
-                    type: "settings",
-                    title: "Обновлены данные сайта",
-                    details: this.settings.siteName
-                })
-            ).catch(() => {});
+            ActivityService.record(
+                "settings",
+                "Обновлены данные сайта",
+                this.settings.siteName
+            );
         } catch (error) {
             status.textContent = `Не удалось сохранить: ${error.message}`;
             status.dataset.state = "error";
