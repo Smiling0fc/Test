@@ -42,20 +42,37 @@ class HomePage {
             return;
         }
 
-        const imageUrl =
+        const heroImageUrl =
             GalleryService.getThumbnailUrl(
                 cover.fileId,
                 2200
             );
 
+        const featuredImageUrl =
+            GalleryService.getThumbnailUrl(
+                cover.fileId,
+                1000
+            );
+
+        const description =
+            String(
+                collection.description || ""
+            ).trim();
+
         hero.hidden = false;
         hero.style.setProperty(
             "--hero-image",
-            `url("${imageUrl}")`
+            `url("${heroImageUrl}")`
         );
 
         featured.hidden = false;
         featured.innerHTML = `
+            <div class="featured-marker" aria-hidden="true">
+                <span></span>
+                <i></i>
+                <small>LATEST STORY</small>
+            </div>
+
             <div class="featured-copy">
                 <span class="featured-kicker">
                     Последняя коллекция
@@ -67,12 +84,28 @@ class HomePage {
                     )}
                 </h2>
 
-                <p>
+                ${description
+                    ? `
+                        <p class="featured-description">
+                            ${Gallery.escapeHtml(
+                                description
+                            )}
+                        </p>
+                    `
+                    : `
+                        <p class="featured-description">
+                            Новая история в кадрах, настроении
+                            и деталях момента.
+                        </p>
+                    `
+                }
+
+                <span class="featured-count">
                     ${photos.length}
                     ${Gallery.getPhotoWord(
                         photos.length
                     )}
-                </p>
+                </span>
 
                 <button
                     class="featured-open"
@@ -92,14 +125,16 @@ class HomePage {
                 )}">
 
                 <img
-                    src="${imageUrl}"
+                    src="${featuredImageUrl}"
                     alt="${Gallery.escapeHtml(
                         collection.name
-                    )}">
+                    )}"
+                    loading="lazy"
+                    decoding="async">
             </button>
         `;
 
-        document
+        featured
             .querySelectorAll(
                 "[data-collection-id]"
             )
