@@ -50,6 +50,9 @@ class Gallery {
                 )
 
             );
+HomePage.render(
+    GalleryService.getCollections()
+);
 
             this.renderCollections();
 
