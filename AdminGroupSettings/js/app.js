@@ -12,7 +12,7 @@ class App {
 
         Layout.render();
         Sidebar.render();
-        Header.render("Dashboard");
+        Header.render("Studio Home");
 
         document
             .getElementById("content")
@@ -35,7 +35,6 @@ class App {
             await CollectionService.load();
 
             Dashboard.render();
-
             Navigation.init();
 
         } catch (error) {
@@ -49,7 +48,7 @@ class App {
                     <div class="dashboard fade">
 
                         <h1>
-                            Не удалось загрузить CMS
+                            Не удалось загрузить ViJoy Studio
                         </h1>
 
                         <p>
