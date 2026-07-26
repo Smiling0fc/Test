@@ -73,9 +73,11 @@ function logActivity(data) {
 }
 
 function getActivitySheet_() {
-    const spreadsheet = SpreadsheetApp.openById(
-        CONFIG.spreadsheetId
+    const referenceSheet = getSheet(
+        CONFIG.collectionsSheet
     );
+
+    const spreadsheet = referenceSheet.getParent();
 
     const sheetName =
         CONFIG.activitySheet ||
