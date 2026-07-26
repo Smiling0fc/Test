@@ -54,9 +54,7 @@ class PublicApi {
             url.toString(),
             {
                 method: "GET",
-
                 cache: "no-store",
-
                 redirect: "follow"
             }
         );
@@ -105,22 +103,23 @@ class PublicApi {
     }
 
     static getCollections() {
-
         return this.get(
             "getCollections"
         );
-
     }
 
     static getPhotos(collectionId) {
-
         return this.get(
             "getPhotos",
             {
                 collectionId
             }
         );
-
     }
 
+    static getSiteSettings() {
+        return this.get(
+            "getSiteSettings"
+        );
+    }
 }
