@@ -3,12 +3,17 @@
     const originalApplyTheme = Settings.applyTheme.bind(Settings);
 
     Settings.render = async function () {
+        let connected = false;
+
         try {
             const appearance = await AppearanceService.load();
+
             localStorage.setItem(
                 this.storageKey,
                 appearance.backgroundTheme
             );
+
+            connected = true;
         } catch (error) {
             console.warn(
                 "Настройки оформления пока недоступны:",
@@ -17,7 +22,9 @@
         }
 
         originalRender();
-        this.updateConnectionNote("connected");
+        this.updateConnectionNote(
+            connected ? "connected" : "offline"
+        );
     };
 
     Settings.bindThemeEvents = function () {
@@ -36,38 +43,66 @@
                     originalApplyTheme(theme);
                     this.updateConnectionNote("saving");
 
+                    let appearance;
+
                     try {
-                        const appearance = await AppearanceService.save(
+                        appearance = await AppearanceService.save(
                             theme.id
                         );
+                    } catch (error) {
+                        console.error(
+                            "Не удалось сохранить оформление сайта:",
+                            error
+                        );
+                        this.updateConnectionNote(
+                            "error",
+                            error.message
+                        );
+                        return;
+                    }
 
+                    const savedTheme = this.themes.find(
+                        item => item.id === appearance.backgroundTheme
+                    ) || theme;
+
+                    try {
                         localStorage.setItem(
                             this.storageKey,
-                            appearance.backgroundTheme
+                            savedTheme.id
                         );
+                    } catch (error) {
+                        console.warn(
+                            "Не удалось обновить локальный кэш темы:",
+                            error.message
+                        );
+                    }
 
-                        const savedTheme = this.themes.find(
-                            item => item.id === appearance.backgroundTheme
-                        ) || theme;
+                    originalApplyTheme(savedTheme);
+                    this.updateConnectionNote("saved");
 
-                        originalApplyTheme(savedTheme);
-                        this.updateConnectionNote("saved");
-
+                    Promise.resolve(
                         ActivityService.log({
                             type: "settings",
                             title: "Изменён фон сайта",
                             details: savedTheme.name
-                        });
-                    } catch (error) {
-                        console.error(error);
-                        this.updateConnectionNote("error");
-                    }
+                        })
+                    ).catch(error => {
+                        console.warn(
+                            "Фон сохранён, но запись в журнал не добавлена:",
+                            error.message
+                        );
+                    });
                 });
             });
     };
 
-    Settings.updateConnectionNote = function (state) {
-        const note = document.querySelector(".settings-save-note");
+    Settings.updateConnectionNote = function (
+        state,
+        details = ""
+    ) {
+        const note = document.querySelector(
+            ".settings-save-note"
+        );
         const title = note?.querySelector("strong");
         const copy = note?.querySelector("small");
 
@@ -82,6 +117,10 @@
                 "Подключено к публичному сайту",
                 "Выбранный образец загружается из GAS."
             ],
+            offline: [
+                "Предпросмотр Studio",
+                "Не удалось загрузить настройку из GAS."
+            ],
             saving: [
                 "Сохраняем оформление…",
                 "Новый фон отправляется на публичный сайт."
@@ -92,7 +131,7 @@
             ],
             error: [
                 "Не удалось сохранить фон",
-                "Проверьте маршруты SiteAppearance в GAS."
+                details || "Проверьте подключение к GAS."
             ]
         };
 
