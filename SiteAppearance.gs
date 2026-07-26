@@ -1,8 +1,9 @@
 function getSiteAppearance() {
     const sheet = getSiteAppearanceSheet_();
-    const values = sheet
-        .getRange(2, 1, Math.max(sheet.getLastRow() - 1, 0), 2)
-        .getValues();
+    const lastRow = sheet.getLastRow();
+    const values = lastRow >= 2
+        ? sheet.getRange(2, 1, lastRow - 1, 2).getValues()
+        : [];
 
     const settings = {};
 
