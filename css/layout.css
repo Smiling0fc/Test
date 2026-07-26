@@ -7,7 +7,7 @@ header {
     top: 0;
     left: 50%;
     z-index: 50;
-
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -18,7 +18,7 @@ header {
 
     border-bottom: 1px solid rgba(255, 255, 255, .22);
 
-    transform: translateX(-50%);
+    transform: none;
 }
 
 .header-on-hero {
