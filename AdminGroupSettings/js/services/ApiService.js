@@ -148,6 +148,15 @@ class ApiService {
         );
     }
 
+    static reorderCollections(collectionIds) {
+        return this.post(
+            "reorderCollections",
+            {
+                collectionIds
+            }
+        );
+    }
+
     static getPhotos(collectionId) {
         return this.get(
             "getPhotos",
@@ -230,4 +239,5 @@ class ApiService {
             data
         );
     }
+
 }
