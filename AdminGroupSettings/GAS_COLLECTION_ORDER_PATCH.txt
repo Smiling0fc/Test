@@ -1,0 +1,16 @@
+ViJoy Studio — сохранение порядка коллекций
+
+1. Добавьте файл CollectionOrder.gs в проект Google Apps Script.
+
+2. В Code.gs внутри switch (action) функции doPost(e) добавьте этот case рядом с остальными действиями коллекций:
+
+case "reorderCollections":
+    return jsonResponse({
+        success: true,
+        collections:
+            reorderCollections(body)
+    });
+
+3. Сохраните проект и опубликуйте новую версию веб-приложения.
+
+Важно: не заменяйте весь Code.gs старой копией. Добавьте только case выше, чтобы сохранить уже работающий маршрут updatePhoto.
