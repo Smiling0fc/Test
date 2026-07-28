@@ -203,6 +203,8 @@ class PageEdges {
             right: []
         };
 
+        document.body.classList.add("section-page-edges");
+
         document
             .querySelectorAll(".page-edge")
             .forEach(edge => edge.remove());
