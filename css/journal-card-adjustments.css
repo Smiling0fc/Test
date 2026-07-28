@@ -1,0 +1,156 @@
+:root {
+    --collection-outline: rgba(177, 149, 96, .22);
+    --collection-outline-inner: rgba(255, 255, 255, .42);
+}
+
+/*
+ * Editorial card sizing
+ * Small, medium and large keep the order configured in Studio,
+ * while their vertical rhythm remains intentionally different.
+ */
+.latest-stories-grid,
+.archive-grid {
+    grid-auto-rows: 80px;
+}
+
+.journal-collection-link.size-small {
+    grid-column: span 4;
+    grid-row: span 3;
+}
+
+.journal-collection-link.size-medium {
+    grid-column: span 6;
+    grid-row: span 4;
+}
+
+.journal-collection-link.size-large {
+    grid-column: 1 / -1;
+    grid-row: span 6;
+}
+
+/* A faint warm contour from the approved editorial mockup. */
+.journal-collection-link .collection-card,
+.journal-collection-link .collection-card.small,
+.journal-collection-link .collection-card.medium,
+.journal-collection-link .collection-card.large {
+    border-color: var(--collection-outline);
+    box-shadow: inset 0 0 0 1px var(--collection-outline-inner);
+}
+
+.journal-collection-link .collection-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    border: 1px solid rgba(118, 96, 61, .08);
+}
+
+/* Medium cards receive more breathing room without changing their width. */
+.journal-collection-link.size-medium .collection-heading {
+    padding-top: 36px;
+}
+
+.journal-collection-link.size-medium .collection-glass {
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+/*
+ * Large cards are full-width editorial spreads.
+ * The text column is protected and the image sits closer to the right edge.
+ */
+.journal-collection-link.size-large .collection-card {
+    grid-template-columns: minmax(330px, 34%) minmax(0, 66%);
+}
+
+.journal-collection-link.size-large .collection-heading {
+    padding: 46px 44px 18px 38px;
+}
+
+.journal-collection-link.size-large .collection-title {
+    max-width: 100%;
+    font-size: clamp(42px, 4.4vw, 68px);
+    line-height: .94;
+}
+
+.journal-collection-link.size-large .collection-description {
+    max-width: 300px;
+}
+
+.journal-collection-link.size-large .collection-glass {
+    margin: 28px 8px 28px 0;
+}
+
+.journal-collection-link.size-large .collection-footer {
+    padding-left: 38px;
+    padding-right: 30px;
+}
+
+@media (max-width: 1180px) {
+    .latest-stories-grid,
+    .archive-grid {
+        grid-auto-rows: 90px;
+    }
+
+    .journal-collection-link.size-small {
+        grid-column: span 6;
+        grid-row: span 3;
+    }
+
+    .journal-collection-link.size-medium {
+        grid-column: span 6;
+        grid-row: span 4;
+    }
+
+    .journal-collection-link.size-large {
+        grid-column: 1 / -1;
+        grid-row: span 5;
+    }
+
+    .journal-collection-link.size-large .collection-card {
+        grid-template-columns: minmax(300px, 36%) minmax(0, 64%);
+    }
+
+    .journal-collection-link.size-large .collection-glass {
+        margin: 24px 6px 24px 0;
+    }
+}
+
+@media (max-width: 760px) {
+    .latest-stories-grid,
+    .archive-grid {
+        grid-auto-rows: auto;
+    }
+
+    .journal-collection-link.size-small,
+    .journal-collection-link.size-medium,
+    .journal-collection-link.size-large {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .journal-collection-link.size-large .collection-card {
+        grid-template-columns: 1fr;
+    }
+
+    .journal-collection-link.size-large .collection-heading {
+        padding: 30px 26px 18px;
+    }
+
+    .journal-collection-link.size-large .collection-title {
+        font-size: clamp(36px, 12vw, 56px);
+    }
+
+    .journal-collection-link.size-large .collection-description {
+        max-width: 360px;
+    }
+
+    .journal-collection-link.size-large .collection-glass {
+        margin: 0 12px 18px 18px;
+    }
+
+    .journal-collection-link.size-large .collection-footer {
+        padding: 6px 26px 24px;
+    }
+}
