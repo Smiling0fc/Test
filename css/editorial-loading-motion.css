@@ -1,0 +1,292 @@
+:root {
+    --skeleton-base: #e9e6df;
+    --skeleton-soft: #f3f1ec;
+    --skeleton-highlight: rgba(255, 255, 255, .72);
+}
+
+/* Image skeletons stay visible until the actual image fires load. */
+.image-loading-shell {
+    position: relative;
+    overflow: hidden;
+    background: var(--skeleton-base);
+}
+
+.image-loading-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background:
+        linear-gradient(
+            105deg,
+            transparent 28%,
+            var(--skeleton-highlight) 45%,
+            transparent 62%
+        ),
+        var(--skeleton-base);
+    background-size: 220% 100%, 100% 100%;
+    animation: editorial-skeleton-shimmer 1.45s ease-in-out infinite;
+    opacity: 1;
+    transition: opacity .45s ease, visibility .45s ease;
+}
+
+.image-loading-shell img {
+    opacity: 0;
+    transition: opacity .58s ease;
+}
+
+.image-loading-shell.is-image-loaded::before,
+.image-loading-shell.is-image-error::before {
+    opacity: 0;
+    visibility: hidden;
+    animation: none;
+}
+
+.image-loading-shell.is-image-loaded img,
+.image-loading-shell.is-image-error img {
+    opacity: 1;
+}
+
+@keyframes editorial-skeleton-shimmer {
+    from {
+        background-position: 150% 0, 0 0;
+    }
+
+    to {
+        background-position: -70% 0, 0 0;
+    }
+}
+
+/* Initial API skeletons. */
+.loading-skeleton {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(118, 96, 61, .09);
+    background: rgba(255, 255, 255, .58);
+}
+
+.loading-skeleton::after,
+.loading-skeleton-bar::after,
+.loading-skeleton-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        105deg,
+        transparent 30%,
+        rgba(255, 255, 255, .78) 48%,
+        transparent 66%
+    );
+    background-size: 220% 100%;
+    animation: editorial-skeleton-shimmer 1.45s ease-in-out infinite;
+}
+
+.loading-skeleton-bar,
+.loading-skeleton-media {
+    position: relative;
+    overflow: hidden;
+    background: var(--skeleton-base);
+}
+
+.loading-skeleton-bar {
+    height: 10px;
+}
+
+.loading-about-visual {
+    display: grid;
+    grid-template-columns: 1.05fr .72fr;
+    gap: 20px;
+    min-height: 520px;
+}
+
+.loading-about-visual .loading-skeleton-media:first-child {
+    min-height: 470px;
+    border-radius: 22px;
+}
+
+.loading-about-visual .loading-skeleton-media:last-child {
+    align-self: center;
+    min-height: 330px;
+    border-radius: 22px;
+}
+
+.loading-home-stack {
+    display: grid;
+    gap: 24px;
+    width: 100%;
+}
+
+.loading-home-story {
+    display: grid;
+    grid-template-columns: minmax(230px, 34%) minmax(0, 66%);
+    min-height: 420px;
+}
+
+.loading-home-story-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 46px 38px;
+}
+
+.loading-home-story-copy .loading-skeleton-bar:nth-child(1) {
+    width: 52%;
+    height: 32px;
+}
+
+.loading-home-story-copy .loading-skeleton-bar:nth-child(2) {
+    width: 32%;
+}
+
+.loading-home-story-copy .loading-skeleton-bar:nth-child(3) {
+    width: 76%;
+}
+
+.loading-home-story-copy .loading-skeleton-bar:last-child {
+    width: 40%;
+    margin-top: auto;
+}
+
+.loading-home-story .loading-skeleton-media {
+    margin: 26px 10px 26px 0;
+}
+
+.loading-home-story:nth-child(2) {
+    min-height: 380px;
+}
+
+.loading-home-story:last-child {
+    width: 68%;
+    min-height: 340px;
+}
+
+.loading-archive-card {
+    min-height: 0;
+}
+
+.loading-archive-card:nth-child(1) {
+    grid-column: 1 / -1;
+    grid-row: span 6;
+}
+
+.loading-archive-card:nth-child(2),
+.loading-archive-card:nth-child(3) {
+    grid-column: span 6;
+    grid-row: span 4;
+}
+
+.loading-archive-card:nth-child(4) {
+    grid-column: 1 / -1;
+    grid-row: span 5;
+}
+
+.loading-gallery-stack {
+    display: grid;
+    gap: clamp(44px, 7vw, 96px);
+    width: 100%;
+}
+
+.loading-gallery-photo {
+    width: min(72%, 920px);
+    aspect-ratio: 4 / 5;
+    border-radius: 14px;
+}
+
+.loading-gallery-photo:nth-child(even) {
+    justify-self: end;
+    aspect-ratio: 5 / 4;
+}
+
+/* Calm editorial reveal motion. */
+.editorial-reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+        opacity .72s cubic-bezier(.2, .72, .25, 1),
+        transform .72s cubic-bezier(.2, .72, .25, 1);
+    transition-delay: var(--editorial-reveal-delay, 0ms);
+    will-change: opacity, transform;
+}
+
+.editorial-reveal.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+    will-change: auto;
+}
+
+.hero-content {
+    animation: editorial-hero-arrival .9s cubic-bezier(.2, .72, .25, 1) both;
+}
+
+@keyframes editorial-hero-arrival {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 900px) {
+    .loading-home-story,
+    .loading-home-story:last-child {
+        width: 100%;
+        grid-template-columns: minmax(180px, 38%) minmax(0, 62%);
+    }
+
+    .loading-archive-card:nth-child(1),
+    .loading-archive-card:nth-child(2),
+    .loading-archive-card:nth-child(3),
+    .loading-archive-card:nth-child(4) {
+        grid-column: 1 / -1;
+        grid-row: span 4;
+    }
+}
+
+@media (max-width: 700px) {
+    .loading-about-visual {
+        min-height: 340px;
+    }
+
+    .loading-home-story,
+    .loading-home-story:last-child {
+        grid-template-columns: 1fr;
+        min-height: 500px;
+    }
+
+    .loading-home-story-copy {
+        min-height: 190px;
+        padding: 30px 26px;
+    }
+
+    .loading-home-story .loading-skeleton-media {
+        min-height: 290px;
+        margin: 0 18px 18px;
+    }
+
+    .loading-gallery-photo {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .image-loading-shell::before,
+    .loading-skeleton::after,
+    .loading-skeleton-bar::after,
+    .loading-skeleton-media::after {
+        animation: none;
+    }
+
+    .editorial-reveal,
+    .editorial-reveal.is-revealed,
+    .hero-content {
+        opacity: 1;
+        transform: none;
+        animation: none;
+        transition: none;
+    }
+}
