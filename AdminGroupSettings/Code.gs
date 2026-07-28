@@ -56,6 +56,24 @@ function doGet(e) {
                     settings: getSiteSettings()
                 });
 
+            case "getDashboardStats":
+                return jsonResponse({
+                    success: true,
+                    stats: getDashboardStats()
+                });
+  
+            case "getActivity":
+                return jsonResponse({
+                    success: true,
+                    activities: getActivity(e.parameter.limit)
+                });
+
+            case "getSiteAppearance":
+                return jsonResponse({
+                    success: true,
+                    appearance: getSiteAppearance()
+                });
+
             default:
                 return jsonResponse({
                     success: false,
@@ -130,20 +148,45 @@ function doPost(e) {
                 return jsonResponse(
                     setCollectionCover(body)
                 );
+                case "updatePhoto":
+          
+                return jsonResponse({
+                    success: true,
+                    photo: updatePhoto(body)
+                });
 
             case "updateSiteSettings":
                 return jsonResponse(
                     updateSiteSettings(body)
                 );
 
+                case "reorderCollections":
+                return jsonResponse({
+                    success: true,
+                    collections:
+                    reorderCollections(body)
+                });
+
+            case "logActivity":
+               return jsonResponse({
+                    success: true,
+                    activity: logActivity(body)
+                });
+
+            case "updateSiteAppearance":
+                return jsonResponse({
+                    success: true,
+                    appearance: updateSiteAppearance(body)
+                });
+
             default:
                 return jsonResponse({
                     success: false,
                     error:
-                        "Unknown POST action"
+                   `Unknown POST action: "${action}"`
                 });
 
-        }
+            }
 
     } catch (error) {
 
@@ -685,6 +728,12 @@ function uploadPhoto(data) {
     const base64 =
         String(data.base64 || "").trim();
 
+    const previewBase64 =
+        String(data.previewBase64 || "").trim();
+
+    const galleryBase64 =
+        String(data.galleryBase64 || "").trim();
+
     if (!collectionId) {
         throw new Error(
             "Не указан ID коллекции."
@@ -708,37 +757,51 @@ function uploadPhoto(data) {
         );
     }
 
-    const bytes =
-        Utilities.base64Decode(base64);
+    const folder =
+        getCollectionFolder(collectionId);
 
-    const blob =
-        Utilities.newBlob(
-            bytes,
+    let originalFile = null;
+    let previewFile = null;
+    let galleryFile = null;
+
+    try {
+
+        originalFile = createPhotoFile_(
+            folder,
+            base64,
             mimeType,
             name
         );
 
-    const folder =
-        getCollectionFolder(collectionId);
+        const baseName =
+            getPhotoBaseName_(name);
 
-    const file =
-        folder.createFile(blob);
+        if (previewBase64) {
+            previewFile = createPhotoFile_(
+                folder,
+                previewBase64,
+                "image/webp",
+                `${baseName}-800.webp`
+            );
+        }
 
-    try {
+        if (galleryBase64) {
+            galleryFile = createPhotoFile_(
+                folder,
+                galleryBase64,
+                "image/webp",
+                `${baseName}-1600.webp`
+            );
+        }
 
-          file.setSharing(
-             DriveApp.Access.ANYONE_WITH_LINK,
-             DriveApp.Permission.VIEW
-        );
+    } catch (error) {
 
-} catch (error) {
+        safelyTrashFile_(originalFile);
+        safelyTrashFile_(previewFile);
+        safelyTrashFile_(galleryFile);
 
-    console.warn(
-        "Не удалось изменить доступ к файлу:",
-        error.message
-    );
-
-}
+        throw error;
+    }
 
     const existingPhotos =
         getPhotos(collectionId);
@@ -759,24 +822,40 @@ function uploadPhoto(data) {
 
         collectionId,
 
-        fileId: file.getId(),
+        fileId: originalFile.getId(),
+
+        previewFileId:
+            previewFile
+                ? previewFile.getId()
+                : "",
+
+        galleryFileId:
+            galleryFile
+                ? galleryFile.getId()
+                : "",
 
         name,
 
         url:
-            `https://drive.google.com/uc?export=view&id=${file.getId()}`,
+            `https://drive.google.com/uc?export=view&id=${originalFile.getId()}`,
 
         createdAt:
             new Date().toISOString(),
 
         order:
-            maxOrder + 1
+            maxOrder + 1,
+
+        description: "",
+
+        layout: "default"
 
     };
 
     const sheet = getSheet(
         CONFIG.photosSheet
     );
+
+    ensurePhotoOptimizationColumns_(sheet);
 
     sheet.appendRow([
 
@@ -786,11 +865,226 @@ function uploadPhoto(data) {
         photo.name,
         photo.url,
         new Date(photo.createdAt),
-        photo.order
+        photo.order,
+        photo.description,
+        photo.layout,
+        photo.previewFileId,
+        photo.galleryFileId
 
     ]);
 
     return photo;
+}
+function createPhotoFile_(
+    folder,
+    base64,
+    mimeType,
+    name
+) {
+
+    const bytes =
+        Utilities.base64Decode(base64);
+
+    const blob =
+        Utilities.newBlob(
+            bytes,
+            mimeType,
+            name
+        );
+
+    const file =
+        folder.createFile(blob);
+
+    try {
+
+        file.setSharing(
+            DriveApp.Access.ANYONE_WITH_LINK,
+            DriveApp.Permission.VIEW
+        );
+
+    } catch (error) {
+
+        console.warn(
+            `Не удалось открыть доступ к ${name}:`,
+            error.message
+        );
+    }
+
+    return file;
+}
+
+function getPhotoBaseName_(name) {
+
+    const cleaned =
+        String(name || "photo")
+            .trim()
+            .replace(/\.[^.]+$/, "");
+
+    return cleaned || "photo";
+}
+
+function ensurePhotoOptimizationColumns_(sheet) {
+
+    const headers = [
+        "id",
+        "collectionId",
+        "fileId",
+        "name",
+        "url",
+        "createdAt",
+        "order",
+        "description",
+        "layout",
+        "previewFileId",
+        "galleryFileId"
+    ];
+
+    const currentHeaders =
+        sheet
+            .getRange(
+                1,
+                1,
+                1,
+                headers.length
+            )
+            .getValues()[0];
+
+    headers.forEach((header, index) => {
+
+        if (!currentHeaders[index]) {
+            sheet
+                .getRange(1, index + 1)
+                .setValue(header);
+        }
+
+    });
+}
+
+function safelyTrashFile_(file) {
+
+    if (!file) {
+        return;
+    }
+
+    try {
+        file.setTrashed(true);
+    } catch (error) {
+        console.warn(
+            "Не удалось удалить незавершённый файл:",
+            error.message
+        );
+    }
+}
+function updatePhoto(data) {
+
+    const photoId = String(
+        data.photoId || ""
+    ).trim();
+
+    if (!photoId) {
+        throw new Error(
+            "Не указан ID фотографии."
+        );
+    }
+
+    const sheet = getSheet(
+        CONFIG.photosSheet
+    );
+
+    const lastRow = sheet.getLastRow();
+
+    if (lastRow < 2) {
+        throw new Error(
+            "Фотография не найдена."
+        );
+    }
+
+    // H и I используются для описания
+    // и расположения фотографии.
+    if (!sheet.getRange(1, 8).getValue()) {
+        sheet.getRange(1, 8)
+            .setValue("description");
+    }
+
+    if (!sheet.getRange(1, 9).getValue()) {
+        sheet.getRange(1, 9)
+            .setValue("layout");
+    }
+
+    const values = sheet
+        .getRange(
+            2,
+            1,
+            lastRow - 1,
+            11
+        )
+        .getValues();
+
+    const index = values.findIndex(
+        row =>
+            String(row[0]) === photoId
+    );
+
+    if (index === -1) {
+        throw new Error(
+            "Фотография не найдена."
+        );
+    }
+
+    const currentRow = values[index];
+
+    const description = String(
+        data.description ?? currentRow[7] ?? ""
+    ).trim();
+
+    const requestedLayout = String(
+        data.layout ?? currentRow[8] ?? "default"
+    ).trim();
+
+    const allowedLayouts = [
+        "default",
+        "story-left",
+        "story-right"
+    ];
+
+    const layout =
+        description &&
+        allowedLayouts.includes(requestedLayout)
+            ? requestedLayout
+            : "default";
+
+    const rowNumber = index + 2;
+
+    sheet
+        .getRange(
+            rowNumber,
+            8,
+            1,
+            2
+        )
+        .setValues([[
+            description,
+            layout
+        ]]);
+
+    return {
+        id: String(currentRow[0]),
+        collectionId: String(currentRow[1]),
+        fileId: String(currentRow[2]),
+        name: String(currentRow[3]),
+        url: String(currentRow[4]),
+        createdAt:
+            normalizeDate(currentRow[5]),
+        order:
+            Number(currentRow[6]) || 0,
+        description,
+        layout,
+        previewFileId:
+            String(currentRow[9] || ""),
+
+        galleryFileId:
+            String(currentRow[10] || ""),
+        };
 
 }
 function deletePhoto(photoId) {
@@ -879,7 +1173,7 @@ function getPhotos(collectionId) {
             2,
             1,
             lastRow - 1,
-            7
+            11
         )
         .getValues()
         .filter(
@@ -907,9 +1201,26 @@ function getPhotos(collectionId) {
                 normalizeDate(row[5]),
 
             order:
-                Number(row[6]) || 0
+                Number(row[6]) || 0,
 
-        }))
+            description:
+                String(row[7] || ""),
+
+           layout:
+           [
+            "default",
+            "story-left",
+            "story-right"
+           ].includes(String(row[8]))
+              ? String(row[8])
+              : "default",
+              
+            previewFileId:
+                String(row[9] || ""),
+
+            galleryFileId:
+                String(row[10] || "")
+            }))
         .sort((a, b) => a.order - b.order);
 
 }
