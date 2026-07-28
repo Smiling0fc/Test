@@ -29,7 +29,7 @@ class SiteIdentity {
         document.title = siteName;
 
         document
-            .querySelectorAll('.logo img')
+            .querySelectorAll(".logo img")
             .forEach(image => image.alt = siteName);
 
         const heroTitle = document.querySelector(
@@ -39,11 +39,17 @@ class SiteIdentity {
             ".hero-description"
         );
 
-        if (heroTitle && !document.getElementById("homeHero")?.dataset.collectionId) {
+        if (
+            heroTitle &&
+            !document.getElementById("homeHero")?.dataset.collectionId
+        ) {
             heroTitle.textContent = siteName;
         }
 
-        if (heroDescription && !document.getElementById("homeHero")?.dataset.collectionId) {
+        if (
+            heroDescription &&
+            !document.getElementById("homeHero")?.dataset.collectionId
+        ) {
             heroDescription.textContent = description;
         }
 
@@ -55,8 +61,14 @@ class SiteIdentity {
                 contact.hidden = false;
                 contact.removeAttribute("target");
                 contact.removeAttribute("rel");
-                contact.setAttribute("aria-controls", "contactDrawer");
-                contact.setAttribute("aria-expanded", "false");
+                contact.setAttribute(
+                    "aria-controls",
+                    "contactDrawer"
+                );
+                contact.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
             });
 
         if (typeof ContactDrawer !== "undefined") {
@@ -68,9 +80,9 @@ class SiteIdentity {
         this.applySocial("Instagram", data.instagramUrl);
 
         document
-            .querySelectorAll(".editorial-footer-copy")
-            .forEach(element => {
-                element.textContent = `© ${year} ${siteName}`;
+            .querySelectorAll(".site-footer-copy p")
+            .forEach(copy => {
+                copy.textContent = `© ${year} ${siteName}`;
             });
 
         document
@@ -79,34 +91,25 @@ class SiteIdentity {
                 element.textContent = description;
             });
 
+        const location = String(
+            data.location || ""
+        ).trim();
+
         document
             .querySelectorAll(".editorial-footer-location")
             .forEach(element => {
-                element.textContent = String(
-                    data.location || ""
+                element.textContent = location || "ViJoy’s Journal";
+                element.hidden = !location;
+                element.setAttribute(
+                    "aria-hidden",
+                    String(!location)
                 );
-                element.hidden = !element.textContent.trim();
             });
-
-        const footerCopy = document.querySelector(
-            ".site-footer-copy p"
-        );
-        const footerNote = document.querySelector(
-            ".site-footer-copy span"
-        );
-
-        if (footerCopy) {
-            footerCopy.textContent = `© ${year} ${siteName}`;
-        }
-
-        if (footerNote && data.location) {
-            footerNote.textContent = String(data.location);
-        }
     }
 
     static applySocial(name, value) {
         const links = document.querySelectorAll(
-            `.site-footer-socials a[aria-label="${name}"], .editorial-footer-socials a[aria-label="${name}"]`
+            `.site-footer-socials a[aria-label="${name}"]`
         );
         const url = this.normalizeExternalUrl(value);
 
@@ -119,6 +122,8 @@ class SiteIdentity {
                 link.rel = "noopener noreferrer";
             } else {
                 link.removeAttribute("href");
+                link.removeAttribute("target");
+                link.removeAttribute("rel");
             }
         });
     }
