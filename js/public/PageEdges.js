@@ -101,13 +101,6 @@ class PageEdges {
         if (page === "home") {
             return [
                 {
-                    selector: "#homeHero",
-                    left: "Главная",
-                    right: "Авторский журнал",
-                    tone: "light",
-                    mode: "full"
-                },
-                {
                     selector: "#about",
                     left: "О фотографе",
                     right: "Портфолио",
@@ -127,7 +120,7 @@ class PageEdges {
         if (page === "archive") {
             return [
                 {
-                    selector: "main.archive-page",
+                    selector: "#archiveGrid",
                     left: body.dataset.edgeLeft || "Коллекции",
                     right: body.dataset.edgeRight || "Портфолио",
                     tone: "dark",
@@ -139,23 +132,16 @@ class PageEdges {
         if (page === "collection") {
             return [
                 {
-                    selector: "#collectionIssueHero",
+                    selector: "#issueGallery",
                     left:
                         body.dataset.edgeLeft ||
                         "Фотографическая история",
                     right:
                         body.dataset.edgeRight ||
                         "ViJoy’s Journal",
-                    tone: "light",
+                    tone: "dark",
                     mode: "full",
                     dynamic: true
-                },
-                {
-                    selector: "#issueGallery",
-                    left: "История",
-                    right: "Галерея",
-                    tone: "dark",
-                    mode: "full"
                 }
             ];
         }
