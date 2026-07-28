@@ -22,8 +22,9 @@
         </a>
         <nav class="glass-menu">
             <ul>
-                <li><a href="./">Главная</a></li>
                 <li><a href="collections.html">Коллекции</a></li>
+                <li><a href="./#latestStories">Примеры работ</a></li>
+                <li><a href="#">Блог</a></li>
                 <li><a href="./#about">О фотографе</a></li>
                 <li><a href="#contactDrawer" class="contact-link" aria-controls="contactDrawer" aria-expanded="false">Связаться <span aria-hidden="true">→</span></a></li>
             </ul>
@@ -32,14 +33,20 @@
 
     <main class="journal-main archive-page">
         <div class="journal-shell">
-            <a class="archive-back" href="./">← На главную</a>
-            <section class="archive-hero">
+            <section class="archive-hero" aria-labelledby="collectionsTitle">
                 <div>
-                    <small>Архив журнала</small>
-                    <h1>Коллекции</h1>
+                    <h1 id="collectionsTitle">Коллекции</h1>
+                    <p>
+                        Истории в каждом кадре. Выберите коллекцию
+                        и погрузитесь в атмосферу момента.
+                    </p>
                 </div>
-                <p>Авторские серии, события и личные истории. Каждая коллекция открывается как отдельный выпуск.</p>
+                <div class="archive-count" aria-live="polite">
+                    <span id="archiveCount">00 коллекций</span>
+                    <i aria-hidden="true"></i>
+                </div>
             </section>
+
             <section id="archiveGrid" class="archive-grid" aria-live="polite">
                 <div class="journal-message">Загружаем коллекции…</div>
             </section>
@@ -47,9 +54,15 @@
     </main>
 
     <footer class="site-footer">
+        <div class="site-footer-socials" aria-label="Социальные сети"></div>
         <div class="site-footer-copy">
             <p>© 2026 ViJoy’s Photo Gallery</p>
-            <span>Истории, которые хочется сохранить</span>
+            <span>Все права защищены</span>
+        </div>
+        <div class="site-footer-legal">
+            <a href="#">Политика конфиденциальности</a>
+            <span aria-hidden="true">·</span>
+            <a href="#">Условия использования</a>
         </div>
     </footer>
 
