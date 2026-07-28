@@ -1,0 +1,227 @@
+ViJoy Studio — Collection Journal Metadata GAS patch
+=====================================================
+
+Новые поля коллекции:
+
+• category   — категория съёмки;
+• shootDate  — дата в формате YYYY-MM-DD;
+• location   — место съёмки.
+
+Номер выпуска берётся из order, количество кадров вычисляется по Photos.
+Отдельная таблица не нужна.
+
+
+1. Добавьте в проект Apps Script новый файл CollectionMetadata.gs
+-----------------------------------------------------------------
+
+const COLLECTION_METADATA_HEADERS = [
+  "category",
+  "shootDate",
+  "location"
+];
+
+function ensureCollectionMetadataColumns_() {
+  const sheet = SpreadsheetApp
+    .getActiveSpreadsheet()
+    .getSheetByName("Collections");
+
+  if (!sheet) {
+    throw new Error("Лист Collections не найден.");
+  }
+
+  const lastColumn = Math.max(sheet.getLastColumn(), 1);
+  const headers = sheet
+    .getRange(1, 1, 1, lastColumn)
+    .getValues()[0]
+    .map(value => String(value || "").trim());
+
+  COLLECTION_METADATA_HEADERS.forEach(header => {
+    if (!headers.includes(header)) {
+      headers.push(header);
+      sheet.getRange(1, headers.length).setValue(header);
+    }
+  });
+
+  return {
+    sheet,
+    headers
+  };
+}
+
+function collectionMetadataFromRow_(headers, row) {
+  const value = header => {
+    const index = headers.indexOf(header);
+    return index === -1 ? "" : String(row[index] || "").trim();
+  };
+
+  return {
+    category: value("category"),
+    shootDate: value("shootDate"),
+    location: value("location")
+  };
+}
+
+function enrichCollectionsWithMetadata_(collections) {
+  const source = Array.isArray(collections) ? collections : [];
+  const state = ensureCollectionMetadataColumns_();
+  const rows = state.sheet.getDataRange().getValues();
+  const idIndex = state.headers.indexOf("id");
+
+  if (idIndex === -1) {
+    throw new Error("В листе Collections отсутствует столбец id.");
+  }
+
+  const metadataById = new Map();
+
+  rows.slice(1).forEach(row => {
+    const id = String(row[idIndex] || "").trim();
+
+    if (id) {
+      metadataById.set(
+        id,
+        collectionMetadataFromRow_(state.headers, row)
+      );
+    }
+  });
+
+  return source.map(collection => ({
+    ...collection,
+    ...(metadataById.get(String(collection.id)) || {
+      category: "",
+      shootDate: "",
+      location: ""
+    })
+  }));
+}
+
+function saveCollectionMetadata_(collectionId, data) {
+  const id = String(collectionId || "").trim();
+
+  if (!id) {
+    throw new Error("Не указан collectionId.");
+  }
+
+  const state = ensureCollectionMetadataColumns_();
+  const rows = state.sheet.getDataRange().getValues();
+  const idIndex = state.headers.indexOf("id");
+
+  if (idIndex === -1) {
+    throw new Error("В листе Collections отсутствует столбец id.");
+  }
+
+  const rowOffset = rows.slice(1).findIndex(row =>
+    String(row[idIndex] || "").trim() === id
+  );
+
+  if (rowOffset === -1) {
+    throw new Error("Коллекция не найдена.");
+  }
+
+  const rowNumber = rowOffset + 2;
+  const values = {
+    category: String(data.category || "").trim(),
+    shootDate: normalizeCollectionShootDate_(data.shootDate),
+    location: String(data.location || "").trim()
+  };
+
+  Object.entries(values).forEach(([header, value]) => {
+    const columnIndex = state.headers.indexOf(header);
+
+    if (columnIndex !== -1) {
+      state.sheet
+        .getRange(rowNumber, columnIndex + 1)
+        .setValue(value);
+    }
+  });
+
+  return values;
+}
+
+function normalizeCollectionShootDate_(value) {
+  const text = String(value || "").trim();
+
+  if (!text) {
+    return "";
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    throw new Error("Дата съёмки должна быть в формате YYYY-MM-DD.");
+  }
+
+  return text;
+}
+
+
+2. Обновите существующую функцию getCollections
+------------------------------------------------
+
+В конце функции, перед возвратом результата, оберните массив коллекций:
+
+const enrichedCollections = enrichCollectionsWithMetadata_(collections);
+
+return {
+  success: true,
+  collections: enrichedCollections
+};
+
+Здесь collections — уже собранный текущей функцией массив.
+
+
+3. Обновите существующую функцию updateCollection
+-------------------------------------------------
+
+После сохранения name, description, size и published добавьте:
+
+const metadata = saveCollectionMetadata_(collectionId, data);
+
+И добавьте metadata в объект возвращаемой коллекции:
+
+return {
+  success: true,
+  collection: {
+    ...collection,
+    ...metadata
+  }
+};
+
+Если аргумент функции называется body, замените data на body.
+
+
+4. Обновите существующую функцию createCollection
+-------------------------------------------------
+
+После создания строки коллекции вызовите:
+
+const metadata = saveCollectionMetadata_(collection.id, data);
+
+И верните:
+
+return {
+  success: true,
+  collection: {
+    ...collection,
+    ...metadata
+  }
+};
+
+Если новая коллекция сначала записывается в таблицу, вызов должен идти
+после appendRow/setValues, чтобы строка уже существовала.
+
+
+5. Опубликуйте новую версию
+---------------------------
+
+Развертывание → Управление развертываниями → Изменить
+→ Новая версия → Развернуть.
+
+После публикации GET getCollections должен возвращать:
+
+{
+  id: "...",
+  name: "...",
+  category: "Свадьба",
+  shootDate: "2026-07-18",
+  location: "Нижний Новгород"
+}
+
+POST updateCollection принимает те же три поля.
