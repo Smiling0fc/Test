@@ -1,5 +1,8 @@
 class SiteIdentity {
 
+    static data = {};
+    static loaded = false;
+
     static async init() {
         try {
             const response = await PublicApi.getSiteSettings();
@@ -10,16 +13,30 @@ class SiteIdentity {
             }
 
             this.apply(data);
+            this.markReady(data);
         } catch (error) {
             if (typeof EditorialFooter !== "undefined") {
                 EditorialFooter.hydrate({});
             }
+
+            this.markReady({});
 
             console.warn(
                 "Основные данные сайта недоступны:",
                 error.message
             );
         }
+    }
+
+    static markReady(data = {}) {
+        this.data = { ...data };
+        this.loaded = true;
+
+        document.dispatchEvent(
+            new CustomEvent("site-identity:ready", {
+                detail: this.data
+            })
+        );
     }
 
     static apply(data = {}) {
@@ -31,6 +48,13 @@ class SiteIdentity {
         );
         const buttonText = String(
             data.contactButtonText || "Связаться"
+        );
+        const aboutTitle = String(
+            data.aboutTitle || "Живые истории без лишнего шума"
+        );
+        const aboutText = String(
+            data.aboutText ||
+            "Я сохраняю не постановку, а ощущение момента: движение, свет, характер и детали, которые обычно ускользают. Каждая съёмка становится небольшой главой личного визуального журнала."
         );
 
         document.title = siteName;
@@ -45,6 +69,12 @@ class SiteIdentity {
         const heroDescription = document.querySelector(
             ".hero-description"
         );
+        const aboutTitleElement = document.querySelector(
+            ".about-editorial-copy h2"
+        );
+        const aboutTextElement = document.querySelector(
+            ".about-editorial-copy p"
+        );
 
         if (
             heroTitle &&
@@ -58,6 +88,14 @@ class SiteIdentity {
             !document.getElementById("homeHero")?.dataset.collectionId
         ) {
             heroDescription.textContent = description;
+        }
+
+        if (aboutTitleElement) {
+            aboutTitleElement.textContent = aboutTitle;
+        }
+
+        if (aboutTextElement) {
+            aboutTextElement.textContent = aboutText;
         }
 
         document
