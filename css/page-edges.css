@@ -3,6 +3,10 @@
     --page-edge-light: rgba(255, 255, 255, .66);
 }
 
+.section-page-edges .hero-marker {
+    display: none;
+}
+
 .page-edge-host {
     position: relative;
 }
