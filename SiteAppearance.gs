@@ -117,7 +117,25 @@ function normalizeSiteAppearance_(data) {
         telegramUrl: normalizeAppearanceUrl_(data.telegramUrl),
         vkUrl: normalizeAppearanceUrl_(data.vkUrl),
         instagramUrl: normalizeAppearanceUrl_(data.instagramUrl),
-        footerYear: normalizeAppearanceYear_(data.footerYear)
+        footerYear: normalizeAppearanceYear_(data.footerYear),
+        maintenanceEnabled: normalizeAppearanceBoolean_(
+            data.maintenanceEnabled
+        ),
+        maintenanceTitle: normalizeAppearanceText_(
+            data.maintenanceTitle,
+            "Сайт скоро вернётся",
+            100
+        ),
+        maintenanceMessage: normalizeAppearanceText_(
+            data.maintenanceMessage,
+            "Мы обновляем галерею и готовим новые истории. Загляните немного позже.",
+            300
+        ),
+        maintenanceButtonText: normalizeAppearanceText_(
+            data.maintenanceButtonText,
+            "Обновить страницу",
+            40
+        )
     };
 }
 
@@ -137,6 +155,10 @@ function normalizeAppearanceUrl_(value) {
     return /^https:\/\//i.test(url)
         ? url.slice(0, 300)
         : "";
+}
+
+function normalizeAppearanceBoolean_(value) {
+    return value === true || String(value).toLowerCase() === "true";
 }
 
 function normalizeAppearanceYear_(value) {
