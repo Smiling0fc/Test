@@ -41,31 +41,68 @@ class JournalPages {
         };
     }
 
-    static storyCard(bundle) {
+    static collectionCard(bundle) {
         const { collection, photos, cover } = bundle;
         const fileId = this.previewId(cover);
         const description = this.escape(collection.description || "");
+        const count = photos.length;
 
         return `
-            <a class="story-card" href="collection.html?id=${encodeURIComponent(collection.id)}">
-                <div class="story-card-image">
-                    ${fileId
-                        ? `<img
-                            src="${GalleryService.getThumbnailUrl(fileId, 800)}"
-                            alt="${this.escape(collection.name)}"
-                            loading="lazy"
-                            decoding="async">`
-                        : ""}
-                </div>
-                <div class="story-card-copy">
-                    <div>
-                        <h3>${this.escape(collection.name)}</h3>
-                        <p>${description || `${photos.length} фотографий`}</p>
+            <a
+                class="journal-collection-link"
+                href="collection.html?id=${encodeURIComponent(collection.id)}">
+                <article class="collection-card">
+                    <div class="collection-heading">
+                        <h2 class="collection-title">
+                            ${this.escape(collection.name)}
+                        </h2>
+                        <p class="collection-description">
+                            ${description}
+                        </p>
                     </div>
-                    <span class="story-card-arrow" aria-hidden="true">→</span>
-                </div>
+
+                    <div class="collection-glass">
+                        <div class="collection-cover">
+                            ${fileId
+                                ? `<img
+                                    src="${GalleryService.getThumbnailUrl(fileId, 800)}"
+                                    alt="${this.escape(collection.name)}"
+                                    loading="lazy"
+                                    decoding="async">`
+                                : `<div class="collection-placeholder">
+                                    <span>Пока без фотографий</span>
+                                </div>`}
+                        </div>
+                    </div>
+
+                    <div class="collection-footer">
+                        <p class="collection-count">
+                            ${count} ${this.photoWord(count)}
+                        </p>
+                        <span class="collection-arrow" aria-hidden="true">→</span>
+                    </div>
+                </article>
             </a>
         `;
+    }
+
+    static photoWord(number) {
+        const value = Math.abs(Number(number)) % 100;
+        const last = value % 10;
+
+        if (value > 10 && value < 20) {
+            return "фотографий";
+        }
+
+        if (last === 1) {
+            return "фотография";
+        }
+
+        if (last >= 2 && last <= 4) {
+            return "фотографии";
+        }
+
+        return "фотографий";
     }
 
     static async initHome() {
@@ -74,14 +111,14 @@ class JournalPages {
 
         try {
             const collections = await GalleryService.loadCollections();
-            const latest = collections.slice(-3).reverse();
+            const selected = collections.slice(0, 3);
             const bundles = await Promise.all(
-                latest.map(collection => this.loadCollectionBundle(collection))
+                selected.map(collection => this.loadCollectionBundle(collection))
             );
 
             if (latestRoot) {
                 latestRoot.innerHTML = bundles.length
-                    ? bundles.map(bundle => this.storyCard(bundle)).join("")
+                    ? bundles.map(bundle => this.collectionCard(bundle)).join("")
                     : `<div class="journal-message">Истории скоро появятся.</div>`;
             }
 
@@ -90,45 +127,24 @@ class JournalPages {
                 .slice(0, 2);
 
             if (aboutVisual) {
-                aboutVisual.innerHTML = visualPhotos.length
-                    ? visualPhotos.map(photo => `
-                        <figure>
-                            <img
-                                src="${GalleryService.getThumbnailUrl(this.galleryId(photo), 1600)}"
-                                alt="Авторская фотография"
-                                loading="lazy"
-                                decoding="async">
-                        </figure>
-                    `).join("")
-                    : "";
+                aboutVisual.innerHTML = visualPhotos.map(photo => `
+                    <figure>
+                        <img
+                            src="${GalleryService.getThumbnailUrl(this.galleryId(photo), 1600)}"
+                            alt="Авторская фотография"
+                            loading="lazy"
+                            decoding="async">
+                    </figure>
+                `).join("");
             }
 
             const heroBundle = bundles[0];
             if (heroBundle?.cover) {
                 const hero = document.getElementById("homeHero");
-                const heroTitle = hero?.querySelector("h1");
-                const heroDescription = hero?.querySelector(".hero-description");
-                const heroButton = hero?.querySelector(".hero-button");
-                const imageId = this.galleryId(heroBundle.cover);
-
                 hero?.style.setProperty(
                     "--hero-image",
-                    `url("${GalleryService.getThumbnailUrl(imageId, 1600)}")`
+                    `url("${GalleryService.getThumbnailUrl(this.galleryId(heroBundle.cover), 1600)}")`
                 );
-
-                if (heroTitle) {
-                    heroTitle.textContent = "ViJoy’s Photo Gallery";
-                }
-
-                if (heroDescription) {
-                    heroDescription.textContent =
-                        "Фотография как личный дневник света, людей и времени.";
-                }
-
-                if (heroButton) {
-                    heroButton.href = "collections.html";
-                    heroButton.innerHTML = "Смотреть истории <span aria-hidden=\"true\">→</span>";
-                }
             }
         } catch (error) {
             console.error(error);
@@ -152,14 +168,11 @@ class JournalPages {
         try {
             const collections = await GalleryService.loadCollections();
             const bundles = await Promise.all(
-                collections
-                    .slice()
-                    .reverse()
-                    .map(collection => this.loadCollectionBundle(collection))
+                collections.map(collection => this.loadCollectionBundle(collection))
             );
 
             root.innerHTML = bundles.length
-                ? bundles.map(bundle => this.storyCard(bundle)).join("")
+                ? bundles.map(bundle => this.collectionCard(bundle)).join("")
                 : `<div class="journal-message">Коллекций пока нет.</div>`;
         } catch (error) {
             console.error(error);
@@ -225,7 +238,7 @@ class JournalPages {
         }
 
         try {
-            const collections = await GalleryService.loadCollections();
+            await GalleryService.loadCollections();
             const collection = GalleryService.getCollectionById(collectionId);
 
             if (!collection) {
@@ -255,7 +268,7 @@ class JournalPages {
                         "История, собранная из света, движения и живых мгновений."
                     )}</p>
                     <div class="collection-issue-meta">
-                        <span>${photos.length} фотографий</span>
+                        <span>${photos.length} ${this.photoWord(photos.length)}</span>
                         <span>ViJoy’s Journal</span>
                     </div>
                     <a class="collection-issue-scroll" href="#issueGallery">
