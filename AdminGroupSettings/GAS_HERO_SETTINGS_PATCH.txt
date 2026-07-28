@@ -1,6 +1,17 @@
 ViJoy Studio — Hero Settings GAS patch
 ======================================
 
+Файл SiteSettings.gs теперь хранит:
+
+• выбранную Hero-коллекцию главной страницы;
+• точку фокуса обложки для каждой коллекции.
+
+Если маршруты getSiteSettings и updateSiteSettings уже добавлены,
+Code.gs менять повторно не нужно. Замените только содержимое
+SiteSettings.gs и опубликуйте новую версию веб-приложения.
+
+Для первой установки:
+
 1. Добавьте файл SiteSettings.gs в тот же проект Google Apps Script,
    где находится Code.gs.
 
@@ -21,14 +32,7 @@ case "updateSiteSettings":
         updateSiteSettings(body)
     );
 
-4. В текущем doGet(e) удалите ошибочный блок, расположенный после default:
-
-case "setCollectionCover":
-    return jsonResponse(
-        setCollectionCover(data)
-    );
-
-setCollectionCover должен оставаться только в doPost(e).
+4. setCollectionCover должен оставаться только в doPost(e).
 
 5. Сохраните проект Apps Script.
 
@@ -38,7 +42,21 @@ setCollectionCover должен оставаться только в doPost(e).
 7. Выберите:
    Новая версия → Развернуть
 
-После публикации станут доступны действия:
+После публикации доступны:
 
 GET  ?action=getSiteSettings
-POST { action: "updateSiteSettings", heroCollectionId: "..." }
+
+POST {
+    action: "updateSiteSettings",
+    heroCollectionId: "..."
+}
+
+POST {
+    action: "updateSiteSettings",
+    collectionHeroFocus: {
+        "collection-id": {
+            x: 50,
+            y: 20
+        }
+    }
+}
