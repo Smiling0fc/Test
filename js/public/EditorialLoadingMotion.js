@@ -19,7 +19,10 @@ class EditorialLoadingMotion {
         ".archive-hero",
         ".archive-grid > .journal-collection-link",
         ".public-photo-grid > .photo-story",
-        ".public-photo-grid > .public-photo"
+        ".public-photo-grid > .public-photo",
+        ".editorial-footer-main",
+        ".editorial-footer-links",
+        ".editorial-footer-bottom"
     ].join(", ");
 
     static homeSkeleton() {
@@ -70,6 +73,13 @@ class EditorialLoadingMotion {
 
     static prepareInitialSkeletons() {
         const page = document.body.dataset.journalPage;
+
+        if (
+            typeof EditorialFooter !== "undefined" &&
+            !EditorialFooter.hydrated
+        ) {
+            EditorialFooter.renderSkeleton();
+        }
 
         if (page === "home") {
             const latest = document.getElementById("latestStoriesGrid");
