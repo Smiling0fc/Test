@@ -1,0 +1,328 @@
+:root {
+    --journal-ink: #211f1d;
+    --journal-soft: rgba(33, 31, 29, .66);
+    --journal-line: rgba(33, 31, 29, .14);
+    --journal-paper: rgba(255, 255, 255, .7);
+}
+
+.journal-main {
+    position: relative;
+    z-index: 1;
+}
+
+.journal-shell {
+    width: min(1240px, calc(100% - 48px));
+    margin: 0 auto;
+}
+
+.about-editorial {
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: clamp(42px, 7vw, 110px);
+    align-items: center;
+    padding: clamp(90px, 12vw, 170px) 0;
+}
+
+.about-editorial-copy small,
+.latest-stories-head small,
+.archive-hero small,
+.collection-issue-copy small {
+    display: block;
+    margin-bottom: 18px;
+    font: 600 11px/1.2 Inter, sans-serif;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--journal-soft);
+}
+
+.about-editorial-copy h2,
+.latest-stories-head h2,
+.archive-hero h1,
+.collection-issue-copy h1 {
+    margin: 0;
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 500;
+    line-height: .94;
+    color: var(--journal-ink);
+}
+
+.about-editorial-copy h2,
+.latest-stories-head h2 {
+    font-size: clamp(46px, 7vw, 88px);
+}
+
+.about-editorial-copy p {
+    max-width: 590px;
+    margin: 28px 0 0;
+    font: 400 clamp(17px, 1.6vw, 21px)/1.75 Inter, sans-serif;
+    color: var(--journal-soft);
+}
+
+.about-editorial-visual {
+    display: grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 18px;
+    min-height: 590px;
+}
+
+.about-editorial-visual figure {
+    overflow: hidden;
+    margin: 0;
+    border-radius: 30px;
+    background: rgba(255,255,255,.34);
+}
+
+.about-editorial-visual figure:last-child {
+    margin-top: 110px;
+    margin-bottom: 60px;
+}
+
+.about-editorial-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.latest-stories {
+    padding: 20px 0 clamp(100px, 12vw, 170px);
+}
+
+.latest-stories-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 42px;
+}
+
+.latest-stories-head a,
+.archive-back,
+.collection-issue-scroll {
+    color: var(--journal-ink);
+    font: 500 13px/1.2 Inter, sans-serif;
+    letter-spacing: .06em;
+    text-decoration: none;
+    border-bottom: 1px solid var(--journal-line);
+    padding-bottom: 8px;
+}
+
+.latest-stories-grid,
+.archive-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.story-card {
+    position: relative;
+    min-width: 0;
+    text-decoration: none;
+    color: var(--journal-ink);
+}
+
+.story-card-image {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    border-radius: 26px;
+    background: rgba(255,255,255,.4);
+}
+
+.story-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform .8s cubic-bezier(.2,.7,.2,1), filter .5s ease;
+}
+
+.story-card:hover img {
+    transform: scale(1.035);
+    filter: saturate(.94);
+}
+
+.story-card-copy {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+    align-items: end;
+    padding: 18px 4px 0;
+}
+
+.story-card h3 {
+    margin: 0;
+    font: 500 clamp(27px, 3vw, 39px)/1 "Cormorant Garamond", serif;
+}
+
+.story-card p {
+    margin: 9px 0 0;
+    color: var(--journal-soft);
+    font: 400 13px/1.55 Inter, sans-serif;
+}
+
+.story-card-arrow {
+    font: 400 25px/1 Inter, sans-serif;
+}
+
+.archive-page {
+    padding: 150px 0 120px;
+}
+
+.archive-hero {
+    display: grid;
+    grid-template-columns: 1fr .7fr;
+    gap: 50px;
+    align-items: end;
+    padding: 65px 0 85px;
+    border-bottom: 1px solid var(--journal-line);
+}
+
+.archive-hero h1 {
+    font-size: clamp(70px, 11vw, 150px);
+}
+
+.archive-hero p {
+    margin: 0 0 10px;
+    color: var(--journal-soft);
+    font: 400 17px/1.75 Inter, sans-serif;
+}
+
+.archive-grid {
+    padding-top: 52px;
+    row-gap: 64px;
+}
+
+.collection-issue-hero {
+    position: relative;
+    min-height: 92vh;
+    display: flex;
+    align-items: end;
+    overflow: hidden;
+    background: #1e1d1b;
+}
+
+.collection-issue-media,
+.collection-issue-media img,
+.collection-issue-shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.collection-issue-media img {
+    object-fit: cover;
+    object-position: center top;
+}
+
+.collection-issue-shade {
+    background: linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.18) 45%, rgba(0,0,0,.78));
+}
+
+.collection-issue-copy {
+    position: relative;
+    z-index: 1;
+    width: min(1240px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 170px 0 68px;
+    color: white;
+}
+
+.collection-issue-copy small,
+.collection-issue-copy h1 {
+    color: white;
+}
+
+.collection-issue-copy h1 {
+    max-width: 960px;
+    font-size: clamp(64px, 10vw, 144px);
+}
+
+.collection-issue-copy p {
+    max-width: 670px;
+    margin: 28px 0 26px;
+    color: rgba(255,255,255,.78);
+    font: 400 clamp(16px, 1.6vw, 21px)/1.7 Inter, sans-serif;
+}
+
+.collection-issue-meta {
+    display: flex;
+    gap: 24px;
+    color: rgba(255,255,255,.7);
+    font: 500 12px/1.2 Inter, sans-serif;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.collection-issue-scroll {
+    display: inline-block;
+    margin-top: 34px;
+    color: white;
+    border-color: rgba(255,255,255,.35);
+}
+
+.issue-gallery {
+    padding: clamp(70px, 8vw, 120px) 0 120px;
+}
+
+.issue-gallery .public-photo-grid {
+    margin-top: 0;
+}
+
+.journal-message {
+    padding: 90px 0;
+    text-align: center;
+    color: var(--journal-soft);
+    font: 400 16px/1.7 Inter, sans-serif;
+}
+
+@media (max-width: 900px) {
+    .about-editorial,
+    .archive-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .latest-stories-grid,
+    .archive-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .about-editorial-visual {
+        min-height: 460px;
+    }
+}
+
+@media (max-width: 620px) {
+    .journal-shell,
+    .collection-issue-copy {
+        width: min(100% - 28px, 1240px);
+    }
+
+    .latest-stories-head {
+        align-items: start;
+        flex-direction: column;
+    }
+
+    .latest-stories-grid,
+    .archive-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-editorial-visual {
+        grid-template-columns: 1fr 1fr;
+        min-height: 360px;
+    }
+
+    .about-editorial-visual figure:last-child {
+        margin-top: 55px;
+        margin-bottom: 30px;
+    }
+
+    .archive-page {
+        padding-top: 105px;
+    }
+
+    .collection-issue-hero {
+        min-height: 84vh;
+    }
+}
