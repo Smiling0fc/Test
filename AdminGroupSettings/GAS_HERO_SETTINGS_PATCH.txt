@@ -1,50 +1,38 @@
-ViJoy Studio — Hero Settings GAS patch
-======================================
+ViJoy Studio — SiteSettings GAS deployment
+==========================================
 
-Файл SiteSettings.gs теперь хранит:
+Файл SiteSettings.gs хранит:
 
 • выбранную Hero-коллекцию главной страницы;
-• точку фокуса обложки для каждой коллекции.
+• точку фокуса обложки для каждой коллекции;
+• данные журнального выпуска для каждой коллекции:
+  category, shootDate и location.
 
-Если маршруты getSiteSettings и updateSiteSettings уже добавлены,
-Code.gs менять повторно не нужно. Замените только содержимое
-SiteSettings.gs и опубликуйте новую версию веб-приложения.
+В текущем проекте маршруты getSiteSettings и updateSiteSettings
+уже находятся в GAS/Code.gs. Code.gs менять не нужно.
 
-Для первой установки:
+Обновление действующего Apps Script
+-----------------------------------
 
-1. Добавьте файл SiteSettings.gs в тот же проект Google Apps Script,
-   где находится Code.gs.
+1. Откройте файл SiteSettings.gs в проекте Google Apps Script.
 
-2. В функции doGet(e), внутри switch (action), ДО блока default,
-   добавьте:
+2. Полностью замените его содержимым файла:
 
-case "getSiteSettings":
-    return jsonResponse({
-        success: true,
-        settings: getSiteSettings()
-    });
+   AdminGroupSettings/GAS/SiteSettings.gs
 
-3. В функции doPost(e), внутри switch (action), ДО блока default,
-   добавьте:
+3. Сохраните проект.
 
-case "updateSiteSettings":
-    return jsonResponse(
-        updateSiteSettings(body)
-    );
+4. Откройте:
 
-4. setCollectionCover должен оставаться только в doPost(e).
-
-5. Сохраните проект Apps Script.
-
-6. Откройте:
    Развертывание → Управление развертываниями → Изменить
 
-7. Выберите:
+5. Выберите:
+
    Новая версия → Развернуть
 
 После публикации доступны:
 
-GET  ?action=getSiteSettings
+GET ?action=getSiteSettings
 
 POST {
     action: "updateSiteSettings",
@@ -60,3 +48,17 @@ POST {
         }
     }
 }
+
+POST {
+    action: "updateSiteSettings",
+    collectionMetadata: {
+        "collection-id": {
+            category: "Свадьба",
+            shootDate: "2026-07-18",
+            location: "Нижний Новгород"
+        }
+    }
+}
+
+Дополнительные столбцы в листе Collections не требуются.
+Файл CollectionMetadata.gs добавлять в Apps Script не нужно.
