@@ -1,0 +1,40 @@
+/*
+ * Keep the document flow stable while public data is loading.
+ * The footer stays below the future cards instead of rising beneath them.
+ */
+
+#latestStoriesGrid.has-loading-reserve {
+    min-height: 1188px;
+}
+
+#archiveGrid.has-loading-reserve {
+    min-height: 1480px;
+}
+
+#issueGalleryRoot.has-loading-reserve {
+    min-height: 2180px;
+}
+
+@media (max-width: 1120px) {
+    #archiveGrid.has-loading-reserve {
+        min-height: 1740px;
+    }
+}
+
+@media (max-width: 760px) {
+    #latestStoriesGrid.has-loading-reserve {
+        min-height: 1548px;
+    }
+
+    #archiveGrid.has-loading-reserve {
+        min-height: 1380px;
+    }
+
+    #archiveGrid.has-loading-reserve .loading-archive-card {
+        min-height: 320px;
+    }
+
+    #issueGalleryRoot.has-loading-reserve {
+        min-height: 1900px;
+    }
+}
