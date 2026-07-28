@@ -27,6 +27,7 @@
         );
 
         await SiteIdentitySettings.render();
+        await MaintenanceSettings.render();
     };
 
     Settings.bindThemeEvents = function () {
@@ -81,19 +82,11 @@
 
                     originalApplyTheme(savedTheme);
                     this.updateConnectionNote("saved");
-
-                    Promise.resolve(
-                        ActivityService.log({
-                            type: "settings",
-                            title: "Изменён фон сайта",
-                            details: savedTheme.name
-                        })
-                    ).catch(error => {
-                        console.warn(
-                            "Фон сохранён, но запись в журнал не добавлена:",
-                            error.message
-                        );
-                    });
+                    ActivityService.record(
+                        "settings",
+                        "Изменён фон сайта",
+                        savedTheme.name
+                    );
                 });
             });
     };
