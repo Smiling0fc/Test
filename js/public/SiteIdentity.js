@@ -38,9 +38,6 @@ class SiteIdentity {
         const heroDescription = document.querySelector(
             ".hero-description"
         );
-        const contact = document.querySelector(
-            ".contact-link"
-        );
 
         if (heroTitle && !document.getElementById("homeHero")?.dataset.collectionId) {
             heroTitle.textContent = siteName;
@@ -50,15 +47,17 @@ class SiteIdentity {
             heroDescription.textContent = description;
         }
 
-        if (contact) {
-            contact.innerHTML = `${this.escape(buttonText)} <span aria-hidden="true">→</span>`;
-            contact.href = "#contactDrawer";
-            contact.hidden = false;
-            contact.removeAttribute("target");
-            contact.removeAttribute("rel");
-            contact.setAttribute("aria-controls", "contactDrawer");
-            contact.setAttribute("aria-expanded", "false");
-        }
+        document
+            .querySelectorAll(".contact-link")
+            .forEach(contact => {
+                contact.innerHTML = `${this.escape(buttonText)} <span aria-hidden="true">→</span>`;
+                contact.href = "#contactDrawer";
+                contact.hidden = false;
+                contact.removeAttribute("target");
+                contact.removeAttribute("rel");
+                contact.setAttribute("aria-controls", "contactDrawer");
+                contact.setAttribute("aria-expanded", "false");
+            });
 
         if (typeof ContactDrawer !== "undefined") {
             ContactDrawer.setData(data);
@@ -67,6 +66,27 @@ class SiteIdentity {
         this.applySocial("Telegram", data.telegramUrl);
         this.applySocial("VK", data.vkUrl);
         this.applySocial("Instagram", data.instagramUrl);
+
+        document
+            .querySelectorAll(".editorial-footer-copy")
+            .forEach(element => {
+                element.textContent = `© ${year} ${siteName}`;
+            });
+
+        document
+            .querySelectorAll(".editorial-footer-description")
+            .forEach(element => {
+                element.textContent = description;
+            });
+
+        document
+            .querySelectorAll(".editorial-footer-location")
+            .forEach(element => {
+                element.textContent = String(
+                    data.location || ""
+                );
+                element.hidden = !element.textContent.trim();
+            });
 
         const footerCopy = document.querySelector(
             ".site-footer-copy p"
@@ -85,24 +105,22 @@ class SiteIdentity {
     }
 
     static applySocial(name, value) {
-        const link = document.querySelector(
-            `.site-footer-socials a[aria-label="${name}"]`
+        const links = document.querySelectorAll(
+            `.site-footer-socials a[aria-label="${name}"], .editorial-footer-socials a[aria-label="${name}"]`
         );
         const url = this.normalizeExternalUrl(value);
 
-        if (!link) {
-            return;
-        }
+        links.forEach(link => {
+            link.hidden = !url;
 
-        link.hidden = !url;
-
-        if (url) {
-            link.href = url;
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
-        } else {
-            link.removeAttribute("href");
-        }
+            if (url) {
+                link.href = url;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+            } else {
+                link.removeAttribute("href");
+            }
+        });
     }
 
     static normalizeExternalUrl(value) {
