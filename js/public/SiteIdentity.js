@@ -3,8 +3,18 @@ class SiteIdentity {
     static async init() {
         try {
             const response = await PublicApi.getSiteSettings();
-            this.apply(response.appearance || {});
+            const data = response.appearance || {};
+
+            if (typeof EditorialFooter !== "undefined") {
+                EditorialFooter.hydrate(data);
+            }
+
+            this.apply(data);
         } catch (error) {
+            if (typeof EditorialFooter !== "undefined") {
+                EditorialFooter.hydrate({});
+            }
+
             console.warn(
                 "Основные данные сайта недоступны:",
                 error.message
@@ -21,9 +31,6 @@ class SiteIdentity {
         );
         const buttonText = String(
             data.contactButtonText || "Связаться"
-        );
-        const year = String(
-            data.footerYear || new Date().getFullYear()
         );
 
         document.title = siteName;
@@ -78,33 +85,6 @@ class SiteIdentity {
         this.applySocial("Telegram", data.telegramUrl);
         this.applySocial("VK", data.vkUrl);
         this.applySocial("Instagram", data.instagramUrl);
-
-        document
-            .querySelectorAll(".site-footer-copy p")
-            .forEach(copy => {
-                copy.textContent = `© ${year} ${siteName}`;
-            });
-
-        document
-            .querySelectorAll(".editorial-footer-description")
-            .forEach(element => {
-                element.textContent = description;
-            });
-
-        const location = String(
-            data.location || ""
-        ).trim();
-
-        document
-            .querySelectorAll(".editorial-footer-location")
-            .forEach(element => {
-                element.textContent = location || "ViJoy’s Journal";
-                element.hidden = !location;
-                element.setAttribute(
-                    "aria-hidden",
-                    String(!location)
-                );
-            });
     }
 
     static applySocial(name, value) {
