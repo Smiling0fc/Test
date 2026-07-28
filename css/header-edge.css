@@ -8,22 +8,29 @@ header {
 header::before {
     content: "";
     position: absolute;
-    top: 0;
-    bottom: 0;
+    top: -28px;
+    bottom: -18px;
     left: 50%;
     z-index: -1;
 
     width: 100vw;
     transform: translateX(-50%);
 
-    border-bottom: 1px solid transparent;
-    background: transparent;
+    border-bottom: 1px solid rgba(33, 31, 29, .08);
+    background: linear-gradient(
+        180deg,
+        rgba(247, 245, 241, 0) 0%,
+        rgba(247, 245, 241, .46) 48%,
+        rgba(247, 245, 241, .9) 100%
+    );
+    box-shadow: 0 14px 34px rgba(40, 34, 28, .035);
     pointer-events: none;
 
     transition:
-        background .3s ease,
-        border-color .3s ease,
-        box-shadow .3s ease;
+        background .35s ease,
+        border-color .35s ease,
+        box-shadow .35s ease,
+        backdrop-filter .35s ease;
 }
 
 .header-on-hero {
@@ -31,7 +38,14 @@ header::before {
 }
 
 .header-on-hero::before {
-    border-bottom-color: rgba(255, 255, 255, .22);
+    border-bottom-color: rgba(255, 255, 255, .14);
+    background: linear-gradient(
+        180deg,
+        rgba(17, 17, 17, 0) 0%,
+        rgba(17, 17, 17, .12) 50%,
+        rgba(17, 17, 17, .34) 100%
+    );
+    box-shadow: 0 14px 38px rgba(0, 0, 0, .08);
 }
 
 .header-scrolled {
@@ -43,11 +57,27 @@ header::before {
 }
 
 .header-scrolled::before {
-    border-bottom-color: rgba(0, 0, 0, .08);
-    background: rgba(247, 245, 241, .88);
+    border-bottom-color: rgba(0, 0, 0, .075);
+    background: linear-gradient(
+        180deg,
+        rgba(247, 245, 241, 0) 0%,
+        rgba(247, 245, 241, .68) 46%,
+        rgba(247, 245, 241, .94) 100%
+    );
+    box-shadow: 0 16px 42px rgba(0, 0, 0, .055);
+    backdrop-filter: blur(16px) saturate(118%);
+    -webkit-backdrop-filter: blur(16px) saturate(118%);
+}
 
-    box-shadow: 0 12px 40px rgba(0, 0, 0, .06);
+@media (max-width: 700px) {
+    header::before {
+        top: -18px;
+        bottom: -12px;
+    }
+}
 
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
+@media (prefers-reduced-motion: reduce) {
+    header::before {
+        transition: none;
+    }
 }
