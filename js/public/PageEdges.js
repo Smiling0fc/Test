@@ -1,8 +1,10 @@
 class PageEdges {
-    static elements = {
-        left: null,
-        right: null
+    static dynamicEdges = {
+        left: [],
+        right: []
     };
+
+    static initialized = false;
 
     static cleanLabel(value, fallback) {
         const label = String(value || fallback || "").trim();
@@ -14,9 +16,23 @@ class PageEdges {
         return `${label.slice(0, 31).trim()}…`;
     }
 
-    static createEdge(side, label) {
+    static createEdge({
+        target,
+        side,
+        label,
+        tone = "dark",
+        dynamic = false
+    }) {
         const edge = document.createElement("aside");
-        edge.className = `page-edge page-edge-${side}`;
+
+        edge.className = [
+            "page-edge",
+            `page-edge-${side}`,
+            tone === "light"
+                ? "page-edge-light"
+                : "page-edge-dark"
+        ].join(" ");
+
         edge.setAttribute("aria-hidden", "true");
         edge.innerHTML = `
             <span class="page-edge-line"></span>
@@ -25,80 +41,177 @@ class PageEdges {
             <span class="page-edge-line"></span>
         `;
 
-        edge.querySelector(".page-edge-label").textContent = label;
-        document.body.appendChild(edge);
+        edge.querySelector(".page-edge-label").textContent =
+            this.cleanLabel(label, "ViJoy’s Journal");
+
+        target.appendChild(edge);
+
+        if (dynamic) {
+            this.dynamicEdges[side].push(edge);
+        }
 
         return edge;
     }
 
-    static setLabels({ left, right } = {}) {
-        const leftLabel = this.cleanLabel(
-            left,
-            document.body.dataset.edgeLeft || "Портфолио"
-        );
+    static mountSection({
+        selector,
+        left,
+        right,
+        tone = "dark",
+        mode = "full",
+        dynamic = false
+    }) {
+        const target = document.querySelector(selector);
 
-        const rightLabel = this.cleanLabel(
-            right,
-            document.body.dataset.edgeRight || "ViJoy’s Journal"
-        );
-
-        if (this.elements.left) {
-            this.elements.left
-                .querySelector(".page-edge-label")
-                .textContent = leftLabel;
-        }
-
-        if (this.elements.right) {
-            this.elements.right
-                .querySelector(".page-edge-label")
-                .textContent = rightLabel;
-        }
-    }
-
-    static watchHero() {
-        const hero = document.querySelector(
-            ".home-hero, .collection-issue-hero"
-        );
-
-        if (!hero) {
-            document.body.classList.remove("page-edges-on-hero");
+        if (!target) {
             return;
         }
 
-        const updateTheme = () => {
-            const bounds = hero.getBoundingClientRect();
-            const probe = Math.min(window.innerHeight * .45, 360);
-            const onHero = bounds.top < probe && bounds.bottom > probe;
+        target.classList.add(
+            "page-edge-host",
+            mode === "shell"
+                ? "page-edge-host-shell"
+                : "page-edge-host-full"
+        );
 
-            document.body.classList.toggle(
-                "page-edges-on-hero",
-                onHero
-            );
+        if (left) {
+            this.createEdge({
+                target,
+                side: "left",
+                label: left,
+                tone,
+                dynamic
+            });
+        }
+
+        if (right) {
+            this.createEdge({
+                target,
+                side: "right",
+                label: right,
+                tone,
+                dynamic
+            });
+        }
+    }
+
+    static definitions(page) {
+        const body = document.body;
+
+        if (page === "home") {
+            return [
+                {
+                    selector: "#homeHero",
+                    left: "Главная",
+                    right: "Авторский журнал",
+                    tone: "light",
+                    mode: "full"
+                },
+                {
+                    selector: "#about",
+                    left: "О фотографе",
+                    right: "Портфолио",
+                    tone: "dark",
+                    mode: "shell"
+                },
+                {
+                    selector: "#latestStories",
+                    left: "Последние истории",
+                    right: "Коллекции",
+                    tone: "dark",
+                    mode: "shell"
+                }
+            ];
+        }
+
+        if (page === "archive") {
+            return [
+                {
+                    selector: "main.archive-page",
+                    left: body.dataset.edgeLeft || "Коллекции",
+                    right: body.dataset.edgeRight || "Портфолио",
+                    tone: "dark",
+                    mode: "full"
+                }
+            ];
+        }
+
+        if (page === "collection") {
+            return [
+                {
+                    selector: "#collectionIssueHero",
+                    left:
+                        body.dataset.edgeLeft ||
+                        "Фотографическая история",
+                    right:
+                        body.dataset.edgeRight ||
+                        "ViJoy’s Journal",
+                    tone: "light",
+                    mode: "full",
+                    dynamic: true
+                },
+                {
+                    selector: "#issueGallery",
+                    left: "История",
+                    right: "Галерея",
+                    tone: "dark",
+                    mode: "full"
+                }
+            ];
+        }
+
+        return [];
+    }
+
+    static setLabels({ left, right } = {}) {
+        const values = {
+            left: this.cleanLabel(
+                left,
+                document.body.dataset.edgeLeft || "Портфолио"
+            ),
+            right: this.cleanLabel(
+                right,
+                document.body.dataset.edgeRight || "ViJoy’s Journal"
+            )
         };
 
-        updateTheme();
-        window.addEventListener("scroll", updateTheme, { passive: true });
-        window.addEventListener("resize", updateTheme);
+        ["left", "right"].forEach(side => {
+            if (!values[side]) {
+                return;
+            }
+
+            this.dynamicEdges[side].forEach(edge => {
+                const label = edge.querySelector(
+                    ".page-edge-label"
+                );
+
+                if (label) {
+                    label.textContent = values[side];
+                }
+            });
+        });
     }
 
     static init() {
-        if (document.querySelector(".page-edge")) {
+        if (this.initialized) {
             return;
         }
 
-        const left = this.cleanLabel(
-            document.body.dataset.edgeLeft,
-            "Портфолио"
-        );
+        this.initialized = true;
+        this.dynamicEdges = {
+            left: [],
+            right: []
+        };
 
-        const right = this.cleanLabel(
-            document.body.dataset.edgeRight,
-            "ViJoy’s Journal"
-        );
+        document
+            .querySelectorAll(".page-edge")
+            .forEach(edge => edge.remove());
 
-        this.elements.left = this.createEdge("left", left);
-        this.elements.right = this.createEdge("right", right);
-        this.watchHero();
+        const page = document.body.dataset.journalPage;
+
+        this.definitions(page).forEach(definition => {
+            this.mountSection(definition);
+        });
     }
 }
 
