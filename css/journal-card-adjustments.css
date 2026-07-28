@@ -46,6 +46,103 @@
     border: 1px solid rgba(118, 96, 61, .08);
 }
 
+/*
+ * Compact archive cards use their own protected text columns.
+ * The image no longer overlaps the heading or description.
+ */
+.archive-grid .journal-collection-link.size-small .collection-card {
+    grid-template-columns: minmax(0, 46%) minmax(0, 54%);
+}
+
+.archive-grid .journal-collection-link.size-small .collection-card::after {
+    width: 42%;
+}
+
+.archive-grid .journal-collection-link.size-small:hover .collection-card::after {
+    width: 45%;
+}
+
+.archive-grid .journal-collection-link.size-small .collection-heading {
+    overflow: hidden;
+    padding: 24px 14px 8px 20px;
+}
+
+.archive-grid .journal-collection-link.size-small .collection-title {
+    max-width: 100%;
+    font-size: clamp(24px, 2vw, 32px);
+    line-height: .96;
+    overflow-wrap: anywhere;
+}
+
+.archive-grid .journal-collection-link.size-small .collection-description {
+    display: -webkit-box;
+    max-width: 100%;
+    margin-top: 12px;
+    overflow: hidden;
+    font-size: 10.5px;
+    line-height: 1.42;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.archive-grid .journal-collection-link.size-small .collection-glass {
+    margin: 18px 12px 18px 0;
+}
+
+.archive-grid .journal-collection-link.size-small .collection-footer {
+    min-height: 48px;
+    padding: 4px 12px 15px 20px;
+}
+
+.archive-grid .journal-collection-link.size-small .collection-arrow {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+    font-size: 17px;
+}
+
+/* Medium cards keep a wider text area and a clean image boundary. */
+.archive-grid .journal-collection-link.size-medium .collection-card {
+    grid-template-columns: minmax(0, 42%) minmax(0, 58%);
+}
+
+.archive-grid .journal-collection-link.size-medium .collection-card::after {
+    width: 40%;
+}
+
+.archive-grid .journal-collection-link.size-medium:hover .collection-card::after {
+    width: 43%;
+}
+
+.archive-grid .journal-collection-link.size-medium .collection-heading {
+    overflow: hidden;
+    padding: 34px 22px 12px 28px;
+}
+
+.archive-grid .journal-collection-link.size-medium .collection-title {
+    max-width: 100%;
+    font-size: clamp(30px, 2.8vw, 44px);
+    overflow-wrap: anywhere;
+}
+
+.archive-grid .journal-collection-link.size-medium .collection-description {
+    display: -webkit-box;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 1.52;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+}
+
+.archive-grid .journal-collection-link.size-medium .collection-glass {
+    margin: 24px 18px 24px 0;
+}
+
+.archive-grid .journal-collection-link.size-medium .collection-footer {
+    padding: 8px 18px 22px 28px;
+}
+
 /* Medium cards receive more breathing room without changing their width. */
 .journal-collection-link.size-medium .collection-heading {
     padding-top: 36px;
@@ -117,6 +214,28 @@
     }
 }
 
+@media (max-width: 900px) and (min-width: 761px) {
+    .archive-grid .journal-collection-link.size-small .collection-card,
+    .archive-grid .journal-collection-link.size-medium .collection-card {
+        grid-template-columns: minmax(0, 45%) minmax(0, 55%);
+    }
+
+    .archive-grid .journal-collection-link.size-small .collection-heading,
+    .archive-grid .journal-collection-link.size-medium .collection-heading {
+        padding-left: 20px;
+        padding-right: 14px;
+    }
+
+    .archive-grid .journal-collection-link.size-medium .collection-title {
+        font-size: clamp(27px, 3.8vw, 36px);
+    }
+
+    .archive-grid .journal-collection-link.size-small .collection-glass,
+    .archive-grid .journal-collection-link.size-medium .collection-glass {
+        margin-right: 10px;
+    }
+}
+
 @media (max-width: 760px) {
     .latest-stories-grid,
     .archive-grid {
@@ -130,27 +249,65 @@
         grid-row: auto;
     }
 
+    .archive-grid .journal-collection-link.size-small .collection-card,
+    .archive-grid .journal-collection-link.size-medium .collection-card,
     .journal-collection-link.size-large .collection-card {
         grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(260px, 62vw) auto;
     }
 
+    .archive-grid .journal-collection-link.size-small .collection-card::after,
+    .archive-grid .journal-collection-link.size-medium .collection-card::after {
+        inset: auto 0 0;
+        width: 100%;
+        height: 48%;
+    }
+
+    .archive-grid .journal-collection-link.size-small:hover .collection-card::after,
+    .archive-grid .journal-collection-link.size-medium:hover .collection-card::after {
+        width: 100%;
+        height: 52%;
+    }
+
+    .archive-grid .journal-collection-link.size-small .collection-heading,
+    .archive-grid .journal-collection-link.size-medium .collection-heading,
     .journal-collection-link.size-large .collection-heading {
+        grid-column: 1;
+        grid-row: 1;
         padding: 30px 26px 18px;
     }
 
+    .archive-grid .journal-collection-link.size-small .collection-title,
+    .archive-grid .journal-collection-link.size-medium .collection-title,
     .journal-collection-link.size-large .collection-title {
         font-size: clamp(36px, 12vw, 56px);
     }
 
+    .archive-grid .journal-collection-link.size-small .collection-description,
+    .archive-grid .journal-collection-link.size-medium .collection-description,
     .journal-collection-link.size-large .collection-description {
+        display: block;
         max-width: 360px;
+        overflow: visible;
+        font-size: 13px;
+        line-height: 1.55;
+        -webkit-line-clamp: unset;
     }
 
+    .archive-grid .journal-collection-link.size-small .collection-glass,
+    .archive-grid .journal-collection-link.size-medium .collection-glass,
     .journal-collection-link.size-large .collection-glass {
+        grid-column: 1;
+        grid-row: 2;
         margin: 0 12px 18px 18px;
     }
 
+    .archive-grid .journal-collection-link.size-small .collection-footer,
+    .archive-grid .journal-collection-link.size-medium .collection-footer,
     .journal-collection-link.size-large .collection-footer {
+        grid-column: 1;
+        grid-row: 3;
+        min-height: 0;
         padding: 6px 26px 24px;
     }
 }
