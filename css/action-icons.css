@@ -1,0 +1,107 @@
+.action-icon {
+    display: inline-block;
+    width: 1.15em;
+    height: 1.15em;
+    flex: 0 0 auto;
+    background-color: currentColor;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    vertical-align: middle;
+    pointer-events: none;
+}
+
+.action-icon-right {
+    -webkit-mask-image: url("../images/icons/arrow-right.svg");
+    mask-image: url("../images/icons/arrow-right.svg");
+}
+
+.action-icon-left {
+    -webkit-mask-image: url("../images/icons/arrow-left.svg");
+    mask-image: url("../images/icons/arrow-left.svg");
+}
+
+.action-icon-down {
+    -webkit-mask-image: url("../images/icons/arrow-down.svg");
+    mask-image: url("../images/icons/arrow-down.svg");
+}
+
+.action-icon-up {
+    -webkit-mask-image: url("../images/icons/arrow-up.svg");
+    mask-image: url("../images/icons/arrow-up.svg");
+}
+
+.action-icon-external {
+    -webkit-mask-image: url("../images/icons/arrow-external.svg");
+    mask-image: url("../images/icons/arrow-external.svg");
+}
+
+.hero-button .action-icon,
+.contact-link .action-icon,
+.next-story-open .action-icon,
+.next-story-archive-link .action-icon,
+.latest-stories-head .action-icon,
+.collection-issue-scroll .action-icon,
+.next-story-footer .action-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.collection-arrow.action-icon {
+    width: 42px;
+    height: 42px;
+    padding: 11px;
+    background-clip: content-box;
+    box-sizing: border-box;
+}
+
+.page-back-to-top::before {
+    content: "";
+    display: block;
+    width: 18px;
+    height: 18px;
+    margin: auto;
+    background-color: currentColor;
+    -webkit-mask: url("../images/icons/arrow-up.svg") center / contain no-repeat;
+    mask: url("../images/icons/arrow-up.svg") center / contain no-repeat;
+}
+
+.action-with-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: .7em;
+}
+
+.action-with-icon[data-icon-direction="left"] {
+    flex-direction: row;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .action-with-icon .action-icon {
+        transition: transform .25s ease;
+    }
+
+    .action-with-icon:hover .action-icon-right,
+    .action-with-icon:focus-visible .action-icon-right,
+    .journal-collection-link:hover .collection-arrow {
+        transform: translateX(3px);
+    }
+
+    .action-with-icon:hover .action-icon-left,
+    .action-with-icon:focus-visible .action-icon-left {
+        transform: translateX(-3px);
+    }
+
+    .action-with-icon:hover .action-icon-down,
+    .action-with-icon:focus-visible .action-icon-down {
+        transform: translateY(3px);
+    }
+
+    .page-back-to-top:hover::before,
+    .page-back-to-top:focus-visible::before {
+        transform: translateY(-2px);
+    }
+}
