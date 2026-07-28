@@ -102,6 +102,26 @@ function normalizeSiteAppearance_(data) {
             "Истории, которые хочется сохранить.",
             220
         ),
+        aboutTitle: normalizeAppearanceText_(
+            data.aboutTitle,
+            "Живые истории без лишнего шума",
+            140
+        ),
+        aboutText: normalizeAppearanceText_(
+            data.aboutText,
+            "Я сохраняю не постановку, а ощущение момента: движение, свет, характер и детали, которые обычно ускользают. Каждая съёмка становится небольшой главой личного визуального журнала.",
+            700
+        ),
+        aboutPrimaryImageId: normalizeAppearanceText_(
+            data.aboutPrimaryImageId,
+            "",
+            220
+        ),
+        aboutSecondaryImageId: normalizeAppearanceText_(
+            data.aboutSecondaryImageId,
+            "",
+            220
+        ),
         location: normalizeAppearanceText_(
             data.location,
             "",
