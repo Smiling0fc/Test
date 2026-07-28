@@ -299,6 +299,14 @@ class JournalPages {
             const coverId = this.galleryId(cover);
 
             document.title = `${collection.name} | ViJoy’s`;
+
+            if (typeof PageEdges !== "undefined") {
+                PageEdges.setLabels({
+                    left: "Фотографическая история",
+                    right: collection.name
+                });
+            }
+
             hero.innerHTML = `
                 <div class="collection-issue-media">
                     ${coverId
@@ -333,6 +341,14 @@ class JournalPages {
                 : `<div class="journal-message">В этой истории пока нет фотографий.</div>`;
         } catch (error) {
             console.error(error);
+
+            if (typeof PageEdges !== "undefined") {
+                PageEdges.setLabels({
+                    left: "Фотографическая история",
+                    right: "История не найдена"
+                });
+            }
+
             hero.innerHTML = `
                 <div class="collection-issue-copy">
                     <small>ViJoy’s Journal</small>
