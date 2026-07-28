@@ -53,12 +53,16 @@ class PhotoService {
                 this.createOptimizedVariants(file)
             ]);
 
+        const preview = optimized.preview800 || {};
+        const gallery = optimized.gallery1600 || {};
+
         const response = await ApiService.uploadPhoto({
             collectionId: id,
             name: file.name,
             mimeType: file.type || "image/jpeg",
             base64: originalBase64,
-            optimized
+            previewBase64: preview.base64 || "",
+            galleryBase64: gallery.base64 || ""
         });
 
         const current = this.getByCollection(id);
