@@ -1,0 +1,17 @@
+:root {
+    --journal-content-max: 992px;
+}
+
+/*
+ * The editorial body is 80% of its previous desktop width.
+ * Header, navigation, full-bleed Hero backgrounds and footer remain unchanged.
+ */
+@media (min-width: 1121px) {
+    body[data-journal-page] .journal-shell,
+    body[data-journal-page="collection"] .collection-issue-copy {
+        width: min(
+            var(--journal-content-max),
+            calc(80% - 38px)
+        );
+    }
+}
