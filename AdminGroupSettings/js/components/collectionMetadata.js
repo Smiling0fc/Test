@@ -1,5 +1,5 @@
 class CollectionMetadata {
-    static mount(collectionId) {
+    static async mount(collectionId) {
         const collection = CollectionService.getById(collectionId);
         const view = document.querySelector(".collection-view");
         const dropzone = document.getElementById("photoDropzone");
@@ -9,6 +9,26 @@ class CollectionMetadata {
         }
 
         document.getElementById("collectionMetadataPanel")?.remove();
+
+        let metadata = {
+            category: "",
+            shootDate: "",
+            location: ""
+        };
+
+        try {
+            if (!SiteSettingsService.loaded) {
+                await SiteSettingsService.load();
+            }
+
+            metadata = SiteSettingsService
+                .getCollectionMetadata(collection.id);
+        } catch (error) {
+            console.warn(
+                "Не удалось загрузить данные Hero:",
+                error.message
+            );
+        }
 
         const panel = document.createElement("section");
         panel.id = "collectionMetadataPanel";
@@ -76,9 +96,9 @@ class CollectionMetadata {
         const status = panel.querySelector("#collectionMetadataStatus");
         const saveButton = form.querySelector("button[type='submit']");
 
-        categoryInput.value = String(collection.category || "");
-        dateInput.value = this.normalizeDateInput(collection.shootDate);
-        locationInput.value = String(collection.location || "");
+        categoryInput.value = String(metadata.category || "");
+        dateInput.value = this.normalizeDateInput(metadata.shootDate);
+        locationInput.value = String(metadata.location || "");
 
         const updatePreview = () => {
             const parts = [
@@ -103,14 +123,17 @@ class CollectionMetadata {
             status.textContent = "Сохраняем…";
 
             try {
-                await CollectionService.updateDetails(collection.id, {
-                    name: collection.name,
-                    description: collection.description || "",
-                    category: categoryInput.value.trim(),
-                    shootDate: dateInput.value,
-                    location: locationInput.value.trim()
-                });
+                const savedMetadata =
+                    await SiteSettingsService.setCollectionMetadata(
+                        collection.id,
+                        {
+                            category: categoryInput.value.trim(),
+                            shootDate: dateInput.value,
+                            location: locationInput.value.trim()
+                        }
+                    );
 
+                Object.assign(collection, savedMetadata);
                 status.textContent = "Сохранено";
 
                 setTimeout(() => {
@@ -121,7 +144,10 @@ class CollectionMetadata {
             } catch (error) {
                 console.error(error);
                 status.textContent = "Не удалось сохранить";
-                alert(error.message || "Не удалось сохранить данные Hero.");
+                alert(
+                    error.message ||
+                    "Не удалось сохранить данные Hero."
+                );
             } finally {
                 saveButton.disabled = false;
             }
@@ -162,6 +188,6 @@ if (typeof CollectionView !== "undefined") {
 
     CollectionView.open = async function openWithMetadata(id) {
         await openCollectionView(id);
-        CollectionMetadata.mount(String(id));
+        await CollectionMetadata.mount(String(id));
     };
 }
