@@ -57,8 +57,13 @@ class SiteIdentity {
             if (href) {
                 contact.href = href;
                 contact.hidden = false;
+                contact.target = href.startsWith("http") ? "_blank" : "";
+                contact.rel = href.startsWith("http")
+                    ? "noopener noreferrer"
+                    : "";
             } else {
                 contact.hidden = true;
+                contact.removeAttribute("href");
             }
         }
 
@@ -86,7 +91,7 @@ class SiteIdentity {
         const link = document.querySelector(
             `.site-footer-socials a[aria-label="${name}"]`
         );
-        const url = String(value || "").trim();
+        const url = this.normalizeExternalUrl(value);
 
         if (!link) {
             return;
@@ -98,23 +103,45 @@ class SiteIdentity {
             link.href = url;
             link.target = "_blank";
             link.rel = "noopener noreferrer";
+        } else {
+            link.removeAttribute("href");
         }
     }
 
     static getContactHref(data) {
-        if (data.telegramUrl) {
-            return String(data.telegramUrl);
+        const telegram = this.normalizeExternalUrl(
+            data.telegramUrl
+        );
+
+        if (telegram) {
+            return telegram;
         }
 
-        if (data.email) {
-            return `mailto:${String(data.email).trim()}`;
+        const email = String(data.email || "").trim();
+        if (email) {
+            return `mailto:${email}`;
         }
 
-        if (data.phone) {
-            return `tel:${String(data.phone).replace(/[^+\d]/g, "")}`;
+        const phone = String(data.phone || "").trim();
+        if (phone) {
+            return `tel:${phone.replace(/[^+\d]/g, "")}`;
         }
 
         return "";
+    }
+
+    static normalizeExternalUrl(value) {
+        const raw = String(value || "").trim();
+
+        if (!raw) {
+            return "";
+        }
+
+        if (/^https?:\/\//i.test(raw)) {
+            return raw;
+        }
+
+        return `https://${raw.replace(/^\/+/, "")}`;
     }
 
     static escape(value) {
