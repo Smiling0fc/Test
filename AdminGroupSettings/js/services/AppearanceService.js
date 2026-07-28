@@ -11,14 +11,20 @@ class AppearanceService {
         telegramUrl: "",
         vkUrl: "",
         instagramUrl: "",
-        footerYear: String(new Date().getFullYear())
+        footerYear: String(new Date().getFullYear()),
+        maintenanceEnabled: false,
+        maintenanceTitle: "Сайт скоро вернётся",
+        maintenanceMessage: "Мы обновляем галерею и готовим новые истории. Загляните немного позже.",
+        maintenanceButtonText: "Обновить страницу"
     };
 
     static normalize(data = {}) {
         return Object.fromEntries(
             Object.entries(this.defaults).map(([key, fallback]) => [
                 key,
-                String(data[key] ?? fallback)
+                typeof fallback === "boolean"
+                    ? data[key] === true || data[key] === "true"
+                    : String(data[key] ?? fallback)
             ])
         );
     }
