@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фотографическая история | ViJoy’s</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/contact-drawer.css">
+    <link rel="stylesheet" href="css/maintenance.css">
+    <link rel="stylesheet" href="css/journal-pages.css">
+</head>
+<body data-journal-page="collection">
+    <header class="header-on-hero">
+        <a class="logo" href="./" aria-label="На главную">
+            <img src="images/brand/vijoys-logo.svg" alt="ViJoy’s Photo Gallery">
+        </a>
+        <nav class="glass-menu">
+            <ul>
+                <li><a href="./">Главная</a></li>
+                <li><a href="collections.html">Все коллекции</a></li>
+                <li><a href="#contactDrawer" class="contact-link" aria-controls="contactDrawer" aria-expanded="false">Связаться <span aria-hidden="true">→</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="journal-main">
+        <section id="collectionIssueHero" class="collection-issue-hero" aria-live="polite">
+            <div class="collection-issue-copy">
+                <small>ViJoy’s Journal</small>
+                <h1>Готовим историю…</h1>
+            </div>
+        </section>
+
+        <section id="issueGallery" class="issue-gallery">
+            <div id="issueGalleryRoot" class="journal-shell">
+                <div class="journal-message">Загружаем фотографии…</div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer-copy">
+            <p>© 2026 ViJoy’s Photo Gallery</p>
+            <span><a href="collections.html">Вернуться к коллекциям</a></span>
+        </div>
+    </footer>
+
+    <section id="maintenanceScreen" class="maintenance-screen" hidden aria-live="polite">
+        <div class="maintenance-card">
+            <img src="images/brand/vijoys-logo.svg" alt="ViJoy’s">
+            <small>Технические работы</small>
+            <h1>Сайт скоро вернётся</h1>
+            <p>Мы обновляем галерею и готовим новые истории.</p>
+            <button type="button">Обновить страницу</button>
+        </div>
+    </section>
+
+    <script src="js/menu.js"></script>
+    <script src="js/publicConfig.js"></script>
+    <script src="js/public/PublicApi.js"></script>
+    <script src="js/public/ContactDrawer.js"></script>
+    <script src="js/public/SiteIdentity.js"></script>
+    <script src="js/public/MaintenanceMode.js"></script>
+    <script src="js/public/GalleryService.js"></script>
+    <script src="js/public/JournalPages.js"></script>
+</body>
+</html>
