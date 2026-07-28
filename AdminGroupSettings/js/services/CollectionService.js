@@ -44,7 +44,10 @@ class CollectionService {
             await ApiService.createCollection({
                 name: trimmed,
                 size: "medium",
-                published: true
+                published: true,
+                category: "",
+                shootDate: "",
+                location: ""
             });
 
         const collection = {
@@ -92,6 +95,24 @@ class CollectionService {
             ""
         ).trim();
 
+        const category = String(
+            data.category ??
+            current?.category ??
+            ""
+        ).trim();
+
+        const shootDate = String(
+            data.shootDate ??
+            current?.shootDate ??
+            ""
+        ).trim();
+
+        const location = String(
+            data.location ??
+            current?.location ??
+            ""
+        ).trim();
+
         if (!name) {
             throw new Error(
                 "Введите название коллекции."
@@ -100,7 +121,10 @@ class CollectionService {
 
         const payload = {
             name,
-            description
+            description,
+            category,
+            shootDate,
+            location
         };
 
         if (
@@ -147,11 +171,12 @@ class CollectionService {
         if (index !== -1) {
             this.collections[index] = {
                 ...this.collections[index],
+                ...payload,
                 ...updatedCollection
             };
         }
 
-        return updatedCollection;
+        return this.collections[index] || updatedCollection;
     }
 
     static async reorder(collectionIds) {
@@ -222,7 +247,6 @@ class CollectionService {
         }
 
         return this.collections;
-
     }
 
     static async remove(id) {
