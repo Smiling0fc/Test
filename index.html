@@ -1,196 +1,102 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>ViJoy’s Photo Gallery</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/contact-drawer.css">
     <link rel="stylesheet" href="css/maintenance.css">
-    <link rel="stylesheet" href="css/lazy-gallery.css">
-
+    <link rel="stylesheet" href="css/journal-pages.css">
 </head>
-
-<body>
-
+<body data-journal-page="home">
     <div class="background"></div>
 
-<header class="header-on-hero">
-
-    <a class="logo" href="./" aria-label="ViJoy’s Photo Gallery">
-        <img src="images/brand/vijoys-logo.svg" alt="ViJoy’s Photo Gallery">
-    </a>
-
-    <nav class="glass-menu">
-
-        <ul>
-
-            <li class="dropdown">
-
-                <a href="#collections">Коллекции</a>
-
-                <ul class="dropdown-menu">
-
-                    <li><a href="#collections">Мероприятия</a></li>
-                    <li><a href="#collections">Свадьбы</a></li>
-                    <li><a href="#collections">Сессии</a></li>
-
-                </ul>
-
-            </li>
-
-            <li><a href="#collections">Примеры работ</a></li>
-            <li><a href="#">Блог</a></li>
-            <li><a href="#contactDrawer" class="contact-link" aria-controls="contactDrawer" aria-expanded="false">Связаться <span aria-hidden="true">→</span></a></li>
-
-        </ul>
-
-    </nav>
-
-</header>
-
-<section
-    id="homeHero"
-    class="home-hero">
-
-    <div class="hero-overlay"></div>
-
-    <div class="hero-marker" aria-hidden="true">
-        <span></span>
-        <i></i>
-        <small>STORIES</small>
-    </div>
-
-    <div class="hero-content">
-
-        <p class="hero-kicker">
-            Editorial Photography
-        </p>
-
-        <h1>
-            ViJoy’s Photo Gallery
-        </h1>
-
-        <p class="hero-description">
-            Истории, которые хочется сохранить.
-        </p>
-
-        <a
-            class="hero-button"
-            href="#collections">
-
-            Смотреть коллекции
-            <span aria-hidden="true">→</span>
-
+    <header class="header-on-hero">
+        <a class="logo" href="./" aria-label="ViJoy’s Photo Gallery">
+            <img src="images/brand/vijoys-logo.svg" alt="ViJoy’s Photo Gallery">
         </a>
+        <nav class="glass-menu">
+            <ul>
+                <li><a href="#about">О фотографе</a></li>
+                <li><a href="collections.html">Коллекции</a></li>
+                <li><a href="#latestStories">Последние истории</a></li>
+                <li><a href="#contactDrawer" class="contact-link" aria-controls="contactDrawer" aria-expanded="false">Связаться <span aria-hidden="true">→</span></a></li>
+            </ul>
+        </nav>
+    </header>
 
-    </div>
-
-</section>
-
-<main>
-
-    <section
-        id="featuredCollection"
-        class="featured-collection"
-        hidden>
-    </section>
-
-    <section class="collections-intro" aria-labelledby="collectionsTitle">
-
-        <div>
-            <p class="collections-kicker">Портфолио</p>
-            <h1 id="collectionsTitle">Коллекции</h1>
-            <p class="collections-lead">
-                Истории в каждом кадре. Выберите коллекцию
-                и погрузитесь в атмосферу момента.
-            </p>
+    <section id="homeHero" class="home-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-marker" aria-hidden="true">
+            <span></span><i></i><small>AUTHOR’S JOURNAL</small>
         </div>
-
-        <div class="collections-index" aria-hidden="true">
-            <span>Авторские истории</span>
-            <i></i>
+        <div class="hero-content">
+            <p class="hero-kicker">Editorial Photography</p>
+            <h1>ViJoy’s Photo Gallery</h1>
+            <p class="hero-description">Фотография как личный дневник света, людей и времени.</p>
+            <a class="hero-button" href="collections.html">
+                Смотреть истории <span aria-hidden="true">→</span>
+            </a>
         </div>
-
     </section>
 
-    <section
-        id="collections"
-        class="collections">
+    <main class="journal-main">
+        <section id="about" class="journal-shell about-editorial">
+            <div class="about-editorial-copy">
+                <small>О фотографе</small>
+                <h2>Живые истории без лишнего шума</h2>
+                <p>
+                    Я сохраняю не постановку, а ощущение момента: движение, свет,
+                    характер и детали, которые обычно ускользают. Каждая съёмка
+                    становится небольшой главой личного визуального журнала.
+                </p>
+            </div>
+            <div id="aboutVisual" class="about-editorial-visual" aria-label="Авторские фотографии"></div>
+        </section>
+
+        <section id="latestStories" class="journal-shell latest-stories">
+            <div class="latest-stories-head">
+                <div>
+                    <small>Свежие выпуски</small>
+                    <h2>Последние истории</h2>
+                </div>
+                <a href="collections.html">Открыть весь архив →</a>
+            </div>
+            <div id="latestStoriesGrid" class="latest-stories-grid" aria-live="polite">
+                <div class="journal-message">Готовим последние истории…</div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer-socials" aria-label="Социальные сети"></div>
+        <div class="site-footer-copy">
+            <p>© 2026 ViJoy’s Photo Gallery</p>
+            <span>Истории, которые хочется сохранить</span>
+        </div>
+    </footer>
+
+    <section id="maintenanceScreen" class="maintenance-screen" hidden aria-live="polite">
+        <div class="maintenance-card">
+            <img src="images/brand/vijoys-logo.svg" alt="ViJoy’s">
+            <small>Технические работы</small>
+            <h1>Сайт скоро вернётся</h1>
+            <p>Мы обновляем галерею и готовим новые истории. Загляните немного позже.</p>
+            <button type="button">Обновить страницу</button>
+        </div>
     </section>
 
-</main>
-
-<footer class="site-footer">
-
-    <div class="site-footer-socials" aria-label="Социальные сети">
-
-        <a href="#" aria-label="Instagram" title="Instagram">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
-                <circle cx="12" cy="12" r="4"></circle>
-                <circle cx="17.5" cy="6.5" r="1"></circle>
-            </svg>
-        </a>
-
-        <a href="#" aria-label="VK" title="VK">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M4 7.2h3.2c.3 3.2 1.8 4.6 3 4.9V7.2h3v2.8c1.2-.1 2.5-1.4 2.9-2.8h3c-.4 1.8-1.9 3.2-3 3.8 1.1.4 2.9 1.7 3.6 4h-3.3c-.5-1.4-1.7-2.5-3.2-2.7V15H11c-4 0-6.3-2.7-7-7.8Z"></path>
-            </svg>
-        </a>
-
-        <a href="#" aria-label="Telegram" title="Telegram">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M21 4.8 18.2 19c-.2 1-1 1.3-1.8.8l-4.3-3.2-2.1 2c-.2.2-.4.4-.8.4l.3-4.4 8.1-7.3c.4-.3-.1-.5-.5-.2L7.1 13.4l-4.3-1.3c-.9-.3-.9-.9.2-1.3L19.8 4.3c.8-.3 1.5.2 1.2.5Z"></path>
-            </svg>
-        </a>
-
-    </div>
-
-    <div class="site-footer-copy">
-        <p>© 2025 ViJoy’s Photo Gallery</p>
-        <span>Все права защищены</span>
-    </div>
-
-    <div class="site-footer-legal">
-        <a href="#">Политика конфиденциальности</a>
-        <span aria-hidden="true">·</span>
-        <a href="#">Условия использования</a>
-    </div>
-
-</footer>
-
-<section id="maintenanceScreen" class="maintenance-screen" hidden aria-live="polite">
-    <div class="maintenance-card">
-        <img src="images/brand/vijoys-logo.svg" alt="ViJoy’s">
-        <small>Технические работы</small>
-        <h1>Сайт скоро вернётся</h1>
-        <p>Мы обновляем галерею и готовим новые истории. Загляните немного позже.</p>
-        <button type="button">Обновить страницу</button>
-    </div>
-</section>
-
-<script src="js/menu.js"></script>
-<script src="js/publicConfig.js"></script>
-<script src="js/public/PublicApi.js"></script>
-<script src="js/public/ContactDrawer.js"></script>
-<script src="js/public/SiteIdentity.js"></script>
-<script src="js/public/MaintenanceMode.js"></script>
-<script src="js/public/GalleryService.js"></script>
-<script src="js/public/HomePage.js"></script>
-<script src="js/public/HeaderTheme.js"></script>
-<script src="js/public/Gallery.js"></script>
-<script src="js/public/LazyGallery.js"></script>
-<script src="js/public/OptimizedImages.js"></script>
-<script src="js/public/CollectionSizes.js"></script>
-
+    <script src="js/menu.js"></script>
+    <script src="js/publicConfig.js"></script>
+    <script src="js/public/PublicApi.js"></script>
+    <script src="js/public/ContactDrawer.js"></script>
+    <script src="js/public/SiteIdentity.js"></script>
+    <script src="js/public/MaintenanceMode.js"></script>
+    <script src="js/public/GalleryService.js"></script>
+    <script src="js/public/JournalPages.js"></script>
 </body>
-
 </html>
