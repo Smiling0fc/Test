@@ -71,6 +71,15 @@ class EditorialLoadingMotion {
         `;
     }
 
+    static markLoadingRoot(root) {
+        if (!root) {
+            return;
+        }
+
+        root.classList.add("has-loading-reserve");
+        root.setAttribute("aria-busy", "true");
+    }
+
     static prepareInitialSkeletons() {
         const page = document.body.dataset.journalPage;
 
@@ -86,6 +95,7 @@ class EditorialLoadingMotion {
             const about = document.getElementById("aboutVisual");
 
             if (latest) {
+                this.markLoadingRoot(latest);
                 latest.innerHTML = this.homeSkeleton();
             }
 
@@ -98,6 +108,7 @@ class EditorialLoadingMotion {
             const archive = document.getElementById("archiveGrid");
 
             if (archive) {
+                this.markLoadingRoot(archive);
                 archive.innerHTML = this.archiveSkeleton();
             }
         }
@@ -106,9 +117,40 @@ class EditorialLoadingMotion {
             const gallery = document.getElementById("issueGalleryRoot");
 
             if (gallery) {
+                this.markLoadingRoot(gallery);
                 gallery.innerHTML = this.gallerySkeleton();
             }
         }
+    }
+
+    static releaseResolvedSkeletons() {
+        const roots = [
+            {
+                element: document.getElementById("latestStoriesGrid"),
+                selector: ".loading-home-stack"
+            },
+            {
+                element: document.getElementById("archiveGrid"),
+                selector: ".loading-archive-card"
+            },
+            {
+                element: document.getElementById("issueGalleryRoot"),
+                selector: ".loading-gallery-stack"
+            }
+        ];
+
+        roots.forEach(({ element, selector }) => {
+            if (!element?.classList.contains("has-loading-reserve")) {
+                return;
+            }
+
+            if (element.querySelector(selector)) {
+                return;
+            }
+
+            element.classList.remove("has-loading-reserve");
+            element.setAttribute("aria-busy", "false");
+        });
     }
 
     static imageShellFor(image) {
@@ -231,6 +273,10 @@ class EditorialLoadingMotion {
                         this.scan(node);
                     }
                 });
+            });
+
+            requestAnimationFrame(() => {
+                this.releaseResolvedSkeletons();
             });
         });
 
