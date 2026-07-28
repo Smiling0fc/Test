@@ -4,21 +4,138 @@
 ================================================== */
 
 const SITE_SETTINGS_KEYS = {
-    heroCollectionId: "heroCollectionId"
+    heroCollectionId: "heroCollectionId",
+    collectionHeroFocus: "collectionHeroFocus"
 };
 
-function getSiteSettings() {
+function hasOwnSiteSetting_(data, key) {
+    return Boolean(
+        data &&
+        Object.prototype.hasOwnProperty.call(
+            data,
+            key
+        )
+    );
+}
 
+function clampHeroFocus_(value, fallback) {
+    const number = Number(value);
+
+    if (!isFinite(number)) {
+        return fallback;
+    }
+
+    return Math.max(
+        0,
+        Math.min(100, Math.round(number))
+    );
+}
+
+function normalizeHeroFocusPoint_(value) {
+    if (
+        !value ||
+        typeof value !== "object" ||
+        Array.isArray(value)
+    ) {
+        return null;
+    }
+
+    return {
+        x: clampHeroFocus_(value.x, 50),
+        y: clampHeroFocus_(value.y, 0)
+    };
+}
+
+function readHeroFocusMap_(properties) {
+    const raw = String(
+        properties.getProperty(
+            SITE_SETTINGS_KEYS.collectionHeroFocus
+        ) || ""
+    ).trim();
+
+    if (!raw) {
+        return {};
+    }
+
+    try {
+        const parsed = JSON.parse(raw);
+
+        return parsed &&
+            typeof parsed === "object" &&
+            !Array.isArray(parsed)
+                ? parsed
+                : {};
+    } catch (error) {
+        console.warn(
+            "Не удалось прочитать настройки фокуса Hero:",
+            error
+        );
+
+        return {};
+    }
+}
+
+function normalizeHeroFocusMap_(value, collections) {
+    const source = value &&
+        typeof value === "object" &&
+        !Array.isArray(value)
+            ? value
+            : {};
+
+    const collectionIds = {};
+
+    (collections || []).forEach(collection => {
+        collectionIds[String(collection.id)] = true;
+    });
+
+    const normalized = {};
+
+    Object.keys(source).forEach(collectionId => {
+        const id = String(collectionId || "").trim();
+
+        if (!id || !collectionIds[id]) {
+            return;
+        }
+
+        const point = normalizeHeroFocusPoint_(
+            source[collectionId]
+        );
+
+        if (point) {
+            normalized[id] = point;
+        }
+    });
+
+    return normalized;
+}
+
+function saveHeroFocusMap_(properties, map) {
+    const keys = Object.keys(map || {});
+
+    if (!keys.length) {
+        properties.deleteProperty(
+            SITE_SETTINGS_KEYS.collectionHeroFocus
+        );
+        return;
+    }
+
+    properties.setProperty(
+        SITE_SETTINGS_KEYS.collectionHeroFocus,
+        JSON.stringify(map)
+    );
+}
+
+function getSiteSettings() {
     const properties =
         PropertiesService.getScriptProperties();
+
+    const collections = getCollections();
 
     const savedHeroCollectionId = String(
         properties.getProperty(
             SITE_SETTINGS_KEYS.heroCollectionId
         ) || ""
     ).trim();
-
-    const collections = getCollections();
 
     const selectedCollection =
         collections.find(collection =>
@@ -54,52 +171,91 @@ function getSiteSettings() {
         );
     }
 
+    const savedFocusMap = readHeroFocusMap_(
+        properties
+    );
+
+    const collectionHeroFocus =
+        normalizeHeroFocusMap_(
+            savedFocusMap,
+            collections
+        );
+
+    if (
+        JSON.stringify(savedFocusMap) !==
+        JSON.stringify(collectionHeroFocus)
+    ) {
+        saveHeroFocusMap_(
+            properties,
+            collectionHeroFocus
+        );
+    }
+
     return {
-        heroCollectionId
+        heroCollectionId,
+        collectionHeroFocus
     };
 }
 
 function updateSiteSettings(data) {
-
-    const heroCollectionId = String(
-        data.heroCollectionId || ""
-    ).trim();
-
+    const payload = data || {};
     const properties =
         PropertiesService.getScriptProperties();
 
-    if (!heroCollectionId) {
-        properties.deleteProperty(
-            SITE_SETTINGS_KEYS.heroCollectionId
-        );
+    if (
+        hasOwnSiteSetting_(
+            payload,
+            "heroCollectionId"
+        )
+    ) {
+        const heroCollectionId = String(
+            payload.heroCollectionId || ""
+        ).trim();
 
-        return {
-            success: true,
-            settings: getSiteSettings()
-        };
+        if (!heroCollectionId) {
+            properties.deleteProperty(
+                SITE_SETTINGS_KEYS.heroCollectionId
+            );
+        } else {
+            const collectionExists =
+                getCollections().some(collection =>
+                    String(collection.id) ===
+                    heroCollectionId
+                );
+
+            if (!collectionExists) {
+                throw new Error(
+                    "Выбранная коллекция не найдена."
+                );
+            }
+
+            properties.setProperty(
+                SITE_SETTINGS_KEYS.heroCollectionId,
+                heroCollectionId
+            );
+        }
     }
 
-    const collectionExists =
-        getCollections().some(collection =>
-            String(collection.id) ===
-            heroCollectionId
-        );
+    if (
+        hasOwnSiteSetting_(
+            payload,
+            "collectionHeroFocus"
+        )
+    ) {
+        const normalizedMap =
+            normalizeHeroFocusMap_(
+                payload.collectionHeroFocus,
+                getCollections()
+            );
 
-    if (!collectionExists) {
-        throw new Error(
-            "Выбранная коллекция не найдена."
+        saveHeroFocusMap_(
+            properties,
+            normalizedMap
         );
     }
-
-    properties.setProperty(
-        SITE_SETTINGS_KEYS.heroCollectionId,
-        heroCollectionId
-    );
 
     return {
         success: true,
-        settings: {
-            heroCollectionId
-        }
+        settings: getSiteSettings()
     };
 }
