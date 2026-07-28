@@ -119,7 +119,7 @@ class PublicApi {
 
     static getSiteSettings() {
         return this.get(
-            "getSiteSettings"
+            "getSiteAppearance"
         );
     }
 }
