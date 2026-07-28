@@ -3,26 +3,48 @@
     --page-edge-light: rgba(255, 255, 255, .66);
 }
 
+.page-edge-host {
+    position: relative;
+}
+
 .page-edge {
-    position: fixed;
-    top: 116px;
-    bottom: 34px;
-    z-index: 35;
+    position: absolute;
+    top: clamp(24px, 5vw, 58px);
+    bottom: clamp(24px, 5vw, 58px);
+    z-index: 8;
+
     display: flex;
     flex-direction: column;
     align-items: center;
+
     width: 24px;
+
     color: var(--page-edge-dark);
     pointer-events: none;
-    transition: color .35s ease, opacity .35s ease;
 }
 
-.page-edge-left {
-    left: 18px;
+.page-edge-light {
+    color: var(--page-edge-light);
 }
 
-.page-edge-right {
-    right: 18px;
+.page-edge-dark {
+    color: var(--page-edge-dark);
+}
+
+.page-edge-host-full > .page-edge-left {
+    left: clamp(12px, 1.5vw, 28px);
+}
+
+.page-edge-host-full > .page-edge-right {
+    right: clamp(12px, 1.5vw, 28px);
+}
+
+.page-edge-host-shell > .page-edge-left {
+    left: calc((100vw - 100%) / -2 + clamp(12px, 1.5vw, 28px));
+}
+
+.page-edge-host-shell > .page-edge-right {
+    right: calc((100vw - 100%) / -2 + clamp(12px, 1.5vw, 28px));
 }
 
 .page-edge-line {
@@ -30,7 +52,7 @@
     min-height: 24px;
     flex: 1 1 auto;
     background: currentColor;
-    opacity: .52;
+    opacity: .48;
 }
 
 .page-edge-dot {
@@ -43,10 +65,12 @@
 }
 
 .page-edge-label {
-    max-height: 210px;
+    max-height: min(210px, 42%);
     margin: 13px 0;
     overflow: hidden;
+
     color: currentColor;
+
     font: 500 8px/1 Inter, sans-serif;
     letter-spacing: .24em;
     text-transform: uppercase;
@@ -58,28 +82,32 @@
     transform: rotate(180deg);
 }
 
-.page-edges-on-hero .page-edge {
-    color: var(--page-edge-light);
+/* A shorter marker works better around compact editorial sections. */
+.about-editorial > .page-edge,
+.latest-stories > .page-edge {
+    top: clamp(32px, 6vw, 76px);
+    bottom: clamp(32px, 6vw, 76px);
+}
+
+/* Archive and long galleries keep their markers near the beginning of the section. */
+.archive-page > .page-edge,
+.issue-gallery > .page-edge {
+    bottom: auto;
+    height: min(68vh, 620px);
 }
 
 @media (max-width: 1380px) {
-    .page-edge-left {
-        left: 8px;
+    .page-edge-host-shell > .page-edge-left {
+        left: -28px;
     }
 
-    .page-edge-right {
-        right: 8px;
+    .page-edge-host-shell > .page-edge-right {
+        right: -28px;
     }
 }
 
-@media (max-width: 1080px), (pointer: coarse) {
+@media (max-width: 1120px), (pointer: coarse) {
     .page-edge {
         display: none;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .page-edge {
-        transition: none;
     }
 }
