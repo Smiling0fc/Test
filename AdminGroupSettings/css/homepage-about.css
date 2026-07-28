@@ -1,0 +1,206 @@
+.homepage-about-preview {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(30px, 5vw, 76px);
+    width: 100%;
+    min-height: 520px;
+    padding: clamp(54px, 7vw, 96px);
+    overflow: hidden;
+    border: 0;
+    border-top: 1px solid rgba(29, 26, 23, .08);
+    border-bottom: 1px solid rgba(29, 26, 23, .08);
+    color: #27231f;
+    background: #ebe6dd;
+    cursor: pointer;
+    text-align: left;
+}
+
+.homepage-about-preview::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    border: 1px solid transparent;
+    pointer-events: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.homepage-about-preview:hover::after,
+.homepage-about-preview.is-selected::after {
+    border-color: rgba(197, 163, 106, .82);
+    box-shadow: inset 0 0 0 2px rgba(197, 163, 106, .12);
+}
+
+.homepage-about-preview:hover .homepage-preview-object-label,
+.homepage-about-preview.is-selected .homepage-preview-object-label {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.homepage-about-copy {
+    display: block;
+    max-width: 520px;
+}
+
+.homepage-about-copy > small {
+    display: block;
+    margin-bottom: 18px;
+    color: rgba(39, 35, 31, .58);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .22em;
+}
+
+.homepage-about-copy > strong {
+    display: block;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(42px, 5.3vw, 74px);
+    font-weight: 400;
+    line-height: .96;
+    letter-spacing: -.04em;
+}
+
+.homepage-about-copy > span {
+    display: block;
+    max-width: 500px;
+    margin-top: 24px;
+    color: rgba(39, 35, 31, .68);
+    font-size: clamp(12px, 1.15vw, 16px);
+    line-height: 1.72;
+}
+
+.homepage-about-images {
+    display: grid;
+    grid-template-columns: 1.18fr .82fr;
+    gap: 16px;
+    min-height: 400px;
+}
+
+.homepage-about-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    overflow: hidden;
+    background: rgba(255, 255, 255, .42);
+}
+
+.homepage-about-image.is-secondary {
+    margin: 72px 0 42px;
+}
+
+.homepage-about-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.homepage-about-image i {
+    padding: 20px;
+    color: rgba(39, 35, 31, .44);
+    font-size: 10px;
+    font-style: normal;
+    letter-spacing: .08em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.homepage-about-picker-preview {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 128px;
+    margin-top: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 8px;
+    background: #111419;
+}
+
+.homepage-about-picker-preview img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.homepage-about-picker-preview::after {
+    content: "";
+    position: absolute;
+    inset: 45% 0 0;
+    background: linear-gradient(transparent, rgba(4, 5, 7, .82));
+    pointer-events: none;
+}
+
+.homepage-about-picker-preview > span {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    overflow: hidden;
+    color: rgba(255, 255, 255, .82);
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.homepage-about-picker-empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 24px;
+}
+
+.homepage-stage.is-tablet .homepage-about-preview {
+    grid-template-columns: .85fr 1.15fr;
+    gap: 34px;
+    min-height: 460px;
+    padding: 54px 42px;
+}
+
+.homepage-stage.is-tablet .homepage-about-copy > strong {
+    font-size: 48px;
+}
+
+.homepage-stage.is-tablet .homepage-about-images {
+    min-height: 340px;
+}
+
+.homepage-stage.is-mobile .homepage-about-preview {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    min-height: 720px;
+    padding: 52px 26px;
+}
+
+.homepage-stage.is-mobile .homepage-about-copy > strong {
+    font-size: 46px;
+}
+
+.homepage-stage.is-mobile .homepage-about-images {
+    min-height: 360px;
+}
+
+@media (max-width: 720px) {
+    .homepage-about-preview {
+        grid-template-columns: 1fr;
+        gap: 36px;
+        padding: 54px 28px;
+    }
+
+    .homepage-about-copy > strong {
+        font-size: 48px;
+    }
+
+    .homepage-about-images {
+        min-height: 380px;
+    }
+}
