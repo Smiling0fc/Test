@@ -190,6 +190,7 @@
     height: 100%;
     border-radius: 0;
     object-fit: cover;
+    object-position: center top;
     transition: transform .8s cubic-bezier(.2, .75, .25, 1);
 }
 
