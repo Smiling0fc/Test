@@ -51,20 +51,17 @@ class SiteIdentity {
         }
 
         if (contact) {
-            const href = this.getContactHref(data);
             contact.innerHTML = `${this.escape(buttonText)} <span aria-hidden="true">→</span>`;
+            contact.href = "#contactDrawer";
+            contact.hidden = false;
+            contact.removeAttribute("target");
+            contact.removeAttribute("rel");
+            contact.setAttribute("aria-controls", "contactDrawer");
+            contact.setAttribute("aria-expanded", "false");
+        }
 
-            if (href) {
-                contact.href = href;
-                contact.hidden = false;
-                contact.target = href.startsWith("http") ? "_blank" : "";
-                contact.rel = href.startsWith("http")
-                    ? "noopener noreferrer"
-                    : "";
-            } else {
-                contact.hidden = true;
-                contact.removeAttribute("href");
-            }
+        if (typeof ContactDrawer !== "undefined") {
+            ContactDrawer.setData(data);
         }
 
         this.applySocial("Telegram", data.telegramUrl);
@@ -106,28 +103,6 @@ class SiteIdentity {
         } else {
             link.removeAttribute("href");
         }
-    }
-
-    static getContactHref(data) {
-        const telegram = this.normalizeExternalUrl(
-            data.telegramUrl
-        );
-
-        if (telegram) {
-            return telegram;
-        }
-
-        const email = String(data.email || "").trim();
-        if (email) {
-            return `mailto:${email}`;
-        }
-
-        const phone = String(data.phone || "").trim();
-        if (phone) {
-            return `tel:${phone.replace(/[^+\d]/g, "")}`;
-        }
-
-        return "";
     }
 
     static normalizeExternalUrl(value) {
