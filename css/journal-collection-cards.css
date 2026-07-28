@@ -1,0 +1,76 @@
+.journal-collection-link {
+    display: block;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+}
+
+.journal-collection-link .collection-card {
+    height: 100%;
+}
+
+.journal-collection-link .collection-glass {
+    position: relative;
+    padding: clamp(10px, 1.2vw, 16px);
+    border: 1px solid rgba(255, 255, 255, .48);
+    border-radius: 30px;
+    background: rgba(255, 255, 255, .24);
+    box-shadow:
+        0 22px 54px rgba(55, 45, 36, .12),
+        inset 0 1px 0 rgba(255, 255, 255, .58);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    transition:
+        transform .45s cubic-bezier(.2, .7, .2, 1),
+        box-shadow .45s ease,
+        background .45s ease;
+}
+
+.journal-collection-link .collection-cover {
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, .35);
+}
+
+.journal-collection-link .collection-cover img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform .7s cubic-bezier(.2, .7, .2, 1);
+}
+
+.journal-collection-link:hover .collection-glass {
+    transform: translateY(-6px);
+    background: rgba(255, 255, 255, .3);
+    box-shadow:
+        0 30px 70px rgba(55, 45, 36, .16),
+        inset 0 1px 0 rgba(255, 255, 255, .7);
+}
+
+.journal-collection-link:hover .collection-cover img {
+    transform: scale(1.025);
+}
+
+.journal-collection-link:focus-visible {
+    outline: 2px solid rgba(33, 31, 29, .7);
+    outline-offset: 8px;
+    border-radius: 26px;
+}
+
+.latest-stories-grid,
+.archive-grid {
+    align-items: stretch;
+}
+
+@media (max-width: 620px) {
+    .journal-collection-link .collection-glass {
+        border-radius: 24px;
+    }
+
+    .journal-collection-link .collection-cover {
+        border-radius: 18px;
+    }
+}
