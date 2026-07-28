@@ -3,18 +3,15 @@ class ContactDrawer {
     static data = {};
     static drawer = null;
     static backdrop = null;
-    static triggers = [];
     static activeTrigger = null;
+    static initialized = false;
 
     static init() {
-        this.triggers = Array.from(
-            document.querySelectorAll(".contact-link")
-        );
-
-        if (!this.triggers.length) {
+        if (this.initialized) {
             return;
         }
 
+        this.initialized = true;
         this.render();
         this.bind();
     }
@@ -94,11 +91,15 @@ class ContactDrawer {
     }
 
     static bind() {
-        this.triggers.forEach(trigger => {
-            trigger.addEventListener("click", event => {
-                event.preventDefault();
-                this.open(trigger);
-            });
+        document.addEventListener("click", event => {
+            const trigger = event.target.closest?.(".contact-link");
+
+            if (!trigger) {
+                return;
+            }
+
+            event.preventDefault();
+            this.open(trigger);
         });
 
         this.drawer
@@ -160,11 +161,13 @@ class ContactDrawer {
     }
 
     static open(trigger = null) {
-        this.activeTrigger = trigger || this.triggers[0] || null;
+        this.activeTrigger = trigger;
 
-        this.triggers.forEach(item =>
-            item.setAttribute("aria-expanded", "false")
-        );
+        document
+            .querySelectorAll(".contact-link")
+            .forEach(item => {
+                item.setAttribute("aria-expanded", "false");
+            });
 
         this.activeTrigger?.setAttribute(
             "aria-expanded",
@@ -190,9 +193,11 @@ class ContactDrawer {
         this.drawer?.setAttribute("aria-hidden", "true");
         this.backdrop?.setAttribute("aria-hidden", "true");
 
-        this.triggers.forEach(item =>
-            item.setAttribute("aria-expanded", "false")
-        );
+        document
+            .querySelectorAll(".contact-link")
+            .forEach(item => {
+                item.setAttribute("aria-expanded", "false");
+            });
 
         document.body.classList.remove("contact-drawer-open");
         this.activeTrigger = null;
