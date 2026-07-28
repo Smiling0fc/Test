@@ -5,7 +5,8 @@
 
 const SITE_SETTINGS_KEYS = {
     heroCollectionId: "heroCollectionId",
-    collectionHeroFocus: "collectionHeroFocus"
+    collectionHeroFocus: "collectionHeroFocus",
+    collectionMetadata: "collectionMetadata"
 };
 
 function hasOwnSiteSetting_(data, key) {
@@ -125,6 +126,144 @@ function saveHeroFocusMap_(properties, map) {
     );
 }
 
+function normalizeCollectionMetadataText_(
+    value,
+    maxLength
+) {
+    return String(value || "")
+        .trim()
+        .slice(0, maxLength);
+}
+
+function normalizeCollectionShootDate_(value) {
+    const date = String(value || "").trim();
+
+    if (!date) {
+        return "";
+    }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        return "";
+    }
+
+    const parsed = new Date(`${date}T12:00:00Z`);
+
+    return isNaN(parsed.getTime())
+        ? ""
+        : date;
+}
+
+function normalizeCollectionMetadataEntry_(value) {
+    if (
+        !value ||
+        typeof value !== "object" ||
+        Array.isArray(value)
+    ) {
+        return null;
+    }
+
+    const metadata = {
+        category: normalizeCollectionMetadataText_(
+            value.category,
+            80
+        ),
+        shootDate: normalizeCollectionShootDate_(
+            value.shootDate
+        ),
+        location: normalizeCollectionMetadataText_(
+            value.location,
+            120
+        )
+    };
+
+    return Object.values(metadata).some(Boolean)
+        ? metadata
+        : null;
+}
+
+function readCollectionMetadataMap_(properties) {
+    const raw = String(
+        properties.getProperty(
+            SITE_SETTINGS_KEYS.collectionMetadata
+        ) || ""
+    ).trim();
+
+    if (!raw) {
+        return {};
+    }
+
+    try {
+        const parsed = JSON.parse(raw);
+
+        return parsed &&
+            typeof parsed === "object" &&
+            !Array.isArray(parsed)
+                ? parsed
+                : {};
+    } catch (error) {
+        console.warn(
+            "Не удалось прочитать метаданные коллекций:",
+            error
+        );
+
+        return {};
+    }
+}
+
+function normalizeCollectionMetadataMap_(
+    value,
+    collections
+) {
+    const source = value &&
+        typeof value === "object" &&
+        !Array.isArray(value)
+            ? value
+            : {};
+
+    const collectionIds = {};
+
+    (collections || []).forEach(collection => {
+        collectionIds[String(collection.id)] = true;
+    });
+
+    const normalized = {};
+
+    Object.keys(source).forEach(collectionId => {
+        const id = String(collectionId || "").trim();
+
+        if (!id || !collectionIds[id]) {
+            return;
+        }
+
+        const metadata =
+            normalizeCollectionMetadataEntry_(
+                source[collectionId]
+            );
+
+        if (metadata) {
+            normalized[id] = metadata;
+        }
+    });
+
+    return normalized;
+}
+
+function saveCollectionMetadataMap_(properties, map) {
+    const keys = Object.keys(map || {});
+
+    if (!keys.length) {
+        properties.deleteProperty(
+            SITE_SETTINGS_KEYS.collectionMetadata
+        );
+        return;
+    }
+
+    properties.setProperty(
+        SITE_SETTINGS_KEYS.collectionMetadata,
+        JSON.stringify(map)
+    );
+}
+
 function getSiteSettings() {
     const properties =
         PropertiesService.getScriptProperties();
@@ -191,9 +330,29 @@ function getSiteSettings() {
         );
     }
 
+    const savedMetadataMap =
+        readCollectionMetadataMap_(properties);
+
+    const collectionMetadata =
+        normalizeCollectionMetadataMap_(
+            savedMetadataMap,
+            collections
+        );
+
+    if (
+        JSON.stringify(savedMetadataMap) !==
+        JSON.stringify(collectionMetadata)
+    ) {
+        saveCollectionMetadataMap_(
+            properties,
+            collectionMetadata
+        );
+    }
+
     return {
         heroCollectionId,
-        collectionHeroFocus
+        collectionHeroFocus,
+        collectionMetadata
     };
 }
 
@@ -249,6 +408,24 @@ function updateSiteSettings(data) {
             );
 
         saveHeroFocusMap_(
+            properties,
+            normalizedMap
+        );
+    }
+
+    if (
+        hasOwnSiteSetting_(
+            payload,
+            "collectionMetadata"
+        )
+    ) {
+        const normalizedMap =
+            normalizeCollectionMetadataMap_(
+                payload.collectionMetadata,
+                getCollections()
+            );
+
+        saveCollectionMetadataMap_(
             properties,
             normalizedMap
         );
