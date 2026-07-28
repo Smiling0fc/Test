@@ -22,8 +22,28 @@ class CollectionIssueMeta {
                 return;
             }
 
-            const photos = await GalleryService.loadPhotos(collectionId);
-            this.apply(collection, photos.length);
+            const [photos, settingsResponse] = await Promise.all([
+                GalleryService.loadPhotos(collectionId),
+                PublicApi.getEditorialSettings().catch(error => {
+                    console.warn(
+                        "Настройки выпуска недоступны:",
+                        error.message
+                    );
+
+                    return { settings: {} };
+                })
+            ]);
+
+            const metadata =
+                settingsResponse?.settings
+                    ?.collectionMetadata
+                    ?.[String(collectionId)] || {};
+
+            this.apply(
+                collection,
+                metadata,
+                photos.length
+            );
         } catch (error) {
             console.warn(
                 "Метаданные выпуска недоступны:",
@@ -32,7 +52,7 @@ class CollectionIssueMeta {
         }
     }
 
-    static apply(collection, photoCount) {
+    static apply(collection, metadata, photoCount) {
         const hero = document.getElementById("collectionIssueHero");
 
         if (!hero) {
@@ -49,12 +69,18 @@ class CollectionIssueMeta {
             }
 
             const category = String(
-                collection.category || "Фотографическая история"
+                metadata.category ||
+                "Фотографическая история"
             ).trim();
+
             const location = String(
-                collection.location || ""
+                metadata.location || ""
             ).trim();
-            const date = this.formatDate(collection.shootDate);
+
+            const date = this.formatDate(
+                metadata.shootDate
+            );
+
             const issue = String(
                 Math.max(1, Number(collection.order || 1))
             ).padStart(2, "0");
