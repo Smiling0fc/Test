@@ -8,6 +8,18 @@ class JournalPages {
             .replace(/'/g, "&#039;");
     }
 
+    static normalizeSize(value) {
+        const size = String(value || "medium").trim();
+
+        return [
+            "small",
+            "medium",
+            "large"
+        ].includes(size)
+            ? size
+            : "medium";
+    }
+
     static previewId(photo) {
         return String(
             photo?.previewFileId ||
@@ -34,6 +46,7 @@ class JournalPages {
 
     static async loadCollectionBundle(collection) {
         const photos = await GalleryService.loadPhotos(collection.id);
+
         return {
             collection,
             photos,
@@ -46,12 +59,15 @@ class JournalPages {
         const fileId = this.previewId(cover);
         const description = this.escape(collection.description || "");
         const count = photos.length;
+        const size = this.normalizeSize(collection.size);
 
         return `
             <a
-                class="journal-collection-link"
+                class="journal-collection-link size-${size}"
+                data-collection-id="${this.escape(collection.id)}"
+                data-size="${size}"
                 href="collection.html?id=${encodeURIComponent(collection.id)}">
-                <article class="collection-card">
+                <article class="collection-card ${size}">
                     <div class="collection-heading">
                         <h2 class="collection-title">
                             ${this.escape(collection.name)}
@@ -66,6 +82,11 @@ class JournalPages {
                             ${fileId
                                 ? `<img
                                     src="${GalleryService.getThumbnailUrl(fileId, 800)}"
+                                    srcset="
+                                        ${GalleryService.getThumbnailUrl(fileId, 800)} 800w,
+                                        ${GalleryService.getThumbnailUrl(this.galleryId(cover), 1600)} 1600w
+                                    "
+                                    sizes="(max-width: 760px) 100vw, 58vw"
                                     alt="${this.escape(collection.name)}"
                                     loading="lazy"
                                     decoding="async">`
@@ -105,6 +126,25 @@ class JournalPages {
         return "фотографий";
     }
 
+    static collectionWord(number) {
+        const value = Math.abs(Number(number)) % 100;
+        const last = value % 10;
+
+        if (value > 10 && value < 20) {
+            return "коллекций";
+        }
+
+        if (last === 1) {
+            return "коллекция";
+        }
+
+        if (last >= 2 && last <= 4) {
+            return "коллекции";
+        }
+
+        return "коллекций";
+    }
+
     static async initHome() {
         const latestRoot = document.getElementById("latestStoriesGrid");
         const aboutVisual = document.getElementById("aboutVisual");
@@ -139,8 +179,10 @@ class JournalPages {
             }
 
             const heroBundle = bundles[0];
+
             if (heroBundle?.cover) {
                 const hero = document.getElementById("homeHero");
+
                 hero?.style.setProperty(
                     "--hero-image",
                     `url("${GalleryService.getThumbnailUrl(this.galleryId(heroBundle.cover), 1600)}")`
@@ -148,6 +190,7 @@ class JournalPages {
             }
         } catch (error) {
             console.error(error);
+
             if (latestRoot) {
                 latestRoot.innerHTML = `
                     <div class="journal-message">
@@ -160,6 +203,7 @@ class JournalPages {
 
     static async initArchive() {
         const root = document.getElementById("archiveGrid");
+        const countRoot = document.getElementById("archiveCount");
 
         if (!root) {
             return;
@@ -170,6 +214,11 @@ class JournalPages {
             const bundles = await Promise.all(
                 collections.map(collection => this.loadCollectionBundle(collection))
             );
+
+            if (countRoot) {
+                const count = collections.length;
+                countRoot.textContent = `${String(count).padStart(2, "0")} ${this.collectionWord(count)}`;
+            }
 
             root.innerHTML = bundles.length
                 ? bundles.map(bundle => this.collectionCard(bundle)).join("")
