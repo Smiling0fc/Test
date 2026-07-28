@@ -122,4 +122,11 @@ class PublicApi {
             "getSiteAppearance"
         );
     }
+
+    static getEditorialSettings() {
+        return this.get(
+            "getSiteSettings"
+        );
+    }
+
 }
