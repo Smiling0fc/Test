@@ -1,23 +1,27 @@
 /* =========================================
-   COLLECTION CARD SIZES
+   LEGACY COLLECTION CARD SIZES
+
+   These rules belong to the original single-page
+   collection layout. Journal pages define their own
+   small, medium and large compositions.
 ========================================= */
 
 @media (min-width: 1181px) {
 
-    .collections {
+    body:not([data-journal-page]) .collections {
         grid-template-columns: repeat(6, minmax(0, 1fr));
         grid-auto-flow: row;
     }
 
-    .collection-card.small {
+    body:not([data-journal-page]) .collection-card.small {
         grid-column: span 2;
     }
 
-    .collection-card.medium {
+    body:not([data-journal-page]) .collection-card.medium {
         grid-column: span 3;
     }
 
-    .collection-card.large {
+    body:not([data-journal-page]) .collection-card.large {
         grid-column: span 6;
     }
 
@@ -25,17 +29,17 @@
 
 @media (min-width: 901px) and (max-width: 1180px) {
 
-    .collections {
+    body:not([data-journal-page]) .collections {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         grid-auto-flow: row;
     }
 
-    .collection-card.small,
-    .collection-card.medium {
+    body:not([data-journal-page]) .collection-card.small,
+    body:not([data-journal-page]) .collection-card.medium {
         grid-column: span 1;
     }
 
-    .collection-card.large {
+    body:not([data-journal-page]) .collection-card.large {
         grid-column: span 2;
     }
 
@@ -43,41 +47,41 @@
 
 @media (min-width: 901px) {
 
-    .collection-card.small {
+    body:not([data-journal-page]) .collection-card.small {
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: auto 250px auto;
         min-height: 520px;
     }
 
-    .collection-card.small::after {
+    body:not([data-journal-page]) .collection-card.small::after {
         top: 178px;
         right: 0;
         bottom: 74px;
         width: 82%;
     }
 
-    .collection-card.small:hover::after {
+    body:not([data-journal-page]) .collection-card.small:hover::after {
         width: 88%;
     }
 
-    .collection-card.small .collection-heading {
+    body:not([data-journal-page]) .collection-card.small .collection-heading {
         grid-column: 1;
         grid-row: 1;
         min-height: 178px;
         padding: 30px 26px 22px;
     }
 
-    .collection-card.small .collection-title {
+    body:not([data-journal-page]) .collection-card.small .collection-title {
         font-size: clamp(30px, 2.6vw, 42px);
     }
 
-    .collection-card.small .collection-description {
+    body:not([data-journal-page]) .collection-card.small .collection-description {
         max-width: 290px;
         margin-top: 14px;
     }
 
-    .collection-card.small .collection-glass {
+    body:not([data-journal-page]) .collection-card.small .collection-glass {
         grid-column: 1;
         grid-row: 2;
         width: calc(100% - 44px);
@@ -85,63 +89,63 @@
         margin: 0 22px;
     }
 
-    .collection-card.small .collection-footer {
+    body:not([data-journal-page]) .collection-card.small .collection-footer {
         grid-column: 1;
         grid-row: 3;
         min-height: 74px;
         padding: 16px 24px 18px 26px;
     }
 
-    .collection-card.medium {
+    body:not([data-journal-page]) .collection-card.medium {
         min-height: 390px;
     }
 
-    .collection-card.large {
+    body:not([data-journal-page]) .collection-card.large {
         grid-template-columns: minmax(280px, .62fr) minmax(0, 1.72fr);
         min-height: 520px;
     }
 
-    .collection-card.large::after {
+    body:not([data-journal-page]) .collection-card.large::after {
         width: 65%;
     }
 
-    .collection-card.large:hover::after {
+    body:not([data-journal-page]) .collection-card.large:hover::after {
         width: 68%;
     }
 
-    .collection-card.large .collection-heading {
+    body:not([data-journal-page]) .collection-card.large .collection-heading {
         padding: 66px 40px 24px 58px;
     }
 
-    .collection-card.large .collection-title {
+    body:not([data-journal-page]) .collection-card.large .collection-title {
         font-size: clamp(54px, 6vw, 88px);
         line-height: .88;
     }
 
-    .collection-card.large .collection-description {
+    body:not([data-journal-page]) .collection-card.large .collection-description {
         max-width: 390px;
         margin-top: 26px;
         font-size: 15px;
         line-height: 1.65;
     }
 
-    .collection-card.large .collection-glass {
+    body:not([data-journal-page]) .collection-card.large .collection-glass {
         width: calc(100% - 70px);
         height: calc(100% - 72px);
         margin: 36px 42px 36px 28px;
     }
 
-    .collection-card.large .collection-footer {
+    body:not([data-journal-page]) .collection-card.large .collection-footer {
         min-height: 104px;
         padding: 18px 34px 38px 58px;
     }
 
-    .collection-card.large .collection-count {
+    body:not([data-journal-page]) .collection-card.large .collection-count {
         font-size: 13px;
         letter-spacing: .04em;
     }
 
-    .collection-card.large .collection-arrow {
+    body:not([data-journal-page]) .collection-card.large .collection-arrow {
         width: 50px;
         height: 50px;
         flex-basis: 50px;
