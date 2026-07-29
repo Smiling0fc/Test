@@ -54,6 +54,15 @@ class Sidebar {
                 </nav>
 
                 <div class="studio-sidebar-bottom">
+                    <button
+                        class="sidebar-utility menu-item"
+                        data-page="faq"
+                        type="button"
+                        title="Руководство и FAQ">
+                        <span class="sidebar-utility-icon">?</span>
+                        <span class="menu-label sidebar-expandable">FAQ</span>
+                    </button>
+
                     <a
                         class="sidebar-utility"
                         href="../"
@@ -103,7 +112,7 @@ class Sidebar {
                 </span>
 
                 <div class="sidebar-group-items">
-                    ${items.map(([page, icon, text], index) => `
+                    ${items.map(([page, icon, text]) => `
                         <button
                             class="menu-item${page === "dashboard" ? " active" : ""}"
                             data-page="${page}"
