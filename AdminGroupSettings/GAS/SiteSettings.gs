@@ -1,6 +1,5 @@
 /* ==================================================
    Site Settings
-   Add this file to the same Google Apps Script project
 ================================================== */
 
 const SITE_SETTINGS_KEYS = {
@@ -12,32 +11,54 @@ const SITE_SETTINGS_KEYS = {
 function hasOwnSiteSetting_(data, key) {
     return Boolean(
         data &&
-        Object.prototype.hasOwnProperty.call(
-            data,
-            key
-        )
+        Object.prototype.hasOwnProperty.call(data, key)
     );
+}
+
+function readSiteSettingsMap_(properties, key) {
+    const raw = String(properties.getProperty(key) || "").trim();
+
+    if (!raw) {
+        return {};
+    }
+
+    try {
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+            ? parsed
+            : {};
+    } catch (error) {
+        console.warn(`Не удалось прочитать настройку ${key}:`, error);
+        return {};
+    }
+}
+
+function saveSiteSettingsMap_(properties, key, map) {
+    if (!Object.keys(map || {}).length) {
+        properties.deleteProperty(key);
+        return;
+    }
+
+    properties.setProperty(key, JSON.stringify(map));
+}
+
+function collectionIdMap_(collections) {
+    const ids = {};
+    (collections || []).forEach(collection => {
+        ids[String(collection.id)] = true;
+    });
+    return ids;
 }
 
 function clampHeroFocus_(value, fallback) {
     const number = Number(value);
-
-    if (!isFinite(number)) {
-        return fallback;
-    }
-
-    return Math.max(
-        0,
-        Math.min(100, Math.round(number))
-    );
+    return isFinite(number)
+        ? Math.max(0, Math.min(100, Math.round(number)))
+        : fallback;
 }
 
 function normalizeHeroFocusPoint_(value) {
-    if (
-        !value ||
-        typeof value !== "object" ||
-        Array.isArray(value)
-    ) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
         return null;
     }
 
@@ -47,62 +68,18 @@ function normalizeHeroFocusPoint_(value) {
     };
 }
 
-function readHeroFocusMap_(properties) {
-    const raw = String(
-        properties.getProperty(
-            SITE_SETTINGS_KEYS.collectionHeroFocus
-        ) || ""
-    ).trim();
-
-    if (!raw) {
-        return {};
-    }
-
-    try {
-        const parsed = JSON.parse(raw);
-
-        return parsed &&
-            typeof parsed === "object" &&
-            !Array.isArray(parsed)
-                ? parsed
-                : {};
-    } catch (error) {
-        console.warn(
-            "Не удалось прочитать настройки фокуса Hero:",
-            error
-        );
-
-        return {};
-    }
-}
-
 function normalizeHeroFocusMap_(value, collections) {
-    const source = value &&
-        typeof value === "object" &&
-        !Array.isArray(value)
-            ? value
-            : {};
-
-    const collectionIds = {};
-
-    (collections || []).forEach(collection => {
-        collectionIds[String(collection.id)] = true;
-    });
-
+    const source = value && typeof value === "object" && !Array.isArray(value)
+        ? value
+        : {};
+    const ids = collectionIdMap_(collections);
     const normalized = {};
 
     Object.keys(source).forEach(collectionId => {
         const id = String(collectionId || "").trim();
+        const point = normalizeHeroFocusPoint_(source[collectionId]);
 
-        if (!id || !collectionIds[id]) {
-            return;
-        }
-
-        const point = normalizeHeroFocusPoint_(
-            source[collectionId]
-        );
-
-        if (point) {
+        if (id && ids[id] && point) {
             normalized[id] = point;
         }
     });
@@ -110,244 +87,115 @@ function normalizeHeroFocusMap_(value, collections) {
     return normalized;
 }
 
-function saveHeroFocusMap_(properties, map) {
-    const keys = Object.keys(map || {});
-
-    if (!keys.length) {
-        properties.deleteProperty(
-            SITE_SETTINGS_KEYS.collectionHeroFocus
-        );
-        return;
-    }
-
-    properties.setProperty(
-        SITE_SETTINGS_KEYS.collectionHeroFocus,
-        JSON.stringify(map)
-    );
-}
-
-function normalizeCollectionMetadataText_(
-    value,
-    maxLength
-) {
-    return String(value || "")
-        .trim()
-        .slice(0, maxLength);
+function normalizeCollectionMetadataText_(value, maxLength) {
+    return String(value || "").trim().slice(0, maxLength);
 }
 
 function normalizeCollectionShootDate_(value) {
     const date = String(value || "").trim();
-
-    if (!date) {
-        return "";
-    }
 
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
         return "";
     }
 
     const parsed = new Date(`${date}T12:00:00Z`);
+    return isNaN(parsed.getTime()) ? "" : date;
+}
 
-    return isNaN(parsed.getTime())
-        ? ""
-        : date;
+function normalizeCollectionDisplayMode_(value) {
+    const mode = String(value || "mixed").trim();
+    return ["gallery", "story", "mixed"].indexOf(mode) !== -1
+        ? mode
+        : "mixed";
 }
 
 function normalizeCollectionMetadataEntry_(value) {
-    if (
-        !value ||
-        typeof value !== "object" ||
-        Array.isArray(value)
-    ) {
-        return null;
-    }
+    const source = value && typeof value === "object" && !Array.isArray(value)
+        ? value
+        : {};
 
-    const metadata = {
-        category: normalizeCollectionMetadataText_(
-            value.category,
-            80
-        ),
-        shootDate: normalizeCollectionShootDate_(
-            value.shootDate
-        ),
-        location: normalizeCollectionMetadataText_(
-            value.location,
-            120
-        )
+    return {
+        category: normalizeCollectionMetadataText_(source.category, 80),
+        shootDate: normalizeCollectionShootDate_(source.shootDate),
+        location: normalizeCollectionMetadataText_(source.location, 120),
+        displayMode: normalizeCollectionDisplayMode_(source.displayMode)
     };
-
-    return Object.values(metadata).some(Boolean)
-        ? metadata
-        : null;
 }
 
-function readCollectionMetadataMap_(properties) {
-    const raw = String(
-        properties.getProperty(
-            SITE_SETTINGS_KEYS.collectionMetadata
-        ) || ""
-    ).trim();
-
-    if (!raw) {
-        return {};
-    }
-
-    try {
-        const parsed = JSON.parse(raw);
-
-        return parsed &&
-            typeof parsed === "object" &&
-            !Array.isArray(parsed)
-                ? parsed
-                : {};
-    } catch (error) {
-        console.warn(
-            "Не удалось прочитать метаданные коллекций:",
-            error
-        );
-
-        return {};
-    }
-}
-
-function normalizeCollectionMetadataMap_(
-    value,
-    collections
-) {
-    const source = value &&
-        typeof value === "object" &&
-        !Array.isArray(value)
-            ? value
-            : {};
-
-    const collectionIds = {};
-
-    (collections || []).forEach(collection => {
-        collectionIds[String(collection.id)] = true;
-    });
-
+function normalizeCollectionMetadataMap_(value, collections) {
+    const source = value && typeof value === "object" && !Array.isArray(value)
+        ? value
+        : {};
+    const ids = collectionIdMap_(collections);
     const normalized = {};
 
     Object.keys(source).forEach(collectionId => {
         const id = String(collectionId || "").trim();
-
-        if (!id || !collectionIds[id]) {
-            return;
-        }
-
-        const metadata =
-            normalizeCollectionMetadataEntry_(
+        if (id && ids[id]) {
+            normalized[id] = normalizeCollectionMetadataEntry_(
                 source[collectionId]
             );
-
-        if (metadata) {
-            normalized[id] = metadata;
         }
     });
 
     return normalized;
 }
 
-function saveCollectionMetadataMap_(properties, map) {
-    const keys = Object.keys(map || {});
-
-    if (!keys.length) {
-        properties.deleteProperty(
-            SITE_SETTINGS_KEYS.collectionMetadata
-        );
-        return;
-    }
-
-    properties.setProperty(
-        SITE_SETTINGS_KEYS.collectionMetadata,
-        JSON.stringify(map)
-    );
-}
-
 function getSiteSettings() {
-    const properties =
-        PropertiesService.getScriptProperties();
-
+    const properties = PropertiesService.getScriptProperties();
     const collections = getCollections();
-
     const savedHeroCollectionId = String(
-        properties.getProperty(
-            SITE_SETTINGS_KEYS.heroCollectionId
-        ) || ""
+        properties.getProperty(SITE_SETTINGS_KEYS.heroCollectionId) || ""
     ).trim();
 
-    const selectedCollection =
-        collections.find(collection =>
-            String(collection.id) ===
-            savedHeroCollectionId
-        ) || null;
+    const selectedCollection = collections.find(collection =>
+        String(collection.id) === savedHeroCollectionId
+    ) || null;
+    const fallbackCollection = collections.find(collection =>
+        collection.published !== false
+    ) || collections[0] || null;
+    const heroCollectionId = selectedCollection
+        ? String(selectedCollection.id)
+        : fallbackCollection
+            ? String(fallbackCollection.id)
+            : "";
 
-    const fallbackCollection =
-        collections.find(collection =>
-            collection.published !== false
-        ) || collections[0] || null;
-
-    const heroCollectionId =
-        selectedCollection
-            ? String(selectedCollection.id)
-            : fallbackCollection
-                ? String(fallbackCollection.id)
-                : "";
-
-    if (
-        heroCollectionId &&
-        heroCollectionId !== savedHeroCollectionId
-    ) {
+    if (heroCollectionId) {
         properties.setProperty(
             SITE_SETTINGS_KEYS.heroCollectionId,
             heroCollectionId
         );
+    } else {
+        properties.deleteProperty(SITE_SETTINGS_KEYS.heroCollectionId);
     }
 
-    if (!heroCollectionId && savedHeroCollectionId) {
-        properties.deleteProperty(
-            SITE_SETTINGS_KEYS.heroCollectionId
-        );
-    }
-
-    const savedFocusMap = readHeroFocusMap_(
-        properties
+    const savedFocusMap = readSiteSettingsMap_(
+        properties,
+        SITE_SETTINGS_KEYS.collectionHeroFocus
+    );
+    const collectionHeroFocus = normalizeHeroFocusMap_(
+        savedFocusMap,
+        collections
+    );
+    saveSiteSettingsMap_(
+        properties,
+        SITE_SETTINGS_KEYS.collectionHeroFocus,
+        collectionHeroFocus
     );
 
-    const collectionHeroFocus =
-        normalizeHeroFocusMap_(
-            savedFocusMap,
-            collections
-        );
-
-    if (
-        JSON.stringify(savedFocusMap) !==
-        JSON.stringify(collectionHeroFocus)
-    ) {
-        saveHeroFocusMap_(
-            properties,
-            collectionHeroFocus
-        );
-    }
-
-    const savedMetadataMap =
-        readCollectionMetadataMap_(properties);
-
-    const collectionMetadata =
-        normalizeCollectionMetadataMap_(
-            savedMetadataMap,
-            collections
-        );
-
-    if (
-        JSON.stringify(savedMetadataMap) !==
-        JSON.stringify(collectionMetadata)
-    ) {
-        saveCollectionMetadataMap_(
-            properties,
-            collectionMetadata
-        );
-    }
+    const savedMetadataMap = readSiteSettingsMap_(
+        properties,
+        SITE_SETTINGS_KEYS.collectionMetadata
+    );
+    const collectionMetadata = normalizeCollectionMetadataMap_(
+        savedMetadataMap,
+        collections
+    );
+    saveSiteSettingsMap_(
+        properties,
+        SITE_SETTINGS_KEYS.collectionMetadata,
+        collectionMetadata
+    );
 
     return {
         heroCollectionId,
@@ -358,76 +206,42 @@ function getSiteSettings() {
 
 function updateSiteSettings(data) {
     const payload = data || {};
-    const properties =
-        PropertiesService.getScriptProperties();
+    const properties = PropertiesService.getScriptProperties();
+    const collections = getCollections();
 
-    if (
-        hasOwnSiteSetting_(
-            payload,
-            "heroCollectionId"
-        )
-    ) {
-        const heroCollectionId = String(
-            payload.heroCollectionId || ""
-        ).trim();
+    if (hasOwnSiteSetting_(payload, "heroCollectionId")) {
+        const heroCollectionId = String(payload.heroCollectionId || "").trim();
 
         if (!heroCollectionId) {
-            properties.deleteProperty(
-                SITE_SETTINGS_KEYS.heroCollectionId
-            );
-        } else {
-            const collectionExists =
-                getCollections().some(collection =>
-                    String(collection.id) ===
-                    heroCollectionId
-                );
-
-            if (!collectionExists) {
-                throw new Error(
-                    "Выбранная коллекция не найдена."
-                );
-            }
-
+            properties.deleteProperty(SITE_SETTINGS_KEYS.heroCollectionId);
+        } else if (collections.some(collection =>
+            String(collection.id) === heroCollectionId
+        )) {
             properties.setProperty(
                 SITE_SETTINGS_KEYS.heroCollectionId,
                 heroCollectionId
             );
+        } else {
+            throw new Error("Выбранная коллекция не найдена.");
         }
     }
 
-    if (
-        hasOwnSiteSetting_(
-            payload,
-            "collectionHeroFocus"
-        )
-    ) {
-        const normalizedMap =
-            normalizeHeroFocusMap_(
-                payload.collectionHeroFocus,
-                getCollections()
-            );
-
-        saveHeroFocusMap_(
+    if (hasOwnSiteSetting_(payload, "collectionHeroFocus")) {
+        saveSiteSettingsMap_(
             properties,
-            normalizedMap
+            SITE_SETTINGS_KEYS.collectionHeroFocus,
+            normalizeHeroFocusMap_(payload.collectionHeroFocus, collections)
         );
     }
 
-    if (
-        hasOwnSiteSetting_(
-            payload,
-            "collectionMetadata"
-        )
-    ) {
-        const normalizedMap =
+    if (hasOwnSiteSetting_(payload, "collectionMetadata")) {
+        saveSiteSettingsMap_(
+            properties,
+            SITE_SETTINGS_KEYS.collectionMetadata,
             normalizeCollectionMetadataMap_(
                 payload.collectionMetadata,
-                getCollections()
-            );
-
-        saveCollectionMetadataMap_(
-            properties,
-            normalizedMap
+                collections
+            )
         );
     }
 
