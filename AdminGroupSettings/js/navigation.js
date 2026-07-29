@@ -37,7 +37,8 @@ class Navigation {
                         dashboard: Dashboard,
                         homepage: Homepage,
                         collections: Collections,
-                        settings: Settings
+                        settings: Settings,
+                        faq: FAQ
                     };
 
                     if (routes[page]) {
