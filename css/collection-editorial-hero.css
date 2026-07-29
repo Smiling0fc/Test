@@ -141,6 +141,87 @@
     border-color: rgba(245, 242, 236, .55);
 }
 
+.collection-editorial-hero.is-loading {
+    overflow: hidden;
+}
+
+.collection-editorial-skeleton-media {
+    background:
+        linear-gradient(110deg, transparent 32%, rgba(255,255,255,.05) 46%, transparent 60%),
+        #171714;
+    background-size: 240% 100%;
+    animation: collectionEditorialSkeleton 1.7s ease-in-out infinite;
+}
+
+.collection-editorial-skeleton-copy {
+    pointer-events: none;
+}
+
+.collection-editorial-skeleton-line {
+    display: block;
+    height: 12px;
+    border-radius: 999px;
+    background:
+        linear-gradient(110deg, rgba(255,255,255,.055) 28%, rgba(255,255,255,.11) 45%, rgba(255,255,255,.055) 62%);
+    background-size: 240% 100%;
+    animation: collectionEditorialSkeleton 1.7s ease-in-out infinite;
+}
+
+.collection-editorial-skeleton-line.is-kicker {
+    width: min(210px, 48%);
+    height: 9px;
+    margin-bottom: 30px;
+}
+
+.collection-editorial-skeleton-line.is-issue {
+    width: 104px;
+    height: 8px;
+    margin-bottom: 38px;
+    opacity: .72;
+}
+
+.collection-editorial-skeleton-line.is-title {
+    width: min(520px, 92%);
+    height: clamp(54px, 6vw, 92px);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.collection-editorial-skeleton-line.is-title.is-short {
+    width: min(320px, 64%);
+    margin-bottom: 34px;
+}
+
+.collection-editorial-skeleton-line.is-description {
+    width: min(560px, 90%);
+    height: 13px;
+    margin-bottom: 12px;
+    opacity: .76;
+}
+
+.collection-editorial-skeleton-line.is-description.is-short {
+    width: min(380px, 68%);
+    margin-bottom: 34px;
+}
+
+.collection-editorial-skeleton-line.is-meta {
+    width: min(300px, 62%);
+    height: 9px;
+    margin-bottom: 48px;
+    opacity: .58;
+}
+
+.collection-editorial-skeleton-line.is-action {
+    width: 128px;
+    height: 8px;
+    opacity: .46;
+}
+
+@keyframes collectionEditorialSkeleton {
+    0% { background-position: 160% 0; }
+    100% { background-position: -80% 0; }
+}
+
 @media (max-width: 980px) {
     .collection-issue-hero.collection-editorial-hero {
         grid-template-columns: 1fr;
@@ -179,11 +260,20 @@
     .collection-editorial-meta span + span::before {
         display: none;
     }
+
+    .collection-editorial-skeleton-line.is-title {
+        height: clamp(46px, 16vw, 70px);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .collection-editorial-hero .collection-issue-media img {
         transition: none;
         transform: none;
+    }
+
+    .collection-editorial-skeleton-media,
+    .collection-editorial-skeleton-line {
+        animation: none;
     }
 }
