@@ -68,6 +68,8 @@ class CollectionEditorialHero {
         );
 
         if (!collection) {
+            hero.classList.remove("is-loading");
+            hero.removeAttribute("aria-busy");
             return;
         }
 
@@ -98,6 +100,8 @@ class CollectionEditorialHero {
         ).trim();
 
         hero.classList.add("collection-editorial-hero");
+        hero.classList.remove("is-loading");
+        hero.removeAttribute("aria-busy");
         hero.innerHTML = `
             <div class="collection-issue-media">
                 ${coverId
@@ -135,6 +139,7 @@ class CollectionEditorialHero {
 
         const image = hero.querySelector(".collection-issue-media img");
         if (!image) {
+            hero.classList.add("is-cover-loaded");
             return;
         }
 
