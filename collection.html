@@ -39,10 +39,22 @@
     </header>
 
     <main class="journal-main">
-        <section id="collectionIssueHero" class="collection-issue-hero" aria-live="polite">
-            <div class="collection-issue-copy">
-                <small>ViJoy’s Journal</small>
-                <h1>Готовим историю…</h1>
+        <section
+            id="collectionIssueHero"
+            class="collection-issue-hero collection-editorial-hero is-loading"
+            aria-live="polite"
+            aria-busy="true">
+            <div class="collection-issue-media collection-editorial-skeleton-media" aria-hidden="true"></div>
+
+            <div class="collection-issue-copy collection-editorial-skeleton-copy" aria-hidden="true">
+                <span class="collection-editorial-skeleton-line is-kicker"></span>
+                <span class="collection-editorial-skeleton-line is-issue"></span>
+                <span class="collection-editorial-skeleton-line is-title"></span>
+                <span class="collection-editorial-skeleton-line is-title is-short"></span>
+                <span class="collection-editorial-skeleton-line is-description"></span>
+                <span class="collection-editorial-skeleton-line is-description is-short"></span>
+                <span class="collection-editorial-skeleton-line is-meta"></span>
+                <span class="collection-editorial-skeleton-line is-action"></span>
             </div>
         </section>
 
