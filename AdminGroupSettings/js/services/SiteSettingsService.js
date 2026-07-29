@@ -1,5 +1,4 @@
 class SiteSettingsService {
-
     static settings = {
         heroCollectionId: "",
         collectionHeroFocus: {},
@@ -10,23 +9,13 @@ class SiteSettingsService {
 
     static clampPercent(value, fallback) {
         const number = Number(value);
-
-        if (!Number.isFinite(number)) {
-            return fallback;
-        }
-
-        return Math.max(
-            0,
-            Math.min(100, Math.round(number))
-        );
+        return Number.isFinite(number)
+            ? Math.max(0, Math.min(100, Math.round(number)))
+            : fallback;
     }
 
     static normalizeFocusPoint(value) {
-        if (
-            !value ||
-            typeof value !== "object" ||
-            Array.isArray(value)
-        ) {
+        if (!value || typeof value !== "object" || Array.isArray(value)) {
             return null;
         }
 
@@ -37,158 +26,88 @@ class SiteSettingsService {
     }
 
     static normalizeFocusMap(value) {
-        if (
-            !value ||
-            typeof value !== "object" ||
-            Array.isArray(value)
-        ) {
+        if (!value || typeof value !== "object" || Array.isArray(value)) {
             return {};
         }
 
         const normalized = {};
-
-        Object.entries(value).forEach(
-            ([collectionId, point]) => {
-                const id = String(
-                    collectionId || ""
-                ).trim();
-
-                const normalizedPoint =
-                    this.normalizeFocusPoint(point);
-
-                if (id && normalizedPoint) {
-                    normalized[id] = normalizedPoint;
-                }
+        Object.entries(value).forEach(([collectionId, point]) => {
+            const id = String(collectionId || "").trim();
+            const normalizedPoint = this.normalizeFocusPoint(point);
+            if (id && normalizedPoint) {
+                normalized[id] = normalizedPoint;
             }
-        );
-
+        });
         return normalized;
     }
 
     static normalizeMetadataText(value, maxLength) {
-        return String(value || "")
-            .trim()
-            .slice(0, maxLength);
+        return String(value || "").trim().slice(0, maxLength);
     }
 
     static normalizeMetadataDate(value) {
         const date = String(value || "").trim();
+        return /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : "";
+    }
 
-        return /^\d{4}-\d{2}-\d{2}$/.test(date)
-            ? date
-            : "";
+    static normalizeDisplayMode(value) {
+        const mode = String(value || "mixed").trim();
+        return ["gallery", "story", "mixed"].includes(mode)
+            ? mode
+            : "mixed";
     }
 
     static normalizeMetadataEntry(value) {
-        const source = value &&
-            typeof value === "object" &&
-            !Array.isArray(value)
-                ? value
-                : {};
+        const source = value && typeof value === "object" && !Array.isArray(value)
+            ? value
+            : {};
 
         return {
-            category: this.normalizeMetadataText(
-                source.category,
-                80
-            ),
-            shootDate: this.normalizeMetadataDate(
-                source.shootDate
-            ),
-            location: this.normalizeMetadataText(
-                source.location,
-                120
-            )
+            category: this.normalizeMetadataText(source.category, 80),
+            shootDate: this.normalizeMetadataDate(source.shootDate),
+            location: this.normalizeMetadataText(source.location, 120),
+            displayMode: this.normalizeDisplayMode(source.displayMode)
         };
     }
 
     static normalizeMetadataMap(value) {
-        if (
-            !value ||
-            typeof value !== "object" ||
-            Array.isArray(value)
-        ) {
+        if (!value || typeof value !== "object" || Array.isArray(value)) {
             return {};
         }
 
         const normalized = {};
-
-        Object.entries(value).forEach(
-            ([collectionId, metadata]) => {
-                const id = String(
-                    collectionId || ""
-                ).trim();
-
-                const entry =
-                    this.normalizeMetadataEntry(metadata);
-
-                if (
-                    id &&
-                    Object.values(entry).some(Boolean)
-                ) {
-                    normalized[id] = entry;
-                }
+        Object.entries(value).forEach(([collectionId, metadata]) => {
+            const id = String(collectionId || "").trim();
+            if (id) {
+                normalized[id] = this.normalizeMetadataEntry(metadata);
             }
-        );
-
+        });
         return normalized;
     }
 
     static applyResponse(response, reset = false) {
         const incoming = response?.settings || {};
-
-        const hasHeroCollectionId =
-            Object.prototype.hasOwnProperty.call(
-                incoming,
-                "heroCollectionId"
-            );
-
-        const hasFocusMap =
-            Object.prototype.hasOwnProperty.call(
-                incoming,
-                "collectionHeroFocus"
-            );
-
-        const hasMetadataMap =
-            Object.prototype.hasOwnProperty.call(
-                incoming,
-                "collectionMetadata"
-            );
+        const has = key => Object.prototype.hasOwnProperty.call(incoming, key);
 
         this.settings = {
-            heroCollectionId: hasHeroCollectionId
-                ? String(
-                    incoming.heroCollectionId || ""
-                )
-                : reset
-                    ? ""
-                    : this.settings.heroCollectionId,
-            collectionHeroFocus: hasFocusMap
-                ? this.normalizeFocusMap(
-                    incoming.collectionHeroFocus
-                )
-                : reset
-                    ? {}
-                    : this.settings.collectionHeroFocus,
-            collectionMetadata: hasMetadataMap
-                ? this.normalizeMetadataMap(
-                    incoming.collectionMetadata
-                )
-                : reset
-                    ? {}
-                    : this.settings.collectionMetadata
+            heroCollectionId: has("heroCollectionId")
+                ? String(incoming.heroCollectionId || "")
+                : reset ? "" : this.settings.heroCollectionId,
+            collectionHeroFocus: has("collectionHeroFocus")
+                ? this.normalizeFocusMap(incoming.collectionHeroFocus)
+                : reset ? {} : this.settings.collectionHeroFocus,
+            collectionMetadata: has("collectionMetadata")
+                ? this.normalizeMetadataMap(incoming.collectionMetadata)
+                : reset ? {} : this.settings.collectionMetadata
         };
 
         this.loaded = true;
-
         return this.settings;
     }
 
     static async load() {
-        const response =
-            await ApiService.getSiteSettings();
-
         return this.applyResponse(
-            response,
+            await ApiService.getSiteSettings(),
             true
         );
     }
@@ -198,84 +117,47 @@ class SiteSettingsService {
     }
 
     static getCollectionHeroFocus(collectionId) {
-        const id = String(
-            collectionId || ""
-        ).trim();
-
-        if (!id) {
-            return null;
-        }
-
-        const point =
-            this.settings.collectionHeroFocus[id];
-
-        return point
-            ? { ...point }
-            : null;
+        const id = String(collectionId || "").trim();
+        const point = id ? this.settings.collectionHeroFocus[id] : null;
+        return point ? { ...point } : null;
     }
 
     static getCollectionMetadata(collectionId) {
-        const id = String(
-            collectionId || ""
-        ).trim();
-
-        if (!id) {
-            return this.normalizeMetadataEntry({});
-        }
-
+        const id = String(collectionId || "").trim();
         return this.normalizeMetadataEntry(
-            this.settings.collectionMetadata[id]
+            id ? this.settings.collectionMetadata[id] : {}
         );
     }
 
-    static async setHeroCollection(
-        collectionId
-    ) {
-        const response =
+    static async setHeroCollection(collectionId) {
+        return this.applyResponse(
             await ApiService.updateSiteSettings({
-                heroCollectionId: String(
-                    collectionId || ""
-                )
-            });
-
-        return this.applyResponse(response);
+                heroCollectionId: String(collectionId || "")
+            })
+        );
     }
 
-    static async setCollectionHeroFocus(
-        collectionId,
-        point
-    ) {
-        const id = String(
-            collectionId || ""
-        ).trim();
-
-        const normalizedPoint =
-            this.normalizeFocusPoint(point);
+    static async setCollectionHeroFocus(collectionId, point) {
+        const id = String(collectionId || "").trim();
+        const normalizedPoint = this.normalizeFocusPoint(point);
 
         if (!id || !normalizedPoint) {
-            throw new Error(
-                "Не удалось определить точку фокуса Hero."
-            );
+            throw new Error("Не удалось определить точку фокуса Hero.");
         }
 
         if (!this.loaded) {
             await this.load();
         }
 
-        const collectionHeroFocus = {
-            ...this.settings.collectionHeroFocus,
-            [id]: normalizedPoint
-        };
-
-        const response =
-            await ApiService.updateSiteSettings({
-                collectionHeroFocus
-            });
+        const response = await ApiService.updateSiteSettings({
+            collectionHeroFocus: {
+                ...this.settings.collectionHeroFocus,
+                [id]: normalizedPoint
+            }
+        });
 
         this.applyResponse(response);
-
-        const savedPoint =
-            this.getCollectionHeroFocus(id);
+        const savedPoint = this.getCollectionHeroFocus(id);
 
         if (!savedPoint) {
             throw new Error(
@@ -286,45 +168,25 @@ class SiteSettingsService {
         return savedPoint;
     }
 
-    static async setCollectionMetadata(
-        collectionId,
-        metadata
-    ) {
-        const id = String(
-            collectionId || ""
-        ).trim();
-
+    static async setCollectionMetadata(collectionId, metadata) {
+        const id = String(collectionId || "").trim();
         if (!id) {
-            throw new Error(
-                "Не удалось определить коллекцию."
-            );
+            throw new Error("Не удалось определить коллекцию.");
         }
 
         if (!this.loaded) {
             await this.load();
         }
 
-        const normalized =
-            this.normalizeMetadataEntry(metadata);
-
-        const collectionMetadata = {
-            ...this.settings.collectionMetadata
-        };
-
-        if (Object.values(normalized).some(Boolean)) {
-            collectionMetadata[id] = normalized;
-        } else {
-            delete collectionMetadata[id];
-        }
-
-        const response =
-            await ApiService.updateSiteSettings({
-                collectionMetadata
-            });
+        const normalized = this.normalizeMetadataEntry(metadata);
+        const response = await ApiService.updateSiteSettings({
+            collectionMetadata: {
+                ...this.settings.collectionMetadata,
+                [id]: normalized
+            }
+        });
 
         this.applyResponse(response);
-
         return this.getCollectionMetadata(id);
     }
-
 }
