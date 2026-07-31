@@ -134,11 +134,16 @@
     height: 100%;
     object-fit: cover;
     object-position: center top;
-    transition: transform .9s cubic-bezier(.2, .72, .25, 1), opacity .58s ease;
+    transform: translateZ(0) scale(1);
+    backface-visibility: hidden;
+    will-change: transform;
+    transition:
+        transform .82s cubic-bezier(.2, .72, .25, 1),
+        opacity .58s ease;
 }
 
 .next-story-card:hover .next-story-media img {
-    transform: scale(1.022);
+    transform: translateZ(0) scale(1.018);
 }
 
 .next-story-placeholder {
