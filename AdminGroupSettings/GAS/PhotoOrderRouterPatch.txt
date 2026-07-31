@@ -1,0 +1,9 @@
+Добавьте этот блок внутрь switch (action) функции doPost(e) в Code.gs:
+
+case "reorderPhotos":
+    return jsonResponse({
+        success: true,
+        photos: reorderPhotos(body)
+    });
+
+Рекомендуемое место: рядом с case "updatePhoto".
