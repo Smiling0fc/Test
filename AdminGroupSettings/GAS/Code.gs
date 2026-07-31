@@ -1,6 +1,6 @@
 /* ==================================================
    Photographer CMS API
-   Version: 0.3.2
+   Version: 0.5.1
 ================================================== */
 
 const CONFIG = {
@@ -46,7 +46,7 @@ function doGet(e) {
                 return jsonResponse({
                     success: true,
                     service: "Photographer CMS API",
-                    version: "0.3.2",
+                    version: "0.5.1",
                     timestamp: new Date().toISOString()
                 });
 
