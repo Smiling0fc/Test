@@ -5,6 +5,7 @@ class PageEdges {
     };
 
     static initialized = false;
+    static collectionObserver = null;
 
     static cleanLabel(value, fallback) {
         const label = String(value || fallback || "").trim();
@@ -21,7 +22,8 @@ class PageEdges {
         side,
         label,
         tone = "dark",
-        dynamic = false
+        dynamic = false,
+        compact = false
     }) {
         const edge = document.createElement("aside");
 
@@ -30,8 +32,9 @@ class PageEdges {
             `page-edge-${side}`,
             tone === "light"
                 ? "page-edge-light"
-                : "page-edge-dark"
-        ].join(" ");
+                : "page-edge-dark",
+            compact ? "page-edge-compact" : ""
+        ].filter(Boolean).join(" ");
 
         edge.setAttribute("aria-hidden", "true");
         edge.innerHTML = `
@@ -59,7 +62,8 @@ class PageEdges {
         right,
         tone = "dark",
         mode = "full",
-        dynamic = false
+        dynamic = false,
+        compact = false
     }) {
         const target = document.querySelector(selector);
 
@@ -80,7 +84,8 @@ class PageEdges {
                 side: "left",
                 label: left,
                 tone,
-                dynamic
+                dynamic,
+                compact
             });
         }
 
@@ -90,9 +95,96 @@ class PageEdges {
                 side: "right",
                 label: right,
                 tone,
-                dynamic
+                dynamic,
+                compact
             });
         }
+    }
+
+    static mountCollectionStoryEdges() {
+        const gallery = document.getElementById("issueGalleryRoot");
+
+        if (!gallery) {
+            return false;
+        }
+
+        const stories = Array.from(
+            gallery.querySelectorAll(".photo-story")
+        );
+
+        if (!stories.length) {
+            return false;
+        }
+
+        gallery
+            .querySelectorAll(".photo-story > .page-edge")
+            .forEach(edge => edge.remove());
+
+        stories.forEach(story => {
+            story.classList.remove(
+                "page-edge-host",
+                "page-edge-host-full",
+                "page-edge-host-shell"
+            );
+        });
+
+        const firstStory = stories[0];
+        const lastStory = stories[stories.length - 1];
+
+        firstStory.classList.add(
+            "page-edge-host",
+            "page-edge-host-shell"
+        );
+
+        this.createEdge({
+            target: firstStory,
+            side: "left",
+            label: "История кадра",
+            tone: "dark",
+            compact: true
+        });
+
+        if (lastStory !== firstStory) {
+            lastStory.classList.add(
+                "page-edge-host",
+                "page-edge-host-shell"
+            );
+
+            this.createEdge({
+                target: lastStory,
+                side: "right",
+                label: "Последний акцент",
+                tone: "dark",
+                compact: true
+            });
+        }
+
+        return true;
+    }
+
+    static watchCollectionStories() {
+        const root = document.getElementById("issueGalleryRoot");
+
+        if (!root) {
+            return;
+        }
+
+        if (this.mountCollectionStoryEdges()) {
+            return;
+        }
+
+        this.collectionObserver?.disconnect();
+        this.collectionObserver = new MutationObserver(() => {
+            if (this.mountCollectionStoryEdges()) {
+                this.collectionObserver.disconnect();
+                this.collectionObserver = null;
+            }
+        });
+
+        this.collectionObserver.observe(root, {
+            childList: true,
+            subtree: true
+        });
     }
 
     static definitions(page) {
@@ -125,23 +217,6 @@ class PageEdges {
                     right: body.dataset.edgeRight || "Портфолио",
                     tone: "dark",
                     mode: "full"
-                }
-            ];
-        }
-
-        if (page === "collection") {
-            return [
-                {
-                    selector: "#issueGallery",
-                    left:
-                        body.dataset.edgeLeft ||
-                        "Фотографическая история",
-                    right:
-                        body.dataset.edgeRight ||
-                        "ViJoy’s Journal",
-                    tone: "dark",
-                    mode: "full",
-                    dynamic: true
                 }
             ];
         }
@@ -200,6 +275,10 @@ class PageEdges {
         this.definitions(page).forEach(definition => {
             this.mountSection(definition);
         });
+
+        if (page === "collection") {
+            this.watchCollectionStories();
+        }
     }
 }
 
