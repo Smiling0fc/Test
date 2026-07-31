@@ -16,7 +16,7 @@ header::before {
     width: 100vw;
     transform: translateX(-50%);
 
-    border-bottom: 1px solid transparent;
+    border: 0;
     background: transparent;
     box-shadow: none;
     pointer-events: none;
@@ -26,8 +26,6 @@ header::before {
 
     transition:
         background .35s ease,
-        border-color .35s ease,
-        box-shadow .35s ease,
         backdrop-filter .35s ease;
 }
 
@@ -36,7 +34,6 @@ header::before {
 }
 
 .header-on-hero::before {
-    border-bottom-color: transparent;
     background: transparent;
     box-shadow: none;
 }
@@ -50,15 +47,14 @@ header::before {
 }
 
 .header-scrolled::before {
-    border-bottom-color: rgba(0, 0, 0, .035);
     background: linear-gradient(
         180deg,
         rgba(247, 245, 241, .86) 0%,
         rgba(247, 245, 241, .7) 34%,
-        rgba(247, 245, 241, .32) 68%,
+        rgba(247, 245, 241, .3) 68%,
         rgba(247, 245, 241, 0) 100%
     );
-    box-shadow: 0 8px 24px rgba(0, 0, 0, .02);
+    box-shadow: none;
     backdrop-filter: blur(14px) saturate(108%);
     -webkit-backdrop-filter: blur(14px) saturate(108%);
 }
