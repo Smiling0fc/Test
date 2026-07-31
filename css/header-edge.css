@@ -9,7 +9,7 @@ header::before {
     content: "";
     position: absolute;
     top: -28px;
-    bottom: -18px;
+    bottom: -8px;
     left: 50%;
     z-index: -1;
 
@@ -50,22 +50,23 @@ header::before {
 }
 
 .header-scrolled::before {
-    border-bottom-color: rgba(0, 0, 0, .055);
+    border-bottom-color: rgba(0, 0, 0, .035);
     background: linear-gradient(
         180deg,
-        rgba(247, 245, 241, 0) 0%,
-        rgba(247, 245, 241, .16) 44%,
-        rgba(247, 245, 241, .68) 100%
+        rgba(247, 245, 241, .86) 0%,
+        rgba(247, 245, 241, .7) 34%,
+        rgba(247, 245, 241, .32) 68%,
+        rgba(247, 245, 241, 0) 100%
     );
-    box-shadow: 0 14px 34px rgba(0, 0, 0, .035);
-    backdrop-filter: blur(11px) saturate(110%);
-    -webkit-backdrop-filter: blur(11px) saturate(110%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .02);
+    backdrop-filter: blur(14px) saturate(108%);
+    -webkit-backdrop-filter: blur(14px) saturate(108%);
 }
 
 @media (max-width: 700px) {
     header::before {
         top: -18px;
-        bottom: -12px;
+        bottom: -6px;
     }
 }
 
