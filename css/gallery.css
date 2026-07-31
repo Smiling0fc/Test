@@ -121,14 +121,14 @@
     border-radius: inherit;
     aspect-ratio: auto;
     object-fit: contain;
-    transform: translateZ(0) scale(1);
-    backface-visibility: hidden;
+    transform: scale(1);
+    transition: transform .7s cubic-bezier(.22, .61, .36, 1);
     will-change: transform;
-    transition: transform .72s cubic-bezier(.2, .72, .25, 1);
+    backface-visibility: hidden;
 }
 
 .public-photo:hover img {
-    transform: translateZ(0) scale(1.012);
+    transform: scale(1.012);
 }
 
 /* =========================================
@@ -169,6 +169,18 @@
     box-shadow: 0 14px 38px rgba(80, 58, 38, .07);
 }
 
+/* Story images use their own hover cycle.
+   The figure also has .public-photo, so the generic upward movement
+   must be neutralized to prevent the cursor from chasing the element. */
+.photo-story .photo-story-image,
+.photo-story .photo-story-image:hover {
+    transform: none;
+}
+
+.photo-story .photo-story-image:hover {
+    box-shadow: 0 16px 42px rgba(80, 58, 38, .085);
+}
+
 .photo-story-image img {
     display: block;
     width: 100%;
@@ -177,14 +189,14 @@
     border-radius: inherit;
     aspect-ratio: auto;
     object-fit: contain;
-    transform: translateZ(0) scale(1);
-    backface-visibility: hidden;
+    transform: scale(1);
+    transition: transform .85s cubic-bezier(.22, .61, .36, 1);
     will-change: transform;
-    transition: transform .82s cubic-bezier(.2, .72, .25, 1);
+    backface-visibility: hidden;
 }
 
-.photo-story:hover .photo-story-image img {
-    transform: translateZ(0) scale(1.012);
+.photo-story .photo-story-image:hover img {
+    transform: scale(1.012);
 }
 
 .photo-story-text {
