@@ -1,6 +1,6 @@
 const CMS_CONFIG = {
 
-    version: "0.5.1",
+    version: "0.5.2",
 
     codename: "Editorial Design",
 
