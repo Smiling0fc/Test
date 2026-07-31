@@ -16,6 +16,16 @@
     margin-left: auto;
 }
 
+.photo-masonry-single .public-photo {
+    border-radius: 3px;
+    box-shadow: 0 9px 24px rgba(80, 58, 38, .04);
+}
+
+.photo-masonry-single .public-photo:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px rgba(80, 58, 38, .06);
+}
+
 .photo-masonry-pair {
     column-count: 2;
 }
@@ -66,6 +76,10 @@
         column-count: 1;
         max-width: none;
         margin-bottom: 54px;
+    }
+
+    .photo-masonry-single .public-photo {
+        border-radius: 6px;
     }
 
     .photo-story,
