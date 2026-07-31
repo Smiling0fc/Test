@@ -1,6 +1,6 @@
 :root {
-    --page-edge-dark: rgba(45, 40, 35, .34);
-    --page-edge-light: rgba(255, 255, 255, .66);
+    --page-edge-dark: rgba(45, 40, 35, .5);
+    --page-edge-light: rgba(255, 255, 255, .72);
 }
 
 .section-page-edges .hero-marker {
@@ -56,7 +56,7 @@
     min-height: 24px;
     flex: 1 1 auto;
     background: currentColor;
-    opacity: .48;
+    opacity: .42;
 }
 
 .page-edge-dot {
@@ -75,8 +75,8 @@
 
     color: currentColor;
 
-    font: 500 8px/1 Inter, sans-serif;
-    letter-spacing: .24em;
+    font: 600 9px/1 Inter, sans-serif;
+    letter-spacing: .18em;
     text-transform: uppercase;
     white-space: nowrap;
     writing-mode: vertical-rl;
@@ -86,6 +86,31 @@
     transform: rotate(180deg);
 }
 
+.page-edge-compact {
+    top: 16%;
+    bottom: 16%;
+    color: rgba(45, 40, 35, .58);
+}
+
+.page-edge-compact .page-edge-line {
+    min-height: 18px;
+    opacity: .34;
+}
+
+.page-edge-compact .page-edge-dot {
+    width: 4px;
+    height: 4px;
+    flex-basis: 4px;
+    margin: 9px 0;
+}
+
+.page-edge-compact .page-edge-label {
+    max-height: 150px;
+    margin: 10px 0;
+    font-size: 9px;
+    letter-spacing: .16em;
+}
+
 /* A shorter marker works better around compact editorial sections. */
 .about-editorial > .page-edge,
 .latest-stories > .page-edge {
@@ -93,9 +118,8 @@
     bottom: clamp(32px, 6vw, 76px);
 }
 
-/* Archive and long galleries keep their markers near the beginning of the section. */
-.archive-page > .page-edge,
-.issue-gallery > .page-edge {
+/* Archive markers stay near the beginning of the section. */
+.archive-page > .page-edge {
     bottom: auto;
     height: min(68vh, 620px);
 }
