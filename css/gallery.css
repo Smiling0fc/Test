@@ -121,11 +121,14 @@
     border-radius: inherit;
     aspect-ratio: auto;
     object-fit: contain;
-    transition: transform .6s ease;
+    transform: translateZ(0) scale(1);
+    backface-visibility: hidden;
+    will-change: transform;
+    transition: transform .72s cubic-bezier(.2, .72, .25, 1);
 }
 
 .public-photo:hover img {
-    transform: scale(1.012);
+    transform: translateZ(0) scale(1.012);
 }
 
 /* =========================================
@@ -174,6 +177,14 @@
     border-radius: inherit;
     aspect-ratio: auto;
     object-fit: contain;
+    transform: translateZ(0) scale(1);
+    backface-visibility: hidden;
+    will-change: transform;
+    transition: transform .82s cubic-bezier(.2, .72, .25, 1);
+}
+
+.photo-story:hover .photo-story-image img {
+    transform: translateZ(0) scale(1.012);
 }
 
 .photo-story-text {
