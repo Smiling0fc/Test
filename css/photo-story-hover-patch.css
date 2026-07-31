@@ -1,0 +1,41 @@
+/* Temporary override for photo-story hover animation.
+   Loaded after all collection styles so legacy transforms cannot win. */
+
+.photo-story .photo-story-image,
+.photo-story .photo-story-image:hover,
+.photo-story .photo-story-image:focus,
+.photo-story .photo-story-image:focus-visible,
+.photo-story .public-photo,
+.photo-story .public-photo:hover,
+.photo-story .public-photo:focus,
+.photo-story .public-photo:focus-visible {
+    transform: none !important;
+    transition-property: box-shadow, filter !important;
+    transition-duration: .35s !important;
+    transition-timing-function: ease !important;
+}
+
+.photo-story .photo-story-image img,
+.photo-story .public-photo img {
+    transform: translate3d(0, 0, 0) scale(1) !important;
+    transform-origin: center center !important;
+    transition: transform .72s cubic-bezier(.22, .61, .36, 1) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    will-change: transform;
+}
+
+.photo-story .photo-story-image:hover img,
+.photo-story .photo-story-image:focus-within img,
+.photo-story .public-photo:hover img,
+.photo-story .public-photo:focus-within img {
+    transform: translate3d(0, 0, 0) scale(1.018) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .photo-story .photo-story-image img,
+    .photo-story .public-photo img {
+        transition: none !important;
+        transform: none !important;
+    }
+}
